@@ -1,0 +1,10 @@
+---
+- hosts: null.com.ar
+  become: yes
+
+  vars_files:
+    - vars/main.yml
+  roles:
+    - geerlingguy.git
+    - geerlingguy.mysql
+    - jdauphant.nginx
