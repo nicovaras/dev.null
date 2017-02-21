@@ -1,0 +1,25 @@
+<footer class="site-footer">
+        <ul class='footer-list'>
+          <li>
+            {% if site.author %}
+              {{ site.author | escape }}
+            {% else %}
+              {{ site.title | escape }}
+            {% endif %}
+            </li>
+            {% if site.email %}
+            <li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
+            {% endif %}
+          {% if site.github_username %}
+            <li>
+              {% include icon-github.html username=site.github_username %}
+            </li>
+          {% endif %}
+            <li>
+              {% include icon-linkedin.html username=site.linkedin_username %}
+            </li>
+            <li>
+              {% include icon-cv.html username=site.cv %}
+            </li>
+        </ul>
+</footer>
