@@ -3,12 +3,12 @@ layout: default
 ---
 
 <div class="home">
-<h1 class="page-heading">Nico Varaschin</h1>
+<h1 class="name">Nico Varaschin</h1>
 
       <div class="">
         <p>{{ site.description | escape }}</p>
       </div>
-
+<hr>
   <h1 class="page-heading">Posts</h1>
 
   {{ content }}
@@ -16,9 +16,16 @@ layout: default
   <ul class="post-list">
     {% for post in site.posts %}
       <li>
+        <div class="div-post-name">
         <h2>
           <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
         </h2>
+        </div>
+        <div class="div-post-cat">
+          {% for cat in post.categories %}
+            <span class="post-cat">{{cat}}</span>
+          {% endfor %}
+        </div>
       </li>
     {% endfor %}
   </ul>

@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Bloom filters in Ruby"
-categories: jekyll update
+categories: data-structures ruby
 permalink: bloom/
 ---
 <link rel="stylesheet" href="/css/styles.css">

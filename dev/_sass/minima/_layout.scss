@@ -201,10 +201,38 @@
 /**
  * Posts
  */
+body {
+  font-size: 20px;
+color: #333;
+  font-family: 'Nunito', sans-serif;
+}
+ .name{
+  font-size:70px;
+  font-weight: 100;
+  color: #3f3f3f;
+  margin: 0 0 35px;
+  text-align: center;
+ }
 .post-header {
   margin-bottom: $spacing-unit;
 }
+.page-heading{
+  font-size:30px;
+  font-weight: 100;
+}
+hr {
+  border: 0;
+border-top: 1px solid #eee;
+width: 40%;
+margin: 30px auto;
+}
 
+.post-list{
+  border: 1px solid #ccc;
+  padding:20px;
+    border-radius: 20px;
+
+}
 .post-title {
   font-size: 42px;
   letter-spacing: -1px;
@@ -257,4 +285,28 @@
     margin: 0;
     display: flex;
     justify-content: space-around;
+}
+
+.post-cat{
+  border: 1px solid #ccc;
+  padding: 1px 5px ;
+  font-size:12px;
+  background:#ddf;
+
+}
+
+.div-post-name{
+   width: 50%;
+    float: left;
+}
+.div-post-cat{
+      margin-left: 50%;
+}
+
+.post-link{
+  text-decoration:underline;
+}
+
+.site-title{
+  font-family:monospace;
 }
