@@ -13,13 +13,13 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: /dev/null
+title: $/dev/null
 email: dev@null.com.ar
 author: Nico Varaschin
 description: > # this means to ignore newlines until "baseurl:"
   I'm a Software Developer and this is my blog. I'll post my projects and things I find interesting.
-  I'm a mix of a Python/Java/Android/Angular dev, a Machine Learning/Data Science enthusiast
-  and a bit of devops.
+  I'm a mix of a Python/Java/Android dev, a Machine Learning and Data Science enthusiast
+  and I'm interested in devops and security.
 
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "dev.null.com.ar" # the base hostname & protocol for your site, e.g. http://example.com
