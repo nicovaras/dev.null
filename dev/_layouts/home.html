@@ -6,7 +6,11 @@ layout: default
 <h1 class="home-name">Nico Varaschin</h1>
 
       <div class="">
+      {% if site.lang == "en" %}
         <p>{{ site.description | escape }}</p>
+      {% else %}
+        <p>{{ site.description_es | escape }}</p>
+      {% endif %}
       </div>
 <hr>
   <h1 class="page-heading">Posts</h1>
@@ -29,7 +33,11 @@ layout: default
       </li>
     {% endfor %}
   </ul>
+      {% if site.lang == "en" %}
+        <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
+      {% else %}
+        <p class="rss-subscribe">suscribirse <a href="{{ "/feed.xml" | relative_url }}">por RSS</a></p>
+      {% endif %}
 
-  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
 
 </div>

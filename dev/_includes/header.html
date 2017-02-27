@@ -14,6 +14,8 @@
       </span>
 
       <div class="trigger">
+              <a class="lang-link" href="{{ site.baseurl_root }}{{page.url}}">English</a>
+              <a class="lang-link" href="{{ site.baseurl_root }}/es{{page.url}}">Español</a>
         {% for my_page in site.pages %}
           {% if my_page.title %}
           <a class="page-link" href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>
