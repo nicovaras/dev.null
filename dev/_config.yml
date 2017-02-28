@@ -22,7 +22,7 @@ description: > # this means to ignore newlines until "baseurl:"
   and a DevOps and security learner.
 
 description_es: > # this means to ignore newlines until "baseurl:"
-  Hola! Soy un Computador Científico y este es mi blog. Voy a postear mis proyecto y cosas que me parecen interesantes.
+  Hola! Soy un Computador Científico y este es mi blog. Voy a postear mis proyectos y cosas que me parecen interesantes.
   Soy una mezcla de desarrollador Python/Java/Android, un fan de Machine Learning y Data Science y un aficionado a la
   seguridad y DevOps.
 
