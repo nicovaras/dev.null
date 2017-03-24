@@ -32,6 +32,7 @@ Esto implica varias cosas. En realidad, no estamos guardando el elemento con tod
 
 Para implementar esto en Ruby utilicé un Bitfield que encontré [aquí] [bitfield] (créditos al autor original). Al tener esa parte ya resuelta, empecemos con el Bloom Filter per se. En primer lugar, ¿cómo sabemos si nuestra estructura está vacía? Eso es fácil, si agrego cualquier elemento, entonces significa que habrá un bit seteado en 1. Si no agregué nada al filtro, todos los bits son 0:
 
+<div class="lang-name">Ruby</div>
 {% highlight ruby %}
 def empty?
   is_empty = true
@@ -46,6 +47,7 @@ end
 
 Antes de pensar en los métodos de añadir y buscar, necesito saber cómo hashear elementos. Es sencillo en Ruby:
 
+<div class="lang-name">Ruby</div>
 {% highlight ruby %}
 def hashes(elem)
   hash = Digest::MD5.hexdigest(elem)
@@ -60,6 +62,7 @@ Uso MD5 para hashear, y luego divido el resultado en cuatro partes. MD5 se utili
 
 Ahora si podemos tener un método add. Para añadir un nuevo elemento primero lo hasheamos, y para cada una de las partes de ese hash resultante, ponemos un bit en el bitfield:
 
+<div class="lang-name">Ruby</div>
 {% highlight ruby %}
 def add(elem)
   hashes(elem).each {|hash|
@@ -73,6 +76,7 @@ end
 
 Para buscar, repetimos el procedimiento. Hasheamos el elemento, y para cada parte, verificamos si ese bit está seteado en 1:
 
+<div class="lang-name">Ruby</div>
 {% highlight ruby %}
 def query(elem)
   hash = hashes(elem)
@@ -90,6 +94,7 @@ Hay que tener en cuenta que algunos hashes pueden colisionar y entonces el progr
 
 Por suerte, tenemos una fórmula para saber aproximadamente cuántos elementos tiene el Bloom Filter:
 
+<div class="lang-name">Ruby</div>
 {% highlight ruby %}
 def approx_size
   n = @filter_size
@@ -100,7 +105,7 @@ end
 {% endhighlight %}
 
 
-Donde ** n ** es el tamaño de mi Bloom Filter, ** x ** es el número de bits seteados en uno y ** k ** es el número de hashes (que, en nuestro caso, es 4). Haciendo un par de pruebas, esta fórmula termina siendo sorprendentemente precisa.
+Donde **n** es el tamaño de mi Bloom Filter, **x** es el número de bits seteados en uno y **k** es el número de hashes (que, en nuestro caso, es 4). Haciendo un par de pruebas, esta fórmula termina siendo sorprendentemente precisa.
 
 Una vez más, esto es sólo una implementación de juguete y no es para nada adecuado para un entorno de producción. ¡Espero que les haya gustado!
 

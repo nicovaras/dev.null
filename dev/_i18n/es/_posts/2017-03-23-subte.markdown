@@ -1,0 +1,161 @@
+---
+layout: post
+title:  "La extensión del Subte"
+categories: firefox chrome javascript
+permalink: subte/
+---
+<link rel="stylesheet" href="/css/styles.css">
+
+El Subte de Buenos Aires se compone de seis líneas que cubren buena parte de la ciudad. Bastante a menudo, una o más de estas líneas tienen problemas con el servicio. Estos problemas incluyen problemas técnicos, huelgas, reparaciones o retrasos inesperados, entre otros.
+La gente frecuentemente se encuentra con la sorpresa de que el metro no funciona cuando lo necesitan y esto genera enojo y tristeza =(.
+
+
+Para ayudar a todos a ser un poco más felices, hice esta extensión para Firefox y Chrome. La idea es que uno puede tener el estado del servicio a mano, en un lugar donde siempre está mirando: el navegador.
+
+Para obtener el estado del servicio, consulto los datos de la web de Metrovias, el actual propietario del Subte. Actualmente no tienen una API para obtener los datos, así que tengo que scrapear la página para obtenerlos. Estoy usando JQuery en mis extensiones, por lo que es fácil consultar la página web y obtener los datos que necesito.
+
+
+<center>
+{% include image.html url="/assets/subte.png" description="Muestra el estado de las lineas y los posibles problemas" %}
+</center>
+Lo que estoy buscando es el string que describe el estado actual de cada línea. Quiero poder informar tres posibles estados: la línea es totalmente funcional, la línea tiene problemas pero es utilizable y si hay un cierre completo de esa línea. Busco en el string palabras clave o frases que describen cada estado. Por ejemplo: si leo "Normal" supongo que la línea está funcionando correctamente, si leo algo como "servicio limitado" o "demorado" sé que el servicio está funcionando pero tiene problemas y tomo todo lo demás como un error, la línea no funciona en absoluto.
+
+
+Los posibles strings no están estandarizados y un nuevo string puede aparecer en cualquier momento, uno que no consideré antes. No puedo hardcodearlos o guardarlos en un archivo y enviarlos con la extensión porque cada nuevo string implicaría re deployar la extensión y esto no es barato: hay un proceso de revisión involucrado que puede tomar días como voy a mostrar después.
+Lo que realmente estoy haciendo es conseguir los strings desde mi propio server. La extensión consulta mi servidor al vuelo, y así puedo cambiar todo lo que quiero sobre la marcha.
+
+
+
+
+## Implementación
+
+Firefox utiliza WebExtensions para desarrollar las extensiones del navegador. Este sistema es casi idéntico al que utiliza Chrome y Opera, por lo que la idea es poder portar la extensión a otro navegador sin necesitar muchos cambios. Voy a mostrar lo que hice en la versión de Firefox, la de Chrome es casi idéntica. Mi extensión tiene dos scripts: uno en segundo plano que cambia el icono de extensión y otro que se ejecuta al hacer click.
+
+
+Según la documentación tengo que tener al menos tres partes:
+<ul>
+            <li> El script en background</li>
+            <li> El script "popup", que incluye el html y css para mostrar una ventana cuando hago click</li>
+            <li> Un manifest para pegar todo eso </li>
+</ul>
+
+Vamos con el manifest:
+
+<div class="lang-name">JSON</div>
+{% highlight json %}
+{
+
+  "manifest_version": 2,
+  "name": "Subte",
+  "version": "0.6",
+
+  ...
+
+  "browser_action": {
+    "default_icon": "icons/logo.png",
+    "default_title": "Subte",
+    "default_popup": "popup/subte.html"
+  },
+
+  "permissions": ["http://www.metrovias.com.ar/",
+                  "http://subte-data.null.com.ar/", "alarms"],
+
+  "background": {
+    "scripts": ["popup/jquery-3.1.1.min.js", "helper.js", "background.js"]
+  }
+}
+{% endhighlight %}
+
+
+Esto es sólo un JSON que define las opciones generales, dice qué ejecutar cuando hago click en la extensión ("browser_action"), donde está el script de background y sus dependencias ("background") y qué permisos especiales y accesos web externos necesito ("permissions"). Como se ve, entro a la web de Metrovias para scrapear los datos y a mi propio servidor para obtener los strings especiales que necesito para clasificar cada estado del servicio.
+
+El script de background necesita cambiar el icono si algo le sucede al servicio. Cada minuto revisa el servidor para ver si hay cambios, usando la API de alarms
+
+<div class="lang-name">Javascript</div>
+{% highlight javascript %}
+browser.alarms.onAlarm.addListener((alarm) => {
+  updateIcon();
+});
+{% endhighlight %}
+
+
+Esta función empieza llamando a mi servidor para traer los posibles strings de estado de las líneas. Llama a una función get_status que recibe un callback para ejecutar después de la llamada asincrónica.
+
+<div class="lang-name">Javascript</div>
+{% highlight javascript %}
+
+function updateIcon() {
+    get_status(
+        function(possible_status) {
+            ...
+        })
+}
+{% endhighlight %}
+
+
+La función interna hace otra llamada AJAX pero esta vez a Metrovias.
+
+<div class="lang-name">Javascript</div>
+{% highlight javascript %}
+
+    function(possible_status) {
+        $.ajax({
+            url: "http://www.metrovias.com.ar",
+            type: 'GET',
+            success: function(data) {
+                ...
+        });}
+{% endhighlight %}
+
+
+Al final, después de obtener esos datos, se ejecuta este bloque
+
+<div class="lang-name">Javascript</div>
+{% highlight javascript %}
+
+            var data = $(data);
+            var lines = ["A", "B", "C", "D", "E", "H"];
+
+            for (var i = 0; i < lines.length; ++i) {
+                var text = data.find("span#status-line-" + lines[i]).text();
+                if (check_status(text, possible_status['warn'])){
+                    browser.browserAction.setBadgeBackgroundColor({ color: "#FF9933" });
+                    browser.browserAction.setBadgeText({text: '⚠'});
+                } else if (!check_status(text, possible_status['ok'])) {
+                    browser.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 255] });
+                    browser.browserAction.setBadgeText({text: '✗'});
+                    break;
+                }
+            }
+{% endhighlight %}
+
+
+
+Esto solo parsea el html recibido, busca algún string que indique si la línea está mal y asigna un color y un símbolo al icono.
+El código para el popup, el que se ejecuta al hacer click en la extensión, es similar pero la diferencia es que tiene código específico para procesar el html.
+
+
+## Proceso de review
+
+Una vez que terminé y testié mi extensión, ¡es hora de mandarla!. Obviamente, quiero que aparezca en los stores oficiales de Chrome y Firefox. Esto implica pasar por un proceso de revisión propio de cada empresa.
+
+<div style="width:46%;margin-right:5%;float:left;">
+{% include image.html url="/assets/subte_firefox.png" description="Pantalla de review de Firefox" %}
+</div>
+{% include image.html url="/assets/subte_chrome.png" description="Pantalla de review de Chrome" %}
+
+En ambos casos subir una extensión es gratis. La principal diferencia con el proceso es el tiempo de espera. Firefox aprobó mi extensión casi 20 días después de subir la primer version y dos o tres días para cualquier cambio que quería hacer. En cambio, Chrome tenía mi extensión online después de una hora nomas. Esto es genial para el desarrollador que lo único que quiere es ver su extensión subida al público, pero también habla sobre la rigurosidad de cada proceso. El proceso de revisión de Firefox tarda más tiempo para estar realmente seguro de que la extensión es segura y cumple las normas.
+
+Esto es todo, acá están los links a cada versión de la extensión y el repo en github. ¡Nos vemos la próxima!
+
+* [Versión Chrome][chrome]
+* [Versión Firefox][firefox]
+* [Source code][github]
+
+[chrome]: https://chrome.google.com/webstore/detail/subte/onobkjhgkjlgdpncdlnjkgecfjkkhoen?hl=es-419
+[firefox]: https://addons.mozilla.org/en-US/firefox/addon/subte/
+[github]: https://github.com/nicovaras/subte
+
+
+
+

@@ -31,6 +31,7 @@ This implies several things. We are not actually saving the element with all its
 
 To implement this on Ruby I used a Bitfield that I found [here][bitfield] (credits to the original author). Having that part already solved, let's start with the Bloom Filter per se. First of all, how do we know if our structure is empty? That's easy, if I add any element then there will be some bit set to 1. If I didn't add anything to the filter, all bits are 0:
 
+<div class="lang-name">Ruby</div>
 {% highlight ruby %}
 def empty?
   is_empty = true
@@ -45,6 +46,7 @@ end
 
 Before looking into the add and search methods, I need to know how to hash elements. It's simple in Ruby:
 
+<div class="lang-name">Ruby</div>
 {% highlight ruby %}
 def hashes(elem)
   hash = Digest::MD5.hexdigest(elem)
@@ -59,6 +61,7 @@ I use MD5 to hash, and then I split the result in four parts. MD5 is used just a
 
 We can now have an add method. To add a new element we first hash it, and for each of the parts of that resulting hash, we set a bit on the bitfield:
 
+<div class="lang-name">Ruby</div>
 {% highlight ruby %}
 def add(elem)
   hashes(elem).each {|hash|
@@ -72,6 +75,7 @@ end
 
 To query, we repeat the procedure. We hash the element, and for each part, we check if that bit is set to 1:
 
+<div class="lang-name">Ruby</div>
 {% highlight ruby %}
 def query(elem)
   hash = hashes(elem)
@@ -89,6 +93,7 @@ Note that some hashes can collide and try to set a bit that is already set to 1 
 
 Luckily, we have a formula to know approximately how many elements the bloom filter has:
 
+<div class="lang-name">Ruby</div>
 {% highlight ruby %}
 def approx_size
   n = @filter_size

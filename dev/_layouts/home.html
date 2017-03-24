@@ -7,9 +7,9 @@ layout: default
 
       <div class="">
       {% if site.lang == "en" %}
-        <p>{{ site.description | escape }}</p>
+        <p>{{ site.description }}</p>
       {% else %}
-        <p>{{ site.description_es | escape }}</p>
+        <p>{{ site.description_es}}</p>
       {% endif %}
       </div>
 <hr>
@@ -19,16 +19,18 @@ layout: default
 
   <ul class="post-list">
     {% for post in site.posts %}
-      <li>
+      <li class="li-post-name">
+      <div class="post-list-container">
         <div class="div-post-name">
         <h2>
-          <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+          # <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
         </h2>
         </div>
         <div class="div-post-cat">
           {% for cat in post.categories %}
             <span class="post-cat">{{cat}}</span>
           {% endfor %}
+        </div>
         </div>
       </li>
     {% endfor %}

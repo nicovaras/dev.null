@@ -187,9 +187,7 @@ a {
 .post-list {
     margin-left: 0;
     list-style: none;
-    > li {
-        margin-bottom: $spacing-unit;
-    }
+
 }
 
 .post-meta {
@@ -198,13 +196,12 @@ a {
 }
 
 .post-link {
-    font-size: 30px;
-    font-weight: initial;
-    text-decoration: underline;
+    font-size: 22px;
+    font-weight: bold;
+    text-decoration: none;
     width: 95%;
     @include media-query($on-palm) {
       font-size: 80%;
-
     }
 
 }
@@ -251,9 +248,14 @@ hr {
     margin: 30px auto;
 }
 
+.li-post-name h2{
+   margin:0 0 0px 0;
+}
+
 .post-list {
     border: 1px solid #ccc;
-    padding: 20px;
+    padding: 10px;
+    padding-bottom: 30px;
     border-radius: 20px;
 }
 
@@ -298,14 +300,6 @@ hr {
 }
 
 
-/*.footer-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: space-around;
-}
-*/
 
 .footer-list {
     list-style: none;
@@ -332,6 +326,9 @@ hr {
     text-decoration: none;
 }
 
+.post-list-container{
+}
+
 .post-cat {
     border: 1px solid #ccc;
     padding: 1px 5px;
@@ -340,20 +337,19 @@ hr {
 }
 
 .div-post-name {
-width: 60%;
+width: 50%;
 float: left;
 margin-left: 10%;
     @include media-query($on-palm) {
-margin:auto;
-}
-
+    margin:auto;
+    }
 }
 
 .div-post-cat {
     display:text;
     text-align:right;
-    padding-top:4px;
-    margin-right:10%;
+    padding-top:10px;
+    margin-right:5%;
     @include media-query($on-palm) {
         font-size:6px;
         padding-top:6px;
@@ -403,4 +399,69 @@ a:link{
 
 a:visited {
   color: #2a3aa2;
+}
+
+.lang-name{
+    border:1px solid #e8e8e8;
+    text-align:right;
+    display:inline-block;
+    background-color: #eef;
+    padding-left:4px;
+    padding-right:4px;
+    font-size:12px;
+    font-weight: bold;
+color: #000080;
+   }
+
+   ul {
+    margin-left:10%;
+   }
+
+ /* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    font-size:12px;
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
 }
