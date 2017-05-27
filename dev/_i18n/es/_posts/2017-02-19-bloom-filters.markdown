@@ -4,7 +4,6 @@ title:  "Bloom filters en Ruby"
 categories: data-structures ruby
 permalink: bloom/
 ---
-<link rel="stylesheet" href="/css/styles.css">
 
 Es sabido que grandes peligros acechan en las profundidades de Internet. Cualquiera podría fácilmente caer víctima de un sitio malicioso con una simple búsqueda o al hacer clic aleatoriamente en cualquier link que encontremos en el camino. Pero en Google Chrome, antes de ingresar a cualquier sitio malicioso, aparece la siguiente advertencia:
 

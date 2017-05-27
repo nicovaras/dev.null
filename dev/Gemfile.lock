@@ -1,10 +1,18 @@
+GIT
+  remote: https://github.com/anarchivist/octopress-video-tag.git
+  revision: 7452399be9e164914fdd1e2facaf91a769b6fc23
+  branch: loosen-gemspec
+  specs:
+    octopress-video-tag (1.1.1)
+      jekyll (>= 2.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.5.0)
+    addressable (2.5.1)
       public_suffix (~> 2.0, >= 2.0.2)
     colorator (1.1.0)
-    ffi (1.9.17)
+    ffi (1.9.18)
     forwardable-extended (2.6.0)
     jekyll (3.4.0)
       addressable (~> 2.4)
@@ -17,7 +25,7 @@ GEM
       pathutil (~> 0.9)
       rouge (~> 1.7)
       safe_yaml (~> 1.0)
-    jekyll-feed (0.9.1)
+    jekyll-feed (0.9.2)
       jekyll (~> 3.3)
     jekyll-multiple-languages-plugin (1.5.1)
       jekyll (>= 2.0, < 4.0)
@@ -41,20 +49,22 @@ GEM
       ffi (>= 0.5.0)
     rouge (1.11.1)
     safe_yaml (1.0.4)
-    sass (3.4.23)
+    sass (3.4.24)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   jekyll (= 3.4.0)
-  jekyll-feed (~> 0.6)
+  jekyll-feed
   jekyll-multiple-languages-plugin
-  minima (~> 2.0)
+  minima (= 2.1.0)
+  octopress-video-tag!
+  rouge
   tzinfo-data
 
 RUBY VERSION
    ruby 2.1.5p273
 
 BUNDLED WITH
-   1.14.4
+   1.14.6

@@ -1,0 +1,132 @@
+---
+layout: post
+title:  "Un bot que juega por sí mismo con inteligencia artificial"
+categories: AI opencv python
+permalink: ai/
+---
+
+<!-- /_sass/minima/_layout -->
+
+Hoy les traigo algo con lo que estuve experimentando últimamente. La idea es jugar juegos automáticamente para poder probar diferentes algoritmos de inteligencia artificial. Quise empezar con lo simple, así que usé este juego que venía con mi distro de Linux. El juego se llama Hitori y acá hay una demo de mi bot corriendo y solucionando el juego:
+
+{% video /assets/hitori.mp4 740px 420px preload:auto  %}
+
+Si, ya sé, es un poco difícil de entender lo que está pasando acá pero aguántenme unos minutos. Hay tres cosas importantes que están pasando:
+
+  - El programa detecta la ventana del juego y la lee usando OpenCV y un OCR. El resultado de esto se puede ver en la primera matriz que se imprime por consola.
+  - Después, teniendo todos los datos que necesita, el programa resuelve el juego. Va a quedar claro después de explicar bien las reglas de este juego.
+  - Por último, simula los movimientos del mouse y los clicks necesarios para resolver el juego. También hace click en el botón "Play again" y vuelve a empezar ☺
+
+El único momento en el que muevo yo el mouse a mano es cuando cambio el tamaño del juego de 5 x 5 a 6 x 6. El programa podría quedarse jugando por sí sólo infinitamente si lo dejo.
+
+## Reglas del juego
+
+Citando más o menos la ayuda oficial del juego:
+
+> Hitori es un pequeño puzzle lógico similar al Sudoku. En el juego, el jugador comienza con un tablero cuadrado con números, y tiene que pintar las celdas hasta que no haya números duplicados en cada fila ni columna. Se tiene que respetar las siguientes reglas:
+> - **[REGLA \#1]** En cada fila y columna no pueden haber números repetidos sin pintar.
+> - **[REGLA \#2]** Ninguna celda pintada puede estar adyacente a otra, vertical u horizontalmente.
+> - **[REGLA \#3]** Todas las celdas sin pintar deben unirse verticalmente y horizontalmente en un sólo grupo.
+
+Ejemplos de estas reglas:
+
+###  **REGLA \#1:**{:.underline} No hay números repetidos en filas ni columnas.
+<center>
+{% include image.html url="/assets/hitori1.png" description="Algunas celdas están pintadas, pero el juego aún no está resuelto. La última fila tiene números repetidos" %}
+</center>
+
+### **REGLA \#2:**{:.underline} No puede haber celdas pintadas que sean vecinas a otras celdas pintadas.
+<center>
+{% include image.html url="/assets/hitori2.png" description="Dos celdas pintadas son adyacentes entre sí" %}
+</center>
+
+
+### **REGLA \#3:**{:.underline} Las celdas sin pintar deben unirse en un solo grupo.
+<center>
+{% include image.html url="/assets/hitori3.png" description="Las celdas sin pintar no se unen en un solo grupo, hay una celda desconectada." %}
+</center>
+
+Si no tienen el juego y quieren probarlo:
+
+```$ sudo apt install hitori ```
+
+## Detección con OpenCV y OCR
+
+Para poder resolver este juego programáticamente tenemos que lograr leer los números del tablero de alguna manera. Decidí sacar un screenshot del tablero y procesarlo con OpenCV. Para los screenshots usé una librería que se llama [Python MSS](https://github.com/BoboTiG/python-mss). Esta librería parece ser bastante rápida, pude medir unos 25 frames por segundo en promedio. Sólo necesito un screenshot esta vez, pero seguro podría ser útil para los próximos proyectos.
+
+Usando OpenCV quiero poder aislar los números para dejarle un trabajo más fácil al proceso de OCR. En resumen lo que hago es aplicar un threshold y eliminar los bordes entre los números.
+
+<center>
+{% include image.html url="/assets/hitori4.png" description="Antes y después del procesamiento de OpenCV." %}
+</center>
+
+Ahora debería ser fácil para el OCR procesar esto. La librería usada para el OCR es la de Google, [tesseract](https://github.com/tesseract-ocr/tesseract). Es una librería muy conocida y estándar para estos casos y funciona lo suficientemente bien. El comando ejecutado es:
+
+```$ tesseract tmp_img.jpg tmp_result -psm 11 -c tessedit_char_whitelist=0123456789```
+
+Esto lee la imagen tmp_img.jpg y guarda el resultado en tmp_result.txt. El parámetro psm se refiere a un "modo de segmentación de página" que indica a tesseract cómo tratar la imagen. De la documentación, psm = 11 corresponde a _"Texto esparzo. Buscar tanto texto como sea posible en ningún orden particular"_.
+También le paso una whitelist con los posibles caracteres del texto (la imagen contiene sólo dígitos en nuestro caso).
+
+## Resolviendo el juego
+
+Ahora tengo todo lo que necesito para resolver el juego. El tablero del juego pasado a Python se parece a esto:
+
+<div class="lang-name">Python</div>
+{% highlight python %}
+  game_board = [['6', '2', '5', '6', '5'],
+                ['1', '3', '5', '2', '6'],
+                ['5', '6', '2', '3', '6'],
+                ['4', '1', '3', '5', '2'],
+                ['3', '4', '1', '4', '3']]
+{% endhighlight %}
+
+A partir de este momento, el problema es fácil. Resuelvo el juego sin romperme mucho la cabeza usando solamente backtracking.
+Primero, para cada celda, quiero comprobar si es posible pintarla (¿ésta celda, es anulable?):
+
+<div class="lang-name">Python</div>
+{% highlight python %}
+    def is_nullable(self, i, j):
+        return self.board[i][j] != '*' and
+               neighbour_not_nulled and (self.repeated_in_row(i, j) or
+                                         self.repeated_in_col(i, j))
+{% endhighlight %}
+
+Primero, si la celda ya fue anulada, la salteo. Después, checkeo la  **REGLA \#1** (sólo se puede pintar si el número en la celda actual se repite en la misma fila o columna) y la **REGLA \#2** (no hay una celda vecina que esté también pintada). Si se cumple eso, reemplazo el número en la celda con un "*" y checkeo si ya resolví el juego:
+
+<div class="lang-name">Python</div>
+{% highlight python %}
+    def is_solved(self):
+        solved = self.still_connected()
+        for i in range(len(self.board)):
+            for j in range(len(self.board)):
+                solved &= self.board[i][j] == "*" or
+                          (not self.repeated_in_col(i, j) and
+                           not self.repeated_in_row(i, j))
+        return solved
+{% endhighlight %}
+
+Acá, con `still_connected(...)` estoy revisando también la **REGLA \#3** (¿el tablero está todavía conectado en un sólo grupo?). En esa función corro un DFS desde cualquier celda para saber si puedo llegar a todas las demas celdas. Y después de esa función, veo si las demas celdas son válidas. Esto es, o tiene un "*" o tiene un número que no rompe con la **REGLA \#1**.
+
+Si todavía no lo resolví, intento todo el proceso de vuelta partiendo desde otra celda de forma recursiva o hago backtracking si es necesario. Eventualmente voy a llegar a una solución y saber exactamente a qué celdas hacerles click.
+
+
+## Clickeando
+
+Podría dejar todo como está hasta acá y listo. Pero sería genial que el programa juegue por sí mismo sin necesitar interacción humana. Resulta que es bastante fácil hacer esto. Hay una librería que se llama [Autopy](http://www.autopy.org/) que es fácil de usar y hace justo lo que necesito. Tiene funciones para hacer click, mover el mouse y controlar el teclado, cosas que podrían ser útiles también en el futuro para otros juegos.
+Desde la solución que generé y la salida de OpenCV que tiene las coordenadas de cada número, puedo conseguir todas las regiones a las cuales hacer click. Entonces, solamente hago:
+
+<div class="lang-name">Python</div>
+{% highlight python %}
+  def click_regions(left, top, regions):
+      for x, y, h, w in regions:
+          autopy.mouse.smooth_move(x + w / 2 + left, y + h / 2 + top)
+          autopy.mouse.click()
+{% endhighlight %}
+
+Siendo `left` y `top` la posición de la ventana y `regions` las regiones que obtuve con todo lo anterior. El `smooth_move` es una linda feature de la librería, hace que el movimiento del mouse sea visible y agrega una sensación "robótica" al programa.
+
+Bueno, esto es todo por ahora, seguramente seguiré con otros juegos más complejos más adelante.
+
+¡Gracias por leer!
+
+Código fuente: [Github](https://github.com/nicovaras/ia_experiments)

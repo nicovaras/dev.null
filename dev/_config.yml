@@ -17,14 +17,12 @@ title: $/dev/null
 email: dev@null.com.ar
 author: Nico Varaschin
 description: > # this means to ignore newlines until "baseurl:"
-  Hi! I'm a <span class="tooltip">Zombie <span class="tooltiptext">I actually died on the operating table and was revived by the doctors. Literally a Zombie.</span></span> Computer Scientist and this is my blog. I'll post my projects and things I find interesting.
-  I'm a mix of a Python / Java / Android dev, a Machine Learning and Data Science enthusiast
-  and a DevOps and security learner.
+  Hi! I'm a <span class="tooltip">Zombie <span class="tooltiptext">I actually died on the operating table and was revived by the doctors. Literally a Zombie ¯\_(ツ)_/¯ </span></span> Computer Scientist and this is my blog. I'll post my projects and things I find interesting.
+  I'm a mix of a Python / Java / Android dev and a Machine Learning and Data Science enthusiast.
 
 description_es: > # this means to ignore newlines until "baseurl:"
-  Hola! Soy un Computador Científico <span class="tooltip">Zombie <span class="tooltiptext">Morí en la sala de operaciones y los doctores lograron revivirme. Literalmente un Zombie.</span></span> y este es mi blog. Voy a postear mis proyectos y cosas que me parecen interesantes.
-  Soy una mezcla de desarrollador Python / Java / Android, un fan de Machine Learning y Data Science y un aficionado a la
-  seguridad y DevOps.
+  Hola! Soy un Computador Científico <span class="tooltip">Zombie <span class="tooltiptext">Me morí en una operación y los doctores me revivieron. Literalmente un Zombie ¯\_(ツ)_/¯ </span></span> y este es mi blog. Voy a postear mis proyectos y cosas que me parecen interesantes.
+  Soy una mezcla de desarrollador Python / Java / Android y un fan de Machine Learning y Data Science.
 
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "dev.null.com.ar" # the base hostname & protocol for your site, e.g. http://example.com
@@ -39,6 +37,7 @@ gems:
   - jekyll-feed
   - rouge
   - jekyll-multiple-languages-plugin
+  - octopress-video-tag
 exclude:
   - Gemfile
   - Gemfile.lock

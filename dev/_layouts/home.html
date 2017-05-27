@@ -12,7 +12,6 @@ layout: default
         <p>{{ site.description_es}}</p>
       {% endif %}
       </div>
-<hr>
   <h1 class="page-heading">Posts</h1>
 
   {{ content }}
@@ -31,8 +30,12 @@ layout: default
             <span class="post-cat">{{cat}}</span>
           {% endfor %}
         </div>
+
         </div>
+
       </li>
+          <hr>
+
     {% endfor %}
   </ul>
       {% if site.lang == "en" %}

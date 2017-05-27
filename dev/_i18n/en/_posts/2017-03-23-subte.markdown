@@ -4,7 +4,6 @@ title:  "The Subte web extension"
 categories: firefox chrome javascript
 permalink: subte/
 ---
-<link rel="stylesheet" href="/css/styles.css">
 
 The Metro in Buenos Aires is composed of six lines that cover good part of the city. More often than not, one or more of these lines have problems with the service. These problems include technical issues, strikes, repairs or unexpected delays among others.
 People often find themselves with the surprise that the metro isn't working when they need it and this makes them angry and sad =( .

@@ -4,7 +4,6 @@ title:  "La extensión del Subte"
 categories: firefox chrome javascript
 permalink: subte/
 ---
-<link rel="stylesheet" href="/css/styles.css">
 
 El Subte de Buenos Aires se compone de seis líneas que cubren buena parte de la ciudad. Bastante a menudo, una o más de estas líneas tienen problemas con el servicio. Estos problemas incluyen problemas técnicos, huelgas, reparaciones o retrasos inesperados, entre otros.
 La gente frecuentemente se encuentra con la sorpresa de que el metro no funciona cuando lo necesitan y esto genera enojo y tristeza =(.
