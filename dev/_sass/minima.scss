@@ -39,13 +39,21 @@ caption {
     margin-bottom: $spacing-unit;
 }
 
-img {
+.image {
     margin-top: $spacing-unit;
-    border: 3px solid;
-    border-radius: 20px;
-    box-shadow: 10px 7px 10px rgba(34, 25, 25, 0.4);
-    width: 100%;
-    margin-left: -5px
+
+    img {
+        border: 3px solid;
+        border-radius: 20px;
+        box-shadow: 10px 7px 10px rgba(34, 25, 25, 0.4);
+        width: 100%;
+        margin-left: -5px;
+        @include media-query($on-palm) {
+            display:block;
+            margin:auto;
+            width: 70%;
+        }
+    }
 }
 
 a {
@@ -235,13 +243,16 @@ a {
 
 body {
     font-size: 20px;
-    @include media-query($on-palm) {
-        font-size: 14px;
-    }
     color: #333;
     font-family: 'Nunito',
     sans-serif;
     text-indent:1em;
+    @include media-query($on-palm) {
+        font-size: 14px;
+        text-indent:0em;
+
+    }
+
 }
 
 .home-name {
@@ -297,8 +308,8 @@ blockquote{
         @include media-query($on-laptop) {
             font-size: 22px;
         }
-                @include media-query($on-palm) {
-           font-size: 18px;
+        @include media-query($on-palm) {
+           font-size: $small-font-size*1.1;
         }
     }
     h4 {
@@ -349,7 +360,7 @@ blockquote{
 
 pre, code {
     @include media-query($on-palm) {
-        font-size:$small-font-size*0.8;
+        font-size:$small-font-size*0.65;
     }
 }
 .post_date {

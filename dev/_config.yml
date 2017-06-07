@@ -31,11 +31,10 @@ linkedin_username:  nvaraschin
 cv:  http://cv.null.com.ar
 
 # Build settings
-markdown: kramdown
 theme: minima
+highlighter: null
 gems:
   - jekyll-feed
-  - rouge
   - jekyll-multiple-languages-plugin
   - octopress-video-tag
 exclude:

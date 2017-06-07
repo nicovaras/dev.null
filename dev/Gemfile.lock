@@ -60,7 +60,6 @@ DEPENDENCIES
   jekyll-multiple-languages-plugin
   minima (= 2.1.0)
   octopress-video-tag!
-  rouge
   tzinfo-data
 
 RUBY VERSION

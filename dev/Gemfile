@@ -21,7 +21,6 @@ gem "minima","2.1.0"
 # If you have any plugins, put them here!
 group :jekyll_plugins do
    gem "jekyll-feed"
-   gem "rouge"
    gem 'octopress-video-tag', :git => "https://github.com/anarchivist/octopress-video-tag.git", :branch => "loosen-gemspec"
    gem 'jekyll-multiple-languages-plugin'
 end
