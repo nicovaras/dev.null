@@ -19,9 +19,10 @@
 }
 
 .post-link {
-    font-size: 22px;
+    font-size: 18px;
     font-weight: bold;
     text-decoration: none;
+    font-family: 'Inconsolata';
     width: 95%;
     @include media-query($on-palm) {
         font-size: 70%;

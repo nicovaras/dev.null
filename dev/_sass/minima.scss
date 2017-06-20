@@ -1,5 +1,5 @@
 @charset "utf-8";
-$base-font-family: "Helvetica Neue",
+$base-font-family: "Product Sans",
 Helvetica,
 Arial,
 sans-serif;
@@ -228,7 +228,7 @@ a {
     font-size: 48px;
     line-height: 1;
     font-weight: bolder;
-    font-family: 'Raleway';
+    font-family: 'Product Sans';
     text-indent:0px;
     text-align:center;
     @include media-query($on-palm) {
@@ -244,7 +244,7 @@ a {
 body {
     font-size: 20px;
     color: #333;
-    font-family: 'Nunito',
+    font-family: 'Product Sans',
     sans-serif;
     text-indent:1em;
     @include media-query($on-palm) {
@@ -294,7 +294,7 @@ blockquote{
     h2 {
         font-size: 32px;
         font-weight: bold;
-        font-family: 'Raleway';
+        font-family: 'Product Sans';
         margin-top: $spacing-unit;
         @include media-query($on-laptop) {
             font-size: 28px;
