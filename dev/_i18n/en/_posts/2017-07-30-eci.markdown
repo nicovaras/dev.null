@@ -1,0 +1,32 @@
+---
+layout: post
+title:  "Predicting malnutrition in children (ECI Competition)"
+categories: kaggle scikit
+permalink: eci/
+---
+
+<!-- /_sass/minima/_layout -->
+
+- opening story
+- contexto/problema de la competencia
+- datos que proveen, ejemplitos, graficos
+- tabla de datos original/rows de 4
+- ver lo que hay que predecir, decae
+
+- end to end, ventajas y desventajas
+- puntaje del primer submit, posicion en medio de la tabla
+- exploracion, regiones y mapitas
+- cada uno de los diferentes datasets
+- feaures engs que se hicieron
+- stacking
+
+- modelo y puntaje final
+- cosas que mejorar y cosas que quedaron
+- conclusion de la historia
+
+
+
+
+Thanks for reading!
+
+Source code: [Github](https://github.com/nicovaras/ia_experiments)
