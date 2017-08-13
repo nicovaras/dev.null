@@ -1,29 +1,198 @@
 ---
 layout: post
-title:  "Predicting malnutrition in children (ECI Competition)"
+title:  "Predicting growth in children - part 1/2"
 categories: kaggle scikit
 permalink: eci/
+controller: fancyController
 ---
 
 <!-- /_sass/minima/_layout -->
 
-- opening story
-- contexto/problema de la competencia
-- datos que proveen, ejemplitos, graficos
-- tabla de datos original/rows de 4
-- ver lo que hay que predecir, decae
+<!-- - opening story -->
 
-- end to end, ventajas y desventajas
-- puntaje del primer submit, posicion en medio de la tabla
-- exploracion, regiones y mapitas
-- cada uno de los diferentes datasets
-- feaures engs que se hicieron
-- stacking
+What would happen if a doctor could know beforehand if a child is going to have health issues?
 
-- modelo y puntaje final
-- cosas que mejorar y cosas que quedaron
-- conclusion de la historia
+Let's say a mother with her baby arrives at the doctor's office to have a routine check-up. The doctor does his job and everything
+seems fine. He enters all the new info of the baby on the computer but the computer says that the baby is probably going to be at
+risk... in four months.
 
+Today, this is still science fiction, but we are not THAT far from it. Today I'll write about a competition I took part of, which addressed a
+similar problem: given some measures like the weight or height of a baby, will those values be dangerously low in the future?
+
+<!-- - contexto/problema de la competencia -->
+# The problem to solve
+
+A competition in Kaggle was launched, in the context of the ECI week (School of Informatics Sciences for its initials in Spanish) .
+The problem consisted in a dataset of routine check-ups for different babies in different regions of Argentina, and we had
+to predict if the percentiles for height, weight and body mass (HAZ, WAZ, BMIZ from now on) will be below a given threshold in the
+next check-up.
+
+The competition was open to everyone, it is an interesting problem and a good classifier will have a positive impact in national medicine.
+
+Also, it has been a long time since I didn't compete, so it was the perfect excuse ☺.
+
+<!-- - datos que proveen, ejemplitos, graficos -->
+# Let's look at the data
+
+The dataset for this competition is pretty straightforward and small enough for making nice experiments.
+The train set has 43933 rows and the test set 6275 rows. Both sets have 23 columns (features).
+
+Here are the first rows of the original train data:
+
+///TABLA
+
+Here we have the meaning of each feature:
+
+* BMIZ (float): body-mass-index-for-age-Z-scores (BMI standardized reference by age and gender).
+* HAZ (float): height-for-age Z-scores (standard reference of height by age and gender).
+* WAZ (float): weight-for-age Z-scores (standardized reference of weight by age and gender).
+
+<a ng-click="vm.showFeatures=!vm.showFeatures">Click to see all other features</a>
+
+{::options parse_block_html="true" /}
+<div ng-show="vm.showFeatures">
+* Individuo (integer): Identifier assigned to each individual.
+* Bmi (float): bmi = weight / (height ^ 2).
+* Departmento_indec_id (integer): department code of the hospital. It matches the code obtained from INDEC.
+* Departmento_lat (float): average latitude of the hospitals of said department
+* Departmento_long (float): average of the length of the hospitals of said department
+* Fecha_control (string): date the individual was checked-up
+* Fecha_nacimiento (string): date the individual was born.
+* Fecha_proximo_control (string): date the individual will be checked-up next time
+* Genero: the gender of the individual (M = male, F = female)
+* Nombre_provincia (string): name of the province where the individual was attended
+* Nombre_region (string): name of the region where the individual was attended
+* Perimetro_encefalico (float): measurement of encephalic perimeter obtained in the attention (cm)
+* Peso (float): measurement of weight obtained in the attention (kg)
+* Talla (float): length measurement obtained at attention (cm)
+* Provincia_indec_id (integer): province code (S = yes belongs, N = does not belong). It matches the code obtained from INDEC.
+* Zona_rural (string): code that indicates if the hospital is in a rural area.
+* Var_BMIZ: variation that BMIZ will have in the following attention regarding the current value
+* Var_HAZ: variation that will have HAZ in the following attention regarding the current value
+* Var_WAZ: variation that will have WAZ in the following attention regarding the current value
+</div>
+
+<!-- - ver lo que hay que predecir, decae -->
+
+Let's see what we have to predict. Our target variable is made of three conditions:
+
+* Decae (Target variable): It takes the value "True" if at least one of the following conditions occurs:
+    * HAZ >= -1 and next_HAZ < -1
+    * WAZ >= -1 and next_WAZ < -1
+    * BMIZ >= -1 and next_BMIZ < -1
+
+This is, if the current value for the indicator is greater than -1 and in the next check-up is less than -1 we can say
+that the value dropped below an acceptable range, and the baby is possibly at risk.
+
+A couple of examples:
+
+{::options parse_block_html="true" /}
+<div class="mark-last-row">
+
+|HAZ control Jun '16| HAZ control Nov '16| decae |
+|-------|--------|---------|
+|               0.12|               -1.02| true  |
+|               -0.5|               -0.99| false |
+|               -1.5|               -1.8 |  false |
+
+</div>
+
+<p class="table-note">HAZ over two different check-ups</p>
+
+<br>
+
+|HAZ Jun '16| BMIZ Jun '16| HAZ Nov '16| BMIZ Nov '16| decae |
+|-------|--------|---------|
+|        0.1|          1.0|        -1.5|          1.0|  true |
+|        0.1|         -1.1|        -1.5|         -1.1|  true |
+
+<p class="table-note">HAZ and BMIZ over two different check-ups</p>
+<br>
+
+
+
+The row highlighted is false regardless of being below -1.0 because HAZ also was below -1.0 on the previous control. Here we have a dependency, the target variable depends
+on the value of the previous seen control, and it has to be >= -1. This is a hard threshold/limit and we will explore later what happens
+on some of the models we train if we just ignore it.
+
+Here is a simple exploration of the features:
+///// MEANS DE TODO
+
+One last thing to mention is that the scoring metric that we will use is ROC AUC.
+
+<!-- - end to end, ventajas y desventajas -->
+# First things first
+
+Let's say Alice and Bob download the train set and start working. Alice pretends to have a good model, clean, with nice features
+and good hyperparameters before submitting a solution. Bob on the other hand thinks it is better to be able to submit quickly
+and then improve the solution.
+
+Alice works for a week before submitting, guiding her work on the results of her own validation set. But the day she submits
+her solution, something went wrong and the score is lower than she expected. It could be a bug on her code, or she overfitted at
+some point and now she has to go back to a possibly complex program to debug.
+
+Bob does just the minimal work to have a solution as fast as possible. He did a basic clean up of the dataset, ran any model with
+default parameters and generated the solution. He submitted and got a not-so-good score, but now he has a baseline on which
+to improve. He knows his pipeline works from end to end, he just has to improve the solution.
+
+I'm not saying that anyone that does what Alice did will make a mistake before ahving a solution, but I think it's better to have
+a working solution and then improve on it. This is true in competitions and also in the industry.
+
+<!-- - puntaje del primer submit, posicion en medio de la tabla -->
+So I did exactly that, I cleaned up the dataset (basic imputation and labeling), ran a Gradient Boosting model with default
+parameters and submitted. My baseline score was *0.77043* and it was enough to be on the top ten at that time!
+
+# Exploring the data
+<!-- - exploracion, regiones y mapitas -->
+Before going any further it's a good idea to actually see the data and think how it can help us solve the problem.
+If we were a doctor, how can we intuitively know if there's something wrong with a baby? Probably measuring his weight, height,
+and other things could help. We can see his socioeconomic environment, does he live in a zone with higher probability of
+leading to health problems? Ideally, we can also see his mother's status, is she healthy? does she take good care of her baby?
+
+We don't have that last bit of information, but we have something about the first two parts. We have the weights, heights and percentiles.
+Here you can see some examples, and how they relate to the target variable:
+
+// Grafiquito loco
+
+We also have the coordinates of the different hospitals. It is reasonable to think that there are zones with higher risk than others.
+I plotted all the hospitals on the map and we can see that it can be a good idea to separate regions on some provinces. For example,
+we can divide Buenos Aires in South/Center-North/Greater Buenos Aires.
+
+<div class="mapas">
+<a id="argentina" title="Whole country view" href="/assets/eci/arg.png" fancyboxable="argentina">
+    <img alt="Argentina" src="/assets/eci/arg.png">
+</a>
+<a id="buenosaires" title="Buenos Aires" href="/assets/eci/bsas.png" fancyboxable="buenosaires">
+    <img alt="Buenos Aires" src="/assets/eci/bsas.png">
+</a>
+<a id="chaco" title="El Chaco" href="/assets/eci/chaco.png" fancyboxable="chaco">
+    <img alt="Chaco" src="/assets/eci/chaco.png">
+</a>
+<a id="cordoba" title="Córdoba" href="/assets/eci/cordoba.png" fancyboxable="cordoba">
+    <img alt="Córdoba" src="/assets/eci/cordoba.png">
+</a>
+<a id="entrerios" title="Entre Ríos" href="/assets/eci/entrerios.png" fancyboxable="entrerios">
+    <img alt="Entre Ríos" src="/assets/eci/entrerios.png">
+</a>
+<a id="estero" title="Santiago del Estero" href="/assets/eci/estero.png" fancyboxable="estero">
+    <img alt="Santiago del Estero" src="/assets/eci/estero.png">
+</a>
+<a id="gba" title="Greater Buenos Aires" href="/assets/eci/gba.png" fancyboxable="gba">
+    <img alt="Greater Buenos Aires" src="/assets/eci/gba.png">
+</a>
+<a id="tucuman" title="Tucumán" href="/assets/eci/tucuman.png" fancyboxable="tucuman">
+    <img alt="Tucumán" src="/assets/eci/tucuman.png">
+</a>
+</div>
+
+Here we grouped the hospitals only geographically, but we can try one more thing. We can group the hospitals by the ratio of healthy/unhealthy kids using the
+target variable. For each hospital we count the number of patients that have the target variable in true versus the ones that are false. We will see that
+this approach was better than the geographic one.
+
+One last thing, we see that the train data is made of one check-up per row and several patients are repeated. In fact, most of the patients have three or four rows in the train set.
+Not only that, those who have three rows correspond to the ones that are on the test set. We have the history of the patients in the test set!
+
+// dibujito de individuo/fecha/haz..../decae
 
 
 

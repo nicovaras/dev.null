@@ -40,7 +40,6 @@ gems:
 exclude:
   - Gemfile
   - Gemfile.lock
-
 webrick:
   headers:
     X-I-Am: Nico Varaschin

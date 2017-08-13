@@ -1,0 +1,23 @@
+{
+  "name": "dev",
+  "homepage": "https://github.com/nicolas-varaschin/dev.null",
+  "authors": [
+    "Nico Varaschin <nicovaras22@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.6.5"
+  },
+  "devDependencies": {
+    "angular-fancybox-plus": "^1.0.3"
+  }
+}

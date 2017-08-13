@@ -3,3 +3,39 @@
 ---
 
 @import "minima";
+
+
+table{
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:2px solid #000000;
+    text-align: center;
+    margin: auto;
+}
+
+th{
+    border:2px solid #000000;
+}
+
+td{
+    border:1px solid #000000;
+}
+
+.mark-last-row tbody tr:last-child {
+    background: gold;
+    font-weight: bolder;
+}
+
+.table-note{
+    display: table;
+    margin: auto;
+    font-size: small;
+    font-style: oblique;
+}
+
+#fbplus-title-float-main{
+    text-indent: 0em;
+}
+.mapas img{
+    width:10%;
+}
