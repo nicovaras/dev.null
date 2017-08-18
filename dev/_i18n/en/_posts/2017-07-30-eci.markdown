@@ -3,7 +3,7 @@ layout: post
 title:  "Predicting growth in children - part 1/2"
 categories: kaggle scikit
 permalink: eci/
-controller: fancyController
+controller: FancyController
 ---
 
 <!-- /_sass/minima/_layout -->
@@ -159,31 +159,36 @@ I plotted all the hospitals on the map and we can see that it can be a good idea
 we can divide Buenos Aires in South/Center-North/Greater Buenos Aires.
 
 <div class="mapas">
-<a id="argentina" title="Whole country view" href="/assets/eci/arg.png" fancyboxable="argentina">
+
+<a class='fancybox-thumb' id="argentina" title="Whole country view" data-thumb="/assets/eci/arg.png" href="/assets/eci/arg.png" rel="gallery">
     <img alt="Argentina" src="/assets/eci/arg.png">
 </a>
-<a id="buenosaires" title="Buenos Aires" href="/assets/eci/bsas.png" fancyboxable="buenosaires">
+<a class='fancybox-thumb' id="buenosaires" title="Buenos Aires" data-thumb="/assets/eci/bsas.png" href="/assets/eci/bsas.png" rel="gallery">
     <img alt="Buenos Aires" src="/assets/eci/bsas.png">
 </a>
-<a id="chaco" title="El Chaco" href="/assets/eci/chaco.png" fancyboxable="chaco">
+<a class='fancybox-thumb' id="chaco" title="El Chaco" data-thumb="/assets/eci/chaco.png" href="/assets/eci/chaco.png" rel="gallery">
     <img alt="Chaco" src="/assets/eci/chaco.png">
 </a>
-<a id="cordoba" title="Córdoba" href="/assets/eci/cordoba.png" fancyboxable="cordoba">
+<a class='fancybox-thumb' id="cordoba" title="Córdoba" data-thumb="/assets/eci/cordoba.png" href="/assets/eci/cordoba.png" rel="gallery">
     <img alt="Córdoba" src="/assets/eci/cordoba.png">
 </a>
-<a id="entrerios" title="Entre Ríos" href="/assets/eci/entrerios.png" fancyboxable="entrerios">
-    <img alt="Entre Ríos" src="/assets/eci/entrerios.png">
-</a>
-<a id="estero" title="Santiago del Estero" href="/assets/eci/estero.png" fancyboxable="estero">
-    <img alt="Santiago del Estero" src="/assets/eci/estero.png">
-</a>
-<a id="gba" title="Greater Buenos Aires" href="/assets/eci/gba.png" fancyboxable="gba">
-    <img alt="Greater Buenos Aires" src="/assets/eci/gba.png">
-</a>
-<a id="tucuman" title="Tucumán" href="/assets/eci/tucuman.png" fancyboxable="tucuman">
+<a class='fancybox-thumb' id="tucuman" title="Tucumán" data-thumb="/assets/eci/tucuman.png" href="/assets/eci/tucuman.png" rel="gallery">
     <img alt="Tucumán" src="/assets/eci/tucuman.png">
 </a>
+<a class='fancybox-thumb' id="entrerios" title="Entre Ríos" data-thumb="/assets/eci/entrerios.png" href="/assets/eci/entrerios.png" rel="gallery">
+    <img alt="Entre Ríos" src="/assets/eci/entrerios.png">
+</a>
+<a class='fancybox-thumb' id="estero" title="Santiago del Estero" data-thumb="/assets/eci/estero.png" href="/assets/eci/estero.png" rel="gallery">
+    <img alt="Santiago del Estero" src="/assets/eci/estero.png">
+</a>
+<a class='fancybox-thumb' id="gba" title="Greater Buenos Aires" data-thumb="/assets/eci/gba.png" href="/assets/eci/gba.png" rel="gallery">
+    <img alt="Greater Buenos Aires" src="/assets/eci/gba.png">
+</a>
+
+
 </div>
+
+I applied some jitter and alpha blending to the points in the data to be able to see the zones with more or less density of pacients.
 
 Here we grouped the hospitals only geographically, but we can try one more thing. We can group the hospitals by the ratio of healthy/unhealthy kids using the
 target variable. For each hospital we count the number of patients that have the target variable in true versus the ones that are false. We will see that

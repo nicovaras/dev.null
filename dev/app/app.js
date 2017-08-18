@@ -1,27 +1,30 @@
-var myApp = angular.module('ngApp', [
-    'fancyboxplus',
-    ], function($interpolateProvider) {
-  $interpolateProvider.startSymbol('[[');
-  $interpolateProvider.endSymbol(']]');
-});
+"use strict";
 
-(function(app){
-  "use strict";
-app.controller('appController', appController)
-app.controller('fancyController', fancyController)
+angular.module('ngApp', [], function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+    }).controller('FancyController', FancyController),
 
-function appController($scope) {
-  $scope.name = 'Robin Hood';
+
+    FancyController.$inject = [];
+
+function FancyController() {
+
+    angular.element(document).ready(function() {
+        $(".fancybox-thumb").fancybox({
+            prevEffect: 'none',
+            nextEffect: 'none',
+            helpers: {
+                title: {
+                    type: 'float'
+                },
+                thumbs: {
+                    width: 50,
+                    height: 50
+                }
+            }
+        });
+
+
+    })
 }
-
-function fancyController($scope, $location, $timeout) {
-        $scope.setActiveImageInGallery = function (prop, img) {
-            $scope[prop] = img;
-        };
-        $scope.setScopeValue = function (prop, value) {
-            $scope[prop] = value;
-        };
-
-    }
-})(myApp);
-
