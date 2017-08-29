@@ -32,25 +32,37 @@ $on-laptop: 1000px;
 
 @import "minima";
 
+body {
+  margin: 0;
+  padding: 0;
+  font-size:16px;
+}
+
+.page-content{
+  background-color: #eceff1;
+}
+
+.wrapper {
+  background-color: #fff;
+  max-width: 1100px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 110px;
+  padding-left: 110px;
+}
 
 table{
     border-collapse: collapse;
     border-spacing: 0;
-    border:2px solid #000000;
     text-align: center;
     margin: auto;
 }
-
-th{
-    border:2px solid #000000;
-}
-
 td{
-    border:1px solid #000000;
+    border:1px solid #ddd;
 }
 
 .mark-last-row tbody tr:last-child {
-    background: gold;
+    background: gold !important;
     font-weight: bolder;
 }
 
@@ -69,13 +81,13 @@ td{
 .mapas {
    /* Prevent vertical gaps */
    line-height: 0;
-  text-indent:0px;
+   text-indent:0px;
 
    -webkit-column-count: 5;
    -webkit-column-gap:   0px;
    -moz-column-count:    5;
    -moz-column-gap:      0px;
-   column-count:         5;
+   column-count:         4;
    column-gap:           0px;
 }
 
@@ -83,6 +95,30 @@ td{
   /* Just in case there are inline attributes */
   width: 90% !important;
   height: auto !important;
+  margin:5px;
+  border:2px solid #000;
+}
+
+.mapa-container{
+      text-align: center;
+}
+.eci-graf {
+   /* Prevent vertical gaps */
+   line-height: 0;
+   text-indent:0px;
+
+   -webkit-column-count: 5;
+   -webkit-column-gap:   0px;
+   -moz-column-count:    5;
+   -moz-column-gap:      0px;
+   column-count:         5;
+   column-gap:           0px;
+       display: table;
+    text-align: center;
+}
+
+.eci-graf img {
+  width:30%;
   margin:5px;
   border:2px solid #000;
 }
@@ -103,7 +139,150 @@ td{
   }
 }
 
-body {
-  margin: 0;
-  padding: 0;
+
+.tiny-link {
+  color: black;
+  font-size: x-small;
+  text-decoration: underline;
+  display: table;
+  margin: auto;
+}
+
+.waka {
+  display: block;
+    width: 100%;
+    overflow-x: scroll;
+    overflow-y: visible;
+
+}
+
+.waka::-webkit-scrollbar {
+  background-color: #F5F5F5;
+}
+.waka::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #336b87;
+}
+.waka::-webkit-scrollbar-track {
+  background-color: #F5F5F5;
+}
+.tabla > table{
+    background-color: rgba(217, 238, 249, 0.75);
+    border:2px solid rgb(51, 51, 51);
+
+}
+
+.tabla > table tbody tr:nth-child(odd) {
+   background-color: #fff;
+}
+
+.ng-table-scrollcontainer>table {
+    border: 2px solid;
+    text-indent:0px;
+    background-color: rgba(217, 238, 249, 0.75);
+}
+
+.ng-table-scrollcontainer>table>tbody>tr>td {
+    font-size: 12px;
+}
+
+.azul {
+  color: #616161 !important;
+}
+
+.azuloscuro {
+  color: #0008ff !important;
+  font-weight: bolder;
+}
+
+.filtros{
+  border: 2px solid lightgray;
+  margin-bottom: 10px !important;
+}
+
+.material-switch{
+  margin:auto;
+}
+.material-switch > input[type="checkbox"] {
+    display: none;
+}
+
+.material-switch > label {
+    cursor: pointer;
+    height: 0px;
+    position: relative;
+    width: 40px;
+
+}
+
+.material-switch > label::before {
+    background: rgb(0, 0, 0);
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    content: '';
+    height: 8px;
+    margin-top: -4px;
+    position:absolute;
+    opacity: 0.3;
+    transition: all 0.4s ease-in-out;
+    width: 20px;
+    left:10px;
+    text-indent:0px;
+}
+.material-switch > label::after {
+    background: rgb(255, 255, 255);
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    content: '';
+    height: 14px;
+    left: 4px;
+    margin-top: -12px;
+    position: absolute;
+    top: 4px;
+    transition: all 0.3s ease-in-out;
+    width: 14px;
+}
+.material-switch > input[type="checkbox"]:checked + label::before {
+    background: inherit;
+    opacity: 0.5;
+}
+.material-switch > input[type="checkbox"]:checked + label::after {
+    background: inherit;
+    left: 20px;
+}
+
+.list-group-item {
+  padding: 5px 15px  !important;
+  border : none !important;
+  font-size:12px;
+  text-indent:0px;
+}
+
+.list-group {
+  margin:auto;
+}
+.material-icons {
+    text-indent: 0;
+  }
+
+.ng-table-counts {
+  display: none;
+}
+
+.pagination{
+  margin: auto;
+    font-size: 10px;
+    text-indent: 0px;
+    margin-bottom: 20px;
+    display: table
+}
+
+
+.post-header{
+  margin-bottom: 50px;
+    padding-top: 80px;
+}
+
+h1{
+  padding-top:30px;
 }

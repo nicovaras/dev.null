@@ -3,7 +3,7 @@ layout: post
 title:  "Predicting growth in children - part 1/2"
 categories: kaggle scikit
 permalink: eci/
-controller: FancyController
+controller: EciController
 ---
 
 <!-- /_sass/minima/_layout -->
@@ -29,48 +29,89 @@ next check-up.
 
 The competition was open to everyone, it is an interesting problem and a good classifier will have a positive impact in national medicine.
 
-Also, it has been a long time since I didn't compete, so it was the perfect excuse ☺.
+Also, it has been a long time since I didn't compete, so it was the perfect excuse. <i class="material-icons">sentiment_very_satisfied</i>
 
 <!-- - datos que proveen, ejemplitos, graficos -->
 # Let's look at the data
 
 The dataset for this competition is pretty straightforward and small enough for making nice experiments.
-The train set has 43933 rows and the test set 6275 rows. Both sets have 23 columns (features).
+The train set has **43933** rows and the test set **6275** rows. Both sets have 23 columns (features).
 
 Here are the first rows of the original train data:
 
-///TABLA
+
+<button ng-click="showFilters=!showFilters" class="btn " ng-show="!showFilters" style="display:table;">Show Filters</button>
+<button ng-click="showFilters=!showFilters" class="btn  active" ng-show="showFilters" style="display:table;">Hide Filters</button>
+
+
+<div class="material-switch row filtros" ng-show="showFilters">
+<ul class="list-group ">
+    <li class="list-group-item col-xs-3" ng-repeat="col in columns">
+        [[{col.field}]]
+        <div class="material-switch pull-left">
+            <input ng-model="col.show" id="[[{col.field}]]" name="[[{col.field}]]" type="checkbox"/>
+            <label for="[[{col.field}]]" class="label-primary"></label>
+        </div>
+    </li>
+</ul>
+</div>
+
+<div class="ng-table-scrollcontainer">
+<table ng-table-dynamic="tableParams with columns" show-filter="false" class="table table-bordered table-striped waka">
+<tbody>
+  <tr ng-repeat="user in $data" ng-class="{azul: esFalse(user), azuloscuro: !esFalse(user)}">
+    <td data-title="col.field" header-title="'col.field'" ng-repeat="col in $columns">[[{user[col.field]}]]</td>
+  </tr>
+</tbody>
+</table>
+</div>
 
 Here we have the meaning of each feature:
 
-* BMIZ (float): body-mass-index-for-age-Z-scores (BMI standardized reference by age and gender).
-* HAZ (float): height-for-age Z-scores (standard reference of height by age and gender).
-* WAZ (float): weight-for-age Z-scores (standardized reference of weight by age and gender).
+{::options parse_block_html="true" /}
+<div ng-show="!vm.showFeatures" class="tabla">
 
-<a ng-click="vm.showFeatures=!vm.showFeatures">Click to see all other features</a>
+|Name| Description |
+|-------|--------|
+| BMIZ (float) | body-mass-index-for-age-Z-scores (BMI standardized reference by age and gender) |
+| HAZ (float) |height-for-age Z-scores (standard reference of height by age and gender) |
+| WAZ (float) |weight-for-age Z-scores (standardized reference of weight by age and gender) |
+| ... | ... |
+
+</div>
 
 {::options parse_block_html="true" /}
-<div ng-show="vm.showFeatures">
-* Individuo (integer): Identifier assigned to each individual.
-* Bmi (float): bmi = weight / (height ^ 2).
-* Departmento_indec_id (integer): department code of the hospital. It matches the code obtained from INDEC.
-* Departmento_lat (float): average latitude of the hospitals of said department
-* Departmento_long (float): average of the length of the hospitals of said department
-* Fecha_control (string): date the individual was checked-up
-* Fecha_nacimiento (string): date the individual was born.
-* Fecha_proximo_control (string): date the individual will be checked-up next time
-* Genero: the gender of the individual (M = male, F = female)
-* Nombre_provincia (string): name of the province where the individual was attended
-* Nombre_region (string): name of the region where the individual was attended
-* Perimetro_encefalico (float): measurement of encephalic perimeter obtained in the attention (cm)
-* Peso (float): measurement of weight obtained in the attention (kg)
-* Talla (float): length measurement obtained at attention (cm)
-* Provincia_indec_id (integer): province code (S = yes belongs, N = does not belong). It matches the code obtained from INDEC.
-* Zona_rural (string): code that indicates if the hospital is in a rural area.
-* Var_BMIZ: variation that BMIZ will have in the following attention regarding the current value
-* Var_HAZ: variation that will have HAZ in the following attention regarding the current value
-* Var_WAZ: variation that will have WAZ in the following attention regarding the current value
+<div ng-show="vm.showFeatures" class="tabla">
+
+|Name| Description |
+|-------|--------|
+| BMIZ (float) | body-mass-index-for-age-Z-scores (BMI standardized reference by age and gender) |
+| HAZ (float) |height-for-age Z-scores (standard reference of height by age and gender) |
+| WAZ (float) |weight-for-age Z-scores (standardized reference of weight by age and gender) |
+| Individuo (integer) | Identifier assigned to each individual"
+| Bmi (float) | bmi = weight / (height ^ 2) "
+| Departmento_indec_id (integer) | department code of the hospital. It matches the code obtained from INDEC"
+| Departmento_lat (float) | average latitude of the hospitals of said department"
+| Departmento_long (float) | average of the length of the hospitals of said department"
+| Fecha_control (string) | date the individual was checked-up"
+| Fecha_nacimiento (string) | date the individual was born"
+| Fecha_proximo_control (string) | date the individual will be checked-up next time"
+| Genero | the gender of the individual (M = male, F = female)"
+| Nombre_provincia (string) | name of the province where the individual was attended"
+| Nombre_region (string) | name of the region where the individual was attended"
+| Perimetro_encefalico (float) | measurement of encephalic perimeter obtained in the attention (cm)"
+| Peso (float) | measurement of weight obtained in the attention (kg)"
+| Talla (float) | length measurement obtained at attention (cm)"
+| Provincia_indec_id (integer) | province code (S = yes belongs, N = does not belong). It matches the code obtained from INDEC"
+| Zona_rural (string) | code that indicates if the hospital is in a rural area"
+| Var_BMIZ | variation that BMIZ will have in the following attention regarding the current value"
+| Var_HAZ | variation that will have HAZ in the following attention regarding the current value"
+| Var_WAZ | variation that will have WAZ in the following attention regarding the current value"
+
 </div>
+
+<a ng-click="vm.showFeatures=!vm.showFeatures" ng-show="!vm.showFeatures" class="tiny-link">Show more...</a>
+<a ng-click="vm.showFeatures=!vm.showFeatures" ng-show="vm.showFeatures"  class="tiny-link">Show less...</a>
 
 <!-- - ver lo que hay que predecir, decae -->
 
@@ -87,7 +128,7 @@ that the value dropped below an acceptable range, and the baby is possibly at ri
 A couple of examples:
 
 {::options parse_block_html="true" /}
-<div class="mark-last-row">
+<div class="tabla mark-last-row" >
 
 |HAZ control Jun '16| HAZ control Nov '16| decae |
 |-------|--------|---------|
@@ -101,10 +142,15 @@ A couple of examples:
 
 <br>
 
+{::options parse_block_html="true" /}
+<div class="tabla" >
+
 |HAZ Jun '16| BMIZ Jun '16| HAZ Nov '16| BMIZ Nov '16| decae |
 |-------|--------|---------|
 |        0.1|          1.0|        -1.5|          1.0|  true |
 |        0.1|         -1.1|        -1.5|         -1.1|  true |
+
+</div>
 
 <p class="table-note">HAZ and BMIZ over two different check-ups</p>
 <br>
@@ -115,10 +161,8 @@ The row highlighted is false regardless of being below -1.0 because HAZ also was
 on the value of the previous seen control, and it has to be >= -1. This is a hard threshold/limit and we will explore later what happens
 on some of the models we train if we just ignore it.
 
-Here is a simple exploration of the features:
-///// MEANS DE TODO
 
-One last thing to mention is that the scoring metric that we will use is ROC AUC.
+One last thing to mention is that the scoring metric that we will use is **ROC AUC** [(interactive)](http://www.navan.name/roc/){:target="_blank"}
 
 <!-- - end to end, ventajas y desventajas -->
 # First things first
@@ -152,12 +196,67 @@ leading to health problems? Ideally, we can also see his mother's status, is she
 We don't have that last bit of information, but we have something about the first two parts. We have the weights, heights and percentiles.
 Here you can see some examples, and how they relate to the target variable:
 
-// Grafiquito loco
+<div class="eci-graf">
+
+<a class='fancybox-thumb' id="haz" title="HAZ" data-thumb="/assets/eci/haz.png" href="/assets/eci/haz.png" rel="gallery2">
+    <img alt="HAZ" src="/assets/eci/haz.png">
+</a>
+<a class='fancybox-thumb' id="waz" title="WAZ" data-thumb="/assets/eci/waz.png" href="/assets/eci/waz.png" rel="gallery2">
+    <img alt="WAZ" src="/assets/eci/waz.png">
+</a>
+<a class='fancybox-thumb' id="bmiz" title="BMIZ" data-thumb="/assets/eci/bmiz.png" href="/assets/eci/bmiz.png" rel="gallery2">
+    <img alt="BMIZ" src="/assets/eci/bmiz.png">
+</a>
+</div>
+
+Here is a simple exploration of the features:
+
+{::options parse_block_html="true" /}
+<div class="waka tabla" style="font-size: 14px">
+
+| Feature |unique |top |freq | mean | std |min |25% |50% |75% |max |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- || --- | --- |
+| BMIZ | --- | --- | --- |0.491|1.277|<span class="azuloscuro">-4.935</span>|-0.307|0.524|1.323|<span class="azuloscuro">4.997</span>|
+| HAZ | --- | --- | --- |-0.662|1.323|<span class="azuloscuro">-5.996</span>|-1.450|-0.612|0.173|<span class="azuloscuro">5.997</span>|
+| WAZ | --- | --- | --- |-0.021|1.177|<span class="azuloscuro">-5.853</span>|-0.717|0.030|0.742|<span class="azuloscuro">4.872</span>|
+| individuo |12562| --- |4| --- | --- | --- | --- | --- | --- | --- |
+| bmi | --- | --- | --- |17.333|2.210|8.3298|15.938|17.301|26.874|
+| departamento_lat | --- | --- | --- |-29.672|3.278|-38.976|-32.527|-27.551|-26.838|-25.402|
+| departamento_long | --- | --- | --- |-62.0619|4.864|-69.58|-65.259|-64.55|-59.08|-50|
+| fecha_control |472| 2014-04-21 |496| --- | --- | --- | --- | --- | --- | --- |
+| fecha_nacimiento |695| 2013-09-09 |295| --- | --- | --- | --- | --- | --- | --- |
+| fecha_proximo_control |402| 2014-08-26 |523| --- | --- | --- | --- | --- | --- | --- |
+| genero |2| <span class="azuloscuro">M</span> |<span class="azuloscuro">22010</span>| --- | --- | --- | --- | --- | --- | --- |
+| nombre_provincia |7| <span class="azuloscuro">Tucuman</span> | <span class="azuloscuro">17467</span> | --- | --- | --- | --- | --- | --- | --- |
+| nombre_region |4| NOA |23084| --- | --- | --- | --- | --- | --- | --- |
+| perimetro_encefalico | --- | --- | --- |42.446|4.365|0|40|42|44.5|97|
+| peso | --- | --- | --- |7.442|2.435|1.92|5.9|7.1|8.6|23|
+| talla | --- | --- | --- |64.762|9.677|41|59|63|68|129|
+| var_BMIZ | --- | --- | --- |0.0806|1.032|-8.541|-0.446|0.070|0.612|7.877|
+| var_HAZ | --- | --- | --- |0.0537|1.016|-10.005|-0.438|0.0185|0.502|8.989|
+| var_WAZ | --- | --- | --- |0.0900|0.693|-7.50|-0.243|0.070|0.393|6.00|
+| zona_rural |2| <span class="azuloscuro">N</span> | <span class="azuloscuro">42970</span>| --- | --- | --- | --- | --- | --- | --- |
+| decae|2| False|37031| --- | --- | --- | --- | --- | --- | --- |
+
+
+</div>
+<br>
+
+We have an insight on the data now. Remember that we have 43933 rows in the training set. We have 22010 males, this is half of the data, it's
+balanced. We also have 17467 cases from Tucumán and this will possibly condition the results that depend on locations. The feature "Zona_rural"
+has 42970 rows on False, this is most of the dataset. This feature has almost no variance and is a possible candidate to be removed.
+Another interesting point to see is that there're very extreme values as min and max for our percentile variables. Having a HAZ of -5 must
+mean very bad news.
+
+Finally, our target variable "decae" has 37031 on False. We have a problem with unbalanced classes and this will affect the performance of our estimators.
+
 
 We also have the coordinates of the different hospitals. It is reasonable to think that there are zones with higher risk than others.
 I plotted all the hospitals on the map and we can see that it can be a good idea to separate regions on some provinces. For example,
 we can divide Buenos Aires in South/Center-North/Greater Buenos Aires.
 
+
+<div class="mapa-container">
 <div class="mapas">
 
 <a class='fancybox-thumb' id="argentina" title="Whole country view" data-thumb="/assets/eci/arg.png" href="/assets/eci/arg.png" rel="gallery">
@@ -187,6 +286,7 @@ we can divide Buenos Aires in South/Center-North/Greater Buenos Aires.
 
 
 </div>
+</div>
 
 I applied some jitter and alpha blending to the points in the data to be able to see the zones with more or less density of pacients.
 
@@ -197,10 +297,10 @@ this approach was better than the geographic one.
 One last thing, we see that the train data is made of one check-up per row and several patients are repeated. In fact, most of the patients have three or four rows in the train set.
 Not only that, those who have three rows correspond to the ones that are on the test set. We have the history of the patients in the test set!
 
-// dibujito de individuo/fecha/haz..../decae
 
+In the next post, I'll continue with these ideas and explain the predictive models I used to play in the competition.
 
-
+<div style="float:right; padding:20px">
 Thanks for reading!
+</div>
 
-Source code: [Github](https://github.com/nicovaras/ia_experiments)
