@@ -40,8 +40,8 @@ The train set has **43933** rows and the test set **6275** rows. Both sets have 
 Here are the first rows of the original train data:
 
 
-<button ng-click="showFilters=!showFilters" class="btn " ng-show="!showFilters" style="display:table;">Show Filters</button>
-<button ng-click="showFilters=!showFilters" class="btn  active" ng-show="showFilters" style="display:table;">Hide Filters</button>
+<button ng-click="showFilters=!showFilters" class="btn btn-default" ng-show="!showFilters" style="display:table;">Show Filters</button>
+<button ng-click="showFilters=!showFilters" class="btn btn-default active" ng-show="showFilters" style="display:table;">Hide Filters</button>
 
 
 <div class="material-switch row filtros" ng-show="showFilters">
@@ -73,11 +73,12 @@ Here we have the meaning of each feature:
 
 |Name| Description |
 |-------|--------|
-| BMIZ (float) | body-mass-index-for-age-Z-scores (BMI standardized reference by age and gender) |
-| HAZ (float) |height-for-age Z-scores (standard reference of height by age and gender) |
-| WAZ (float) |weight-for-age Z-scores (standardized reference of weight by age and gender) |
+| BMIZ (float) | Body-mass-index-for-age-Z-scores (BMI standardized reference by age and gender) |
+| HAZ (float) | Height-for-age Z-scores (standard reference of height by age and gender) |
+| WAZ (float) | Weight-for-age Z-scores (standardized reference of weight by age and gender) |
 | ... | ... |
 
+<button ng-click="vm.showFeatures=!vm.showFeatures" ng-show="!vm.showFeatures" class="btn btn-default  tiny-link">Show more</button>
 </div>
 
 {::options parse_block_html="true" /}
@@ -85,42 +86,41 @@ Here we have the meaning of each feature:
 
 |Name| Description |
 |-------|--------|
-| BMIZ (float) | body-mass-index-for-age-Z-scores (BMI standardized reference by age and gender) |
-| HAZ (float) |height-for-age Z-scores (standard reference of height by age and gender) |
-| WAZ (float) |weight-for-age Z-scores (standardized reference of weight by age and gender) |
-| Individuo (integer) | Identifier assigned to each individual"
-| Bmi (float) | bmi = weight / (height ^ 2) "
-| Departmento_indec_id (integer) | department code of the hospital. It matches the code obtained from INDEC"
-| Departmento_lat (float) | average latitude of the hospitals of said department"
-| Departmento_long (float) | average of the length of the hospitals of said department"
-| Fecha_control (string) | date the individual was checked-up"
-| Fecha_nacimiento (string) | date the individual was born"
-| Fecha_proximo_control (string) | date the individual will be checked-up next time"
-| Genero | the gender of the individual (M = male, F = female)"
-| Nombre_provincia (string) | name of the province where the individual was attended"
-| Nombre_region (string) | name of the region where the individual was attended"
-| Perimetro_encefalico (float) | measurement of encephalic perimeter obtained in the attention (cm)"
-| Peso (float) | measurement of weight obtained in the attention (kg)"
-| Talla (float) | length measurement obtained at attention (cm)"
-| Provincia_indec_id (integer) | province code (S = yes belongs, N = does not belong). It matches the code obtained from INDEC"
-| Zona_rural (string) | code that indicates if the hospital is in a rural area"
-| Var_BMIZ | variation that BMIZ will have in the following attention regarding the current value"
-| Var_HAZ | variation that will have HAZ in the following attention regarding the current value"
-| Var_WAZ | variation that will have WAZ in the following attention regarding the current value"
+| BMIZ (float) | Body-mass-index-for-age-Z-scores (BMI standardized reference by age and gender) |
+| HAZ (float) |Height-for-age Z-scores (standard reference of height by age and gender) |
+| WAZ (float) |Weight-for-age Z-scores (standardized reference of weight by age and gender) |
+| Individuo (int) | Identifier assigned to each individual |
+| Bmi (float) | Bmi = weight / (height ^ 2) |
+| Departmento_indec_id (int) | Department code of the hospital. It matches the code obtained from INDEC |
+| Departmento_lat (float) | Average latitude of the hospitals of said department |
+| Departmento_long (float) | Average of the length of the hospitals of said department |
+| Fecha_control (string) | Date the individual was checked-up |
+| Fecha_nacimiento (string) | Date the individual was born |
+| Fecha_proximo_control (string) | Date the individual will be checked-up next time |
+| Genero | Gender of the individual (M = male, F = female) |
+| Nombre_provincia (string) | Name of the province where the individual was attended |
+| Nombre_region (string) | Name of the region where the individual was attended |
+| Perimetro_encefalico (float) | Measurement of encephalic perimeter obtained in the attention (cm) |
+| Peso (float) | Measurement of weight obtained in the attention (kg) |
+| Talla (float) | Length measurement obtained at attention (cm) |
+| Provincia_indec_id (int) | Province code (S = yes belongs, N = does not belong). |
+| Zona_rural (string) | Code that indicates if the hospital is in a rural area |
+| Var_BMIZ | Variation that BMIZ will have in the following attention regarding the current value |
+| Var_HAZ | Variation that will have HAZ in the following attention regarding the current value |
+| Var_WAZ | Variation that will have WAZ in the following attention regarding the current value |
 
+<button ng-click="vm.showFeatures=!vm.showFeatures" ng-show="vm.showFeatures"  class="btn btn-default tiny-link">Show less</button>
 </div>
 
-<a ng-click="vm.showFeatures=!vm.showFeatures" ng-show="!vm.showFeatures" class="tiny-link">Show more...</a>
-<a ng-click="vm.showFeatures=!vm.showFeatures" ng-show="vm.showFeatures"  class="tiny-link">Show less...</a>
 
 <!-- - ver lo que hay que predecir, decae -->
 
 Let's see what we have to predict. Our target variable is made of three conditions:
 
-* Decae (Target variable): It takes the value "True" if at least one of the following conditions occurs:
-    * HAZ >= -1 and next_HAZ < -1
-    * WAZ >= -1 and next_WAZ < -1
-    * BMIZ >= -1 and next_BMIZ < -1
+**Decae** (Target variable): It takes the value "True" if at least one of the following conditions occurs:
+* HAZ >= -1 and next_HAZ < -1
+* WAZ >= -1 and next_WAZ < -1
+* BMIZ >= -1 and next_BMIZ < -1
 
 This is, if the current value for the indicator is greater than -1 and in the next check-up is less than -1 we can say
 that the value dropped below an acceptable range, and the baby is possibly at risk.
@@ -214,29 +214,29 @@ Here is a simple exploration of the features:
 {::options parse_block_html="true" /}
 <div class="waka tabla" style="font-size: 14px">
 
-| Feature |unique |top |freq | mean | std |min |25% |50% |75% |max |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- || --- | --- |
-| BMIZ | --- | --- | --- |0.491|1.277|<span class="azuloscuro">-4.935</span>|-0.307|0.524|1.323|<span class="azuloscuro">4.997</span>|
-| HAZ | --- | --- | --- |-0.662|1.323|<span class="azuloscuro">-5.996</span>|-1.450|-0.612|0.173|<span class="azuloscuro">5.997</span>|
-| WAZ | --- | --- | --- |-0.021|1.177|<span class="azuloscuro">-5.853</span>|-0.717|0.030|0.742|<span class="azuloscuro">4.872</span>|
-| individuo |12562| --- |4| --- | --- | --- | --- | --- | --- | --- |
-| bmi | --- | --- | --- |17.333|2.210|8.3298|15.938|17.301|26.874|
-| departamento_lat | --- | --- | --- |-29.672|3.278|-38.976|-32.527|-27.551|-26.838|-25.402|
-| departamento_long | --- | --- | --- |-62.0619|4.864|-69.58|-65.259|-64.55|-59.08|-50|
-| fecha_control |472| 2014-04-21 |496| --- | --- | --- | --- | --- | --- | --- |
-| fecha_nacimiento |695| 2013-09-09 |295| --- | --- | --- | --- | --- | --- | --- |
-| fecha_proximo_control |402| 2014-08-26 |523| --- | --- | --- | --- | --- | --- | --- |
-| genero |2| <span class="azuloscuro">M</span> |<span class="azuloscuro">22010</span>| --- | --- | --- | --- | --- | --- | --- |
-| nombre_provincia |7| <span class="azuloscuro">Tucuman</span> | <span class="azuloscuro">17467</span> | --- | --- | --- | --- | --- | --- | --- |
-| nombre_region |4| NOA |23084| --- | --- | --- | --- | --- | --- | --- |
-| perimetro_encefalico | --- | --- | --- |42.446|4.365|0|40|42|44.5|97|
-| peso | --- | --- | --- |7.442|2.435|1.92|5.9|7.1|8.6|23|
-| talla | --- | --- | --- |64.762|9.677|41|59|63|68|129|
-| var_BMIZ | --- | --- | --- |0.0806|1.032|-8.541|-0.446|0.070|0.612|7.877|
-| var_HAZ | --- | --- | --- |0.0537|1.016|-10.005|-0.438|0.0185|0.502|8.989|
-| var_WAZ | --- | --- | --- |0.0900|0.693|-7.50|-0.243|0.070|0.393|6.00|
-| zona_rural |2| <span class="azuloscuro">N</span> | <span class="azuloscuro">42970</span>| --- | --- | --- | --- | --- | --- | --- |
-| decae|2| False|37031| --- | --- | --- | --- | --- | --- | --- |
+| Feature |top |freq | mean | std |min |25% |50% |75% |max |
+| ---  | --- | --- | --- | --- | --- | --- | --- || --- | --- |
+| BMIZ  | --- | --- |0.491|1.277|<span class="azuloscuro">-4.935</span>|-0.307|0.524|1.323|<span class="azuloscuro">4.997</span>|
+| HAZ  | --- | --- |-0.662|1.323|<span class="azuloscuro">-5.996</span>|-1.450|-0.612|0.173|<span class="azuloscuro">5.997</span>|
+| WAZ  | --- | --- |-0.021|1.177|<span class="azuloscuro">-5.853</span>|-0.717|0.030|0.742|<span class="azuloscuro">4.872</span>|
+| individuo | --- |4| --- | --- | --- | --- | --- | --- | --- |
+| bmi  | --- | --- |17.333|2.210|8.3298|15.938|17.301|26.874|
+| departamento_lat  | --- | --- |-29.672|3.278|-38.976|-32.527|-27.551|-26.838|-25.402|
+| departamento_long  | --- | --- |-62.0619|4.864|-69.58|-65.259|-64.55|-59.08|-50|
+| fecha_control | 2014-04-21 |496| --- | --- | --- | --- | --- | --- | --- |
+| fecha_nacimiento | 2013-09-09 |295| --- | --- | --- | --- | --- | --- | --- |
+| fecha_proximo_control | 2014-08-26 |523| --- | --- | --- | --- | --- | --- | --- |
+| genero | <span class="azuloscuro">M</span> |<span class="azuloscuro">22010</span>| --- | --- | --- | --- | --- | --- | --- |
+| nombre_provincia | <span class="azuloscuro">Tucuman</span> | <span class="azuloscuro">17467</span> | --- | --- | --- | --- | --- | --- | --- |
+| nombre_region | NOA |23084| --- | --- | --- | --- | --- | --- | --- |
+| perimetro_encefalico  | --- | --- |42.446|4.365|0|40|42|44.5|97|
+| peso  | --- | --- |7.442|2.435|1.92|5.9|7.1|8.6|23|
+| talla  | --- | --- |64.762|9.677|41|59|63|68|129|
+| var_BMIZ  | --- | --- |0.0806|1.032|-8.541|-0.446|0.070|0.612|7.877|
+| var_HAZ  | --- | --- |0.0537|1.016|-10.005|-0.438|0.0185|0.502|8.989|
+| var_WAZ  | --- | --- |0.0900|0.693|-7.50|-0.243|0.070|0.393|6.00|
+| zona_rural | <span class="azuloscuro">N</span> | <span class="azuloscuro">42970</span>| --- | --- | --- | --- | --- | --- | --- |
+| decae | False|37031| --- | --- | --- | --- | --- | --- | --- |
 
 
 </div>
@@ -300,7 +300,7 @@ Not only that, those who have three rows correspond to the ones that are on the 
 
 In the next post, I'll continue with these ideas and explain the predictive models I used to play in the competition.
 
-<div style="float:right; padding:20px">
+<div style="float:right;padding: 50px; padding-bottom: 70px;">
 Thanks for reading!
 </div>
 

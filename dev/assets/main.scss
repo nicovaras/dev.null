@@ -101,6 +101,8 @@ td{
 
 .mapa-container{
       text-align: center;
+          margin: auto;
+    width: 80%;
 }
 .eci-graf {
    /* Prevent vertical gaps */
@@ -142,10 +144,10 @@ td{
 
 .tiny-link {
   color: black;
-  font-size: x-small;
-  text-decoration: underline;
+  /*font-size: x-small;*/
+  /*text-decoration: underline;*/
   display: table;
-  margin: auto;
+  margin: 10px auto;
 }
 
 .waka {
@@ -169,8 +171,15 @@ td{
 .tabla > table{
     background-color: rgba(217, 238, 249, 0.75);
     border:2px solid rgb(51, 51, 51);
-
+    text-align:left;
 }
+.tabla > table thead tr th {
+      padding-right: 10px;
+}
+.tabla > table tbody tr td {
+      padding-right: 10px;
+}
+
 
 .tabla > table tbody tr:nth-child(odd) {
    background-color: #fff;
