@@ -427,7 +427,7 @@ ul {
 
 /* Tooltip container */
 
-.tooltip {
+.tooltipo {
     position: relative;
     display: inline-block;
     border-bottom: 1px dotted black;
@@ -438,7 +438,7 @@ ul {
 
 /* Tooltip text */
 
-.tooltip .tooltiptext {
+.tooltipo .tooltipotext {
     font-size: 12px;
     visibility: hidden;
     width: 120px;
@@ -456,12 +456,13 @@ ul {
     /* Fade in tooltip */
     opacity: 0;
     transition: opacity 1s;
+    font-family: initial;
 }
 
 
 /* Tooltip arrow */
 
-.tooltip .tooltiptext::after {
+.tooltipo .tooltipotext::after {
     content: "";
     position: absolute;
     top: 100%;
@@ -475,7 +476,7 @@ ul {
 
 /* Show the tooltip text when you mouse over the tooltip container */
 
-.tooltip:hover .tooltiptext {
+.tooltipo:hover .tooltipotext {
     visibility: visible;
     opacity: 1;
 }

@@ -114,28 +114,82 @@ Here we have the meaning of each feature:
 
 
 <!-- - ver lo que hay que predecir, decae -->
-
+<br>
 Let's see what we have to predict. Our target variable is made of three conditions:
 
-**Decae** (Target variable): It takes the value "True" if at least one of the following conditions occurs:
-* HAZ >= -1 and next_HAZ < -1
-* WAZ >= -1 and next_WAZ < -1
-* BMIZ >= -1 and next_BMIZ < -1
+<div class="tabla" >
+<table >
+<tr style="background-color:rgba(217, 238, 249, 0.75) !important">
+<td>Decae (Target variable) </td>
+<td>
+It takes the value "True" if at least one of the following conditions occurs:
+<div style="margin: auto;  display: table;">
+<div style="font-size: 80px;display: table-cell;vertical-align: middle;">
+{
+</div>
+<div class="" style="font-family: monospace;display: table-cell;vertical-align: middle;">
+<div class="">
+<span>HAZ &gt;= -1 and next_HAZ &lt; -1</span>
+</div>
+<div class="">
+<span>WAZ &gt;= -1 and next_WAZ &lt; -1</span>
+</div>
+<div class="">
+<span>BMIZ &gt;= -1 and next_BMIZ &lt; -1</span>
+</div>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
 
 This is, if the current value for the indicator is greater than -1 and in the next check-up is less than -1 we can say
 that the value dropped below an acceptable range, and the baby is possibly at risk.
 
+<br>
 A couple of examples:
 
 {::options parse_block_html="true" /}
 <div class="tabla mark-last-row" >
-
-|HAZ control Jun '16| HAZ control Nov '16| decae |
-|-------|--------|---------|
-|               0.12|               -1.02| true  |
-|               -0.5|               -0.99| false |
-|               -1.5|               -1.8 |  false |
-
+<table>
+<thead>
+<tr>
+<td>HAZ check-up  Jun '16</td>
+<td>HAZ check-up  Nov '16</td>
+<td>decae</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.12</td>
+<td>-1.02</td>
+<td>true
+<span class="glyphicon glyphicon-question-sign tooltipo">
+    <span class="tooltipotext"> True, HAZ was &gt;= -1 and now is &lt; -1</span>
+</span>
+</td>
+</tr>
+<tr>
+<td>-0.5</td>
+<td>-0.99</td>
+<td>false
+<span class="glyphicon glyphicon-question-sign tooltipo">
+    <span class="tooltipotext"> False, HAZ is always &gt;= -1</span>
+</span>
+</td>
+</tr>
+<tr>
+<td>-1.5</td>
+<td>-1.8</td>
+<td>false
+<span class="glyphicon glyphicon-question-sign tooltipo">
+    <span class="tooltipotext"> Both checkups are below -1, the condition needs the first one to be &gt;= -1</span>
+</span>
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 <p class="table-note">HAZ over two different check-ups</p>
@@ -157,8 +211,8 @@ A couple of examples:
 
 
 
-The row highlighted is false regardless of being below -1.0 because HAZ also was below -1.0 on the previous control. Here we have a dependency, the target variable depends
-on the value of the previous seen control, and it has to be >= -1. This is a hard threshold/limit and we will explore later what happens
+The row highlighted is false regardless of being below -1.0 because HAZ also was below -1.0 on the previous check-up . Here we have a dependency, the target variable depends
+on the value of the previous seen check-up , and it has to be >= -1. This is a hard threshold/limit and we will explore later what happens
 on some of the models we train if we just ignore it.
 
 
@@ -301,6 +355,6 @@ Not only that, those who have three rows correspond to the ones that are on the 
 In the next post, I'll continue with these ideas and explain the predictive models I used to play in the competition.
 
 <div style="float:right;padding: 50px; padding-bottom: 70px;">
-Thanks for reading!
+*Thanks for reading!*
 </div>
 
