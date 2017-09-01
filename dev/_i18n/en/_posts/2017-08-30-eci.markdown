@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: post-eci
 title:  "Predicting growth in children - part 1/2"
 categories: kaggle scikit
 permalink: eci/
