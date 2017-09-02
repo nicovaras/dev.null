@@ -114,7 +114,7 @@ Ahora veamos lo que tenemos que predecir. Nuestra variable objetivo "decae" se c
 <td>
 Toma el valor "true" si se cumple alguna de éstas tres condiciones:
 <div style="margin: auto;  display: table;">
-<div style="font-size: 80px;display: table-cell;vertical-align: middle;">
+<div style="vertical-align: middle;font-size: 70px;margin-top: 22px;">
 {
 </div>
 <div class="" style="font-family: monospace;display: table-cell;vertical-align: middle;">

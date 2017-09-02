@@ -1,5 +1,11 @@
 @charset "utf-8";
-$base-font-family: "Product Sans",
+@font-face {
+    font-family:'GibsonLight';
+    src: url('../assets/f.woff2');
+
+}
+
+$base-font-family: "GibsonLight",
 Helvetica,
 Arial,
 sans-serif;
@@ -231,6 +237,7 @@ a {
     font-family: 'Product Sans';
     text-indent:0px;
     text-align:center;
+    text-transform:uppercase;
     @include media-query($on-palm) {
         font-size: 30px;
     }
@@ -244,7 +251,7 @@ a {
 body {
     font-size: 20px;
     color: #333;
-    font-family: 'Product Sans',
+    font-family: 'GibsonLight',
     sans-serif;
     text-indent:1em;
     @include media-query($on-palm) {
@@ -291,10 +298,11 @@ blockquote{
 
 .post-content {
     margin-bottom: $spacing-unit;
+    line-height: 1.8em;
     h2 {
         font-size: 32px;
         font-weight: bold;
-        font-family: 'Product Sans';
+        font-family: 'GibsonLight';
         margin-top: $spacing-unit;
         @include media-query($on-laptop) {
             font-size: 28px;

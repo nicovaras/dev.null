@@ -124,7 +124,7 @@ Now lets see what we have to predict. Our target variable is made of three condi
 <td>
 It takes the value "True" if at least one of the following conditions occurs:
 <div style="margin: auto;  display: table;">
-<div style="font-size: 80px;display: table-cell;vertical-align: middle;">
+<div style="vertical-align: middle;font-size: 70px;margin-top: 22px;">
 {
 </div>
 <div class="" style="font-family: monospace;display: table-cell;vertical-align: middle;">
