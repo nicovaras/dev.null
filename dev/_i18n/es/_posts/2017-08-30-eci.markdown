@@ -1,0 +1,394 @@
+---
+layout: post-eci
+title: "Predicción de salud infantil en Argentina - parte 1/2"
+categories: kaggle scikit
+permalink: eci/
+controller: EciController
+---
+
+¿Qué pasaría si un médico pudiera saber de antemano si un niño va a tener problemas de salud?
+
+Digamos que una madre con su bebé llega al consultorio del médico para hacerse un chequeo de rutina. El médico hace su trabajo y todo
+se ve bien. Ingresa toda la nueva información del bebé en la computadora pero ésta dice que el bebé probablemente va a estar en
+riesgo de salud... dentro de cuatro meses.
+
+Hoy en día, esto sigue siendo ciencia ficción, pero no estamos TAN lejos de una situación así. Hoy voy a escribir sobre una competencia de la que participé, que proponía un problema similar: dadas algunas medidas como el peso o la talla de un bebé, ¿serán esos valores peligrosamente bajos en el futuro?
+
+# El problema a resolver
+
+[Kaggle](https://inclass.kaggle.com/c/eci2017-1) lanzó una competencia en el contexto de la semana de la ECI (Escuela de Ciencias Informáticas) referido a temáticas de salud en niños. El problema contenía un dataset de chequeos de rutina para diferentes bebés en diferentes regiones de Argentina, y tuvimos que predecir si los z-values de altura, peso y masa corporal (HAZ, WAZ, BMIZ de ahora en adelante) estarán por debajo de un umbral determinado en el próximo chequeo.
+
+La competencia era abierta a todos los que quisieran participar, es un problema interesante y un buen clasificador tendría un impacto positivo en la medicina nacional.
+
+Además, pasó mucho tiempo desde que no competía, por lo que me vino al pelo. <i class="material-icons">sentiment_very_satisfied</i>
+
+# Veamos los datos
+
+El dataset para esta competencia es bastante sencillo y lo suficientemente pequeño para correr varios experimentos interesantes.
+El conjunto de training tiene **43933** filas y el conjunto de test **6275** filas. Ambos conjuntos tienen 23 columnas (features).
+
+Acá están las primeras filas de los datos originales del training set:
+
+
+<button ng-click="showFilters=!showFilters" class="btn btn-default" ng-show="!showFilters" style="display:table;">Mostrar filtros</button>
+<button ng-click="showFilters=!showFilters" class="btn btn-default active" ng-show="showFilters" style="display:table;">Ocultar filtros</button>
+
+
+<div class="material-switch row filtros" ng-show="showFilters">
+<ul class="list-group ">
+    <li class="list-group-item col-xs-3" ng-repeat="col in columns">
+        [[{col.field}]]
+        <div class="material-switch pull-left">
+            <input ng-model="col.show" id="[[{col.field}]]" name="[[{col.field}]]" type="checkbox"/>
+            <label for="[[{col.field}]]" class="label-primary"></label>
+        </div>
+    </li>
+</ul>
+</div>
+
+<div class="ng-table-scrollcontainer">
+<table ng-table-dynamic="tableParams with columns" show-filter="false" class="table table-bordered table-striped waka">
+<tbody>
+  <tr ng-repeat="user in $data" ng-class="{azul: esFalse(user), azuloscuro: !esFalse(user)}">
+    <td data-title="col.field" header-title="'col.field'" ng-repeat="col in $columns">[[{user[col.field]}]]</td>
+  </tr>
+</tbody>
+</table>
+</div>
+
+Y acá tenemos la descripción de cada feature:
+
+
+{::options parse_block_html="true" /}
+<div ng-show="!vm.showFeatures" class="tabla">
+
+| Nombre | Descripción |
+|-------|--------|
+| BMIZ (float) | body-mass-index-for-age-Z-scores (referencia estandarizada del BMI por edad y género)  |
+| HAZ (float) |  height-for-age Z-scores (referencia estandarizada del la altura por edad y género) |
+| WAZ (float) | weight-for-age Z-scores (referencia estandarizada del peso por edad y género) |
+| ... | ... |
+
+<button ng-click="vm.showFeatures=!vm.showFeatures" ng-show="!vm.showFeatures" class="btn btn-default  tiny-link">Mostrar más</button>
+</div>
+
+{::options parse_block_html="true" /}
+<div ng-show="vm.showFeatures" class="tabla">
+
+| Nombre | Descripción |
+|-------|--------|
+| BMIZ (float) | body-mass-index-for-age-Z-scores (referencia estandarizada del BMI por edad y género)  |
+| HAZ (float) |  height-for-age Z-scores (referencia estandarizada del la altura por edad y género) |
+| WAZ (float) | weight-for-age Z-scores (referencia estandarizada del peso por edad y género) |
+| Individuo (int) | Identificador asignado a cada individuo |
+| Bmi (float) | bmi = peso / (altura^2) |
+| Departmento_indec_id (int) | código de departamento del efector. Coincide con el código obtenido del INDEC |
+| Departmento_lat (float) |promedio de la latitud en la cual se encuentran los efectores de dicho departamento|
+| Departmento_long (float) | promedio de la longitud en la cual se encuentran los efectores de dicho departamento |
+| Fecha_control (string) | fecha en que el individuo fue atendido |
+| Fecha_nacimiento (string) | fecha en que el individuo nació. |
+| Fecha_proximo_control (string) | fecha en que el individuo será atendido por próxima vez |
+| Genero |género del individuo (M = masculino, F = femenino) |
+| Nombre_provincia (string) | nombre de la provincia en donde se atendió el individuo |
+| Nombre_region (string) | nombre de la región en donde se atendió el individuo |
+| Perimetro_encefalico (float) | Mmedición de perímetro encefálico obtenida en la atención (cm) |
+| Peso (float) | medición de peso obtenida en la atención (kg) |
+| Talla (float) | medición de talla obtenida en la atención (cm) |
+| Provincia_indec_id (int) | código de provincia (S = sí pertenece, N = no pertenece)|
+| Zona_rural (string) | Código que indica si el efector se encuentra en una zona rural |
+| Var_BMIZ | variación que tendrá BMIZ en la siguiente atención respecto al valor actual |
+| Var_HAZ | variación que tendrá HAZ en la siguiente atención respecto al valor actual |
+| Var_WAZ | variación que tendrá WAZ en la siguiente atención respecto al valor actual |
+
+<button ng-click="vm.showFeatures=!vm.showFeatures" ng-show="vm.showFeatures"  class="btn btn-default tiny-link">Mostrar menos</button>
+</div>
+
+
+<br>
+Ahora veamos lo que tenemos que predecir. Nuestra variable objetivo "decae" se compone de tres condiciones:
+
+<div class="tabla" >
+<table >
+<tr style="background-color:rgba(217, 238, 249, 0.75) !important">
+<td>Decae </td>
+<td>
+Toma el valor "true" si se cumple alguna de éstas tres condiciones:
+<div style="margin: auto;  display: table;">
+<div style="font-size: 80px;display: table-cell;vertical-align: middle;">
+{
+</div>
+<div class="" style="font-family: monospace;display: table-cell;vertical-align: middle;">
+<div class="">
+<span>HAZ &gt;= -1 and proximo_HAZ &lt; -1</span>
+</div>
+<div class="">
+<span>WAZ &gt;= -1 and proximo_WAZ &lt; -1</span>
+</div>
+<div class="">
+<span>BMIZ &gt;= -1 and proximo_BMIZ &lt; -1</span>
+</div>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+
+Esto es, si el valor actual para el z-value es mayor que -1 y en el próximo chequeo es menor que -1 podemos decir
+que el valor bajó por debajo de un rango aceptable, y el bebé está posiblemente en riesgo (y "decae" es true).
+Hay que tener en cuenta que si el z-value del chequeo anterior estaba por debajo de -1, el valor del siguiente chequeo no importa ya que la definición de nuestras condiciones dice que estos casos siempre seran "false".
+
+
+<br>
+Un par de ejemplos:
+
+{::options parse_block_html="true" /}
+<div class="tabla mark-last-row" >
+<table>
+<thead>
+<tr>
+<td>HAZ chequeo Jun '16</td>
+<td>HAZ chequeo Nov '16</td>
+<td>decae</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.12</td>
+<td>-1.02</td>
+<td>true
+<span class="glyphicon glyphicon-question-sign tooltipo">
+    <span class="tooltipotext"> True, HAZ era &gt;= -1 y ahora es &lt; -1</span>
+</span>
+</td>
+</tr>
+<tr>
+<td>-0.5</td>
+<td>-0.99</td>
+<td>false
+<span class="glyphicon glyphicon-question-sign tooltipo">
+    <span class="tooltipotext"> Falso, HAZ es siempre &gt;= -1</span>
+</span>
+</td>
+</tr>
+<tr>
+<td>-1.5</td>
+<td>-1.8</td>
+<td>false
+<span class="glyphicon glyphicon-question-sign tooltipo">
+    <span class="tooltipotext"> Ambos chequeos son menores a -1, la condición requiere que el anterior sea &gt;= -1</span>
+</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p class="table-note">HAZ respecto a dos chequeos en diferentes fechas</p>
+
+<br>
+
+{::options parse_block_html="true" /}
+<div class="tabla" >
+<table>
+<thead>
+    <tr>
+        <th>HAZ Jun '16</th>
+        <th>BMIZ Jun '16</th>
+        <th>HAZ Nov '16</th>
+        <th>BMIZ Nov '16</th>
+        <th>decae</th>
+    </tr>
+</thead>
+<tbody>
+<tr>
+<td>
+    0.1
+</td>
+<td>
+    1.0
+</td>
+<td>
+    -1.5
+</td>
+<td>
+    1.0
+</td>
+<td>
+    true
+<span class="glyphicon glyphicon-question-sign tooltipo">
+    <span class="tooltipotext"> HAZ cayó por debajo de -1</span>
+</span>
+</td>
+
+</tr>
+<tr>
+<td>
+    0.1
+</td>
+<td>
+    -1.1
+</td>
+<td>
+    -1.5
+</td>
+<td>
+    -1.1
+</td>
+<td>
+true
+<span class="glyphicon glyphicon-question-sign tooltipo">
+    <span class="tooltipotext"> BMIZ está por debajo de -1 pero esto era verdad también en el chequeo anterior. Pero HAZ es menor a -1 y esta es la razón de por qué tenemos un true.</span>
+</span>
+
+</td>
+</tr>
+
+</tbody>
+</table>
+
+
+</div>
+
+<p class="table-note">BMIZ y HAZ respecto a dos chequeos en diferentes fechas</p>
+<br>
+
+
+La fila resaltada es falsa independientemente de estar por debajo de -1.0 porque HAZ también estaba por debajo de -1.0 en el chequeo anterior. Acá se ve una dependencia, la variable objetivo depende del valor del chequeo visto anteriormente, y éste tiene que ser >= -1 para que "decae" pueda ser verdadero. Este es un umbral/límite fuerte y exploraremos más adelante que sucede en algunos de los modelos que entrenemos si simplemente ignoramos este hecho.
+
+
+Una última cosa a mencionar es que la métrica de scoring que vamos a usar es **ROC AUC** [(interactivo)](http://www.navan.name/roc/) {:target="_blank"}
+
+# Primero lo primero
+
+Digamos que Alice y Bob descargan el training set y empiezan a trabajar. La idea de Alice es tener un buen modelo, limpio, con buenas features
+y buenos hiperparámetros antes de mandar una solución. Bob por otro lado piensa que es mejor ser capaz de enviar una solución rápido
+y después mejorarla.
+
+Alice trabaja durante una semana antes de poder mandar una solución, guiandose en los resultados de su propio set de validación. Pero el día en que manda su solución, algo sale mal y el score final es menor de lo que ella esperaba. Esto quizá sea un bug en el código, o overfittió en
+algún punto y ahora tiene que volver a un código posiblemente complejo y debuggearlo.
+
+Bob hace el trabajo mínimo para tener una solución lo más rápido posible. Hizo una limpieza básica del dataset, corrió cualquier modelo con parámetros por defecto y generó la solución. Se presentó y obtuvo una puntuación no tan buena, pero ahora tiene una base sobre la cual
+mejorar. Sabe que su pipeline funciona de punto a punto, solamente tiene que mejorar la solución.
+
+No digo que alguien que hace lo que Alice hizo va a cometer un error antes de tener una solución, pero creo que es mejor a largo plazo tener
+una solución que funcione, por más mala que sea, y luego mejorarla. Esto es cierto en las competencias y también en la industria.
+
+Así que hice exactamente eso, limpié un poco el dataset (imputación básica y labelling), corrí un modelo de Gradient Boosting con valores por default y subí una solución el mismo día que empecé a competir. El puntaje inicial fue de *0.77043* y fue suficiente para estar entre los diez primeros en ese momento!
+
+# Explorando los datos
+Antes de seguir con modelos y parámentros y demás, es muy buena idea ver realmente los datos y pensar cómo pueden ayudarnos a resolver el problema.
+Si fuéramos médicos, ¿cómo podemos saber intuitivamente si hay algo malo con un bebé? Probablemente midiendo su peso, altura,
+y otras cosas podrían ayudar. Podemos ver su entorno socioeconómico, ¿vive en una zona con mayor probabilidad de conducir a problemas de salud? Idealmente, también podríamos ver la situación de su madre, ¿es sana? ¿Cuida bien de su bebé?
+
+No tenemos esa última información, pero tenemos algo sobre las dos primeras partes. Tenemos los pesos, alturas y z-values y algunos datos geográficos que podemos extrapolar con datos socioeconómicos externos.
+
+Comencemos con los z-values. Acá podemos ver algunos ejemplos y cómo se relacionan con la variable "decae":
+
+<div class="eci-graf">
+
+<a class='fancybox-thumb' id="haz" title="HAZ" data-thumb="/assets/eci/haz.png" href="/assets/eci/haz.png" rel="gallery2">
+    <img alt="HAZ" src="/assets/eci/haz.png">
+</a>
+<a class='fancybox-thumb' id="waz" title="WAZ" data-thumb="/assets/eci/waz.png" href="/assets/eci/waz.png" rel="gallery2">
+    <img alt="WAZ" src="/assets/eci/waz.png">
+</a>
+<a class='fancybox-thumb' id="bmiz" title="BMIZ" data-thumb="/assets/eci/bmiz.png" href="/assets/eci/bmiz.png" rel="gallery2">
+    <img alt="BMIZ" src="/assets/eci/bmiz.png">
+</a>
+</div>
+
+Vemos que, entre ciertos puntos, tenemos más densidad de casos con "decae" en "true". Esto podría ser útil más adelante si podemos meter esta información en nuestro modelo.
+<br>
+<br>
+
+También en dos minutos se puede generar una exploración descriptiva simple de las features:
+
+{::options parse_block_html="true" /}
+<div class="waka tabla" style="font-size: 14px">
+
+| Feature |top |freq | mean | std |min |25% |50% |75% |max |
+| ---  | --- | --- | --- | --- | --- | --- | --- || --- | --- |
+| BMIZ  | --- | --- |0.491|1.277|<span class="azuloscuro">-4.935</span>|-0.307|0.524|1.323|<span class="azuloscuro">4.997</span>|
+| HAZ  | --- | --- |-0.662|1.323|<span class="azuloscuro">-5.996</span>|-1.450|-0.612|0.173|<span class="azuloscuro">5.997</span>|
+| WAZ  | --- | --- |-0.021|1.177|<span class="azuloscuro">-5.853</span>|-0.717|0.030|0.742|<span class="azuloscuro">4.872</span>|
+| individuo | --- |4| --- | --- | --- | --- | --- | --- | --- |
+| bmi  | --- | --- |17.333|2.210|8.3298|15.938|17.301|26.874|
+| departamento_lat  | --- | --- |-29.672|3.278|-38.976|-32.527|-27.551|-26.838|-25.402|
+| departamento_long  | --- | --- |-62.0619|4.864|-69.58|-65.259|-64.55|-59.08|-50|
+| fecha_control | 2014-04-21 |496| --- | --- | --- | --- | --- | --- | --- |
+| fecha_nacimiento | 2013-09-09 |295| --- | --- | --- | --- | --- | --- | --- |
+| fecha_proximo_control | 2014-08-26 |523| --- | --- | --- | --- | --- | --- | --- |
+| genero | <span class="azuloscuro">M</span> |<span class="azuloscuro">22010</span>| --- | --- | --- | --- | --- | --- | --- |
+| nombre_provincia | <span class="azuloscuro">Tucuman</span> | <span class="azuloscuro">17467</span> | --- | --- | --- | --- | --- | --- | --- |
+| nombre_region | NOA |23084| --- | --- | --- | --- | --- | --- | --- |
+| perimetro_encefalico  | --- | --- |42.446|4.365|0|40|42|44.5|97|
+| peso  | --- | --- |7.442|2.435|1.92|5.9|7.1|8.6|23|
+| talla  | --- | --- |64.762|9.677|41|59|63|68|129|
+| var_BMIZ  | --- | --- |0.0806|1.032|-8.541|-0.446|0.070|0.612|7.877|
+| var_HAZ  | --- | --- |0.0537|1.016|-10.005|-0.438|0.0185|0.502|8.989|
+| var_WAZ  | --- | --- |0.0900|0.693|-7.50|-0.243|0.070|0.393|6.00|
+| zona_rural | <span class="azuloscuro">N</span> | <span class="azuloscuro">42970</span>| --- | --- | --- | --- | --- | --- | --- |
+| decae | False|37031| --- | --- | --- | --- | --- | --- | --- |
+
+
+</div>
+<br>
+
+Ahora tenemos una idea de los datos. Recordemos que tenemos **43933** filas en el training set. Tenemos **22010** varones, esto es la mitad de los datos y la otra mitad son mujeres, así que está equilibrado por esta variable. También tenemos **17467** casos de Tucumán (es mucho) y esto posiblemente influirá en los resultados que dependan de las ubicaciones. La feature "Zona_rural" tiene **42970** filas en "false", esto es la mayor parte del dataset. Esta feature no tiene casi varianza y es una posible candidata para ser eliminada.
+Una curiosidad para ver es que hay valores muy extremos para el min y max de nuestras features de z-value. Tener un HAZ de -5 debe significar un caso muy complicado de tratar para el médico.
+
+Por último, nuestra variable objetivo "decae" tiene *37031* valores en "false". Esto es casi el 80% del dataset por lo que tenemos un problema con las clases desequilibradas y esto va a afectar el rendimiento de nuestros predictores.
+
+También tenemos las coordenadas de los diferentes hospitales. Es razonable pensar que hay zonas con mayor riesgo que otras.
+Dibujé todos los hospitales en el mapa y vemos que quizá sea una buena idea definir nuevas subregiones en algunas provincias. Por ejemplo,
+podemos dividir Buenos Aires en Sur/Centro-Norte/Gran Buenos Aires.
+
+<div class="mapa-container">
+<div class="mapas">
+
+<a class='fancybox-thumb' id="argentina" title="Whole country view" data-thumb="/assets/eci/arg.png" href="/assets/eci/arg.png" rel="gallery">
+    <img alt="Argentina" src="/assets/eci/arg.png">
+</a>
+<a class='fancybox-thumb' id="buenosaires" title="Buenos Aires" data-thumb="/assets/eci/bsas.png" href="/assets/eci/bsas.png" rel="gallery">
+    <img alt="Buenos Aires" src="/assets/eci/bsas.png">
+</a>
+<a class='fancybox-thumb' id="chaco" title="El Chaco" data-thumb="/assets/eci/chaco.png" href="/assets/eci/chaco.png" rel="gallery">
+    <img alt="Chaco" src="/assets/eci/chaco.png">
+</a>
+<a class='fancybox-thumb' id="cordoba" title="Córdoba" data-thumb="/assets/eci/cordoba.png" href="/assets/eci/cordoba.png" rel="gallery">
+    <img alt="Córdoba" src="/assets/eci/cordoba.png">
+</a>
+<a class='fancybox-thumb' id="tucuman" title="Tucumán" data-thumb="/assets/eci/tucuman.png" href="/assets/eci/tucuman.png" rel="gallery">
+    <img alt="Tucumán" src="/assets/eci/tucuman.png">
+</a>
+<a class='fancybox-thumb' id="entrerios" title="Entre Ríos" data-thumb="/assets/eci/entrerios.png" href="/assets/eci/entrerios.png" rel="gallery">
+    <img alt="Entre Ríos" src="/assets/eci/entrerios.png">
+</a>
+<a class='fancybox-thumb' id="estero" title="Santiago del Estero" data-thumb="/assets/eci/estero.png" href="/assets/eci/estero.png" rel="gallery">
+    <img alt="Santiago del Estero" src="/assets/eci/estero.png">
+</a>
+<a class='fancybox-thumb' id="gba" title="Greater Buenos Aires" data-thumb="/assets/eci/gba.png" href="/assets/eci/gba.png" rel="gallery">
+    <img alt="Greater Buenos Aires" src="/assets/eci/gba.png">
+</a>
+
+
+</div>
+</div>
+
+Usé algo de jitter y alpha blending en los puntos para poder ver mejor las zonas con más o con menos densidad de pacientes.
+
+En este caso agrupamos los hospitales sólo geográficamente, pero podemos intentar una cosita más. Podemos agrupar los hospitales por la proporción de casos sanos/no sanos según "decae". Por cada hospital tenemos el número de pacientes que tienen "decae" en "true" versus los que son falsos, dividimos esos dos números y obtenemos una proporción.
+Por ejemplo, si el hospital #123 tiene 80 pacientes con "decae" en "false" y 20 con "decae" en "true", nuestra nueva feature es r = 0.8.
+Voy a mostrar en el próximo post que este enfoque fue mejor que el geográfico.
+
+Una última cosa (y muy importante), podemos ver que los datos del training se componen de un chequeo por cada fila y varios pacientes se repiten. De hecho, la mayoría de los pacientes tienen tres o cuatro filas en el training set.
+No sólo eso, los pacientes que tienen tres filas corresponden a los mismos pacientes que están en el test set. Entonces tenemos la historia de los pacientes en el test set!
+
+
+En el próximo post, sigo un poco con estas ideas y voy a contar las nuevas features que generé y los modelos predictivos que terminé usando en la competencia.
+
+<div style="float:right;padding: 50px; padding-bottom: 70px;">
+*¡Gracias por leer!*
+</div>
+
