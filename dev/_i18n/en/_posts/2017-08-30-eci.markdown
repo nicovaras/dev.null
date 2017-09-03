@@ -22,9 +22,9 @@ similar problem: given some measurements like the weight or height of a baby, wi
 <!-- - contexto/problema de la competencia -->
 # The problem to solve
 
-[Kaggle](https://inclass.kaggle.com/c/eci2017-1) launched a competition in the context of the ECI week (School of Informatics Sciences for its initials in Spanish) .
+in the context of the ECI week (School of Informatics Sciences for its initials in Spanish), a competition was launched in [Kaggle](https://inclass.kaggle.com/c/eci2017-1) which theme was children health analysis.
 The problem consisted in a dataset of routine check-ups for different babies in different regions of Argentina, and we had
-to predict if the z-values for height, weight and body mass (HAZ, WAZ, BMIZ from now on) will be below a given threshold in the
+to predict if the z-scores for height, weight and body mass (HAZ, WAZ, BMIZ from now on) will be below a given threshold in the
 next check-up.
 
 The competition was open to everyone, it is an interesting problem and a good classifier will have a positive impact in national medicine.
@@ -144,7 +144,7 @@ It takes the value "True" if at least one of the following conditions occurs:
 </table>
 </div>
 
-This is, if the current value for the z-value is greater than -1 and in the next check-up it is less than -1 we can say
+This is, if the current value for the z-score is greater than -1 and in the next check-up it is less than -1 we can say
 that the value dropped below an acceptable range, and the baby is possibly at risk (and our target variable is true).
 Note that if the previous value was below -1, the next value doesn't matter because our condition will always be false.
 
@@ -302,9 +302,9 @@ If we were a doctor, how can we intuitively know if there's something wrong with
 and other things could help. We can see his socioeconomic environment, does he live in a zone with higher probability of
 leading to health problems? Ideally, we could also see his mother's situation, is she healthy? Does she take good care of her baby?
 
-We don't have that last bit of information, but we have something about the first two parts. We have the weights, heights and z-values and some geographic data that we can extrapolate with external socioeconomic data.
+We don't have that last bit of information, but we have something about the first two parts. We have the weights, heights and z-scores and some geographic data that we can extrapolate with external socioeconomic data.
 
-Lets start with the z-values. Here you can see some examples, and how they relate to the target variable:
+Lets start with the z-scores. Here you can see some examples, and how they relate to the target variable:
 
 <div class="eci-graf">
 
@@ -358,7 +358,7 @@ Here is a simple exploration of the features:
 We have an insight on the data now. Remember that we have **43933** rows in the training set. We have **22010** males, this is half of the data and the other half are females, so it's
 balanced. We also have **17467** cases from Tucumán (a lot) and this will possibly influence the results that depend on locations. The feature "Zona_rural"
 has **42970** rows on False, this is most of the dataset. This feature has almost no variance and is a possible candidate to be removed.
-Another interesting point to see is that there're very extreme values as min and max for our z-value variables. Having a HAZ of -5 must
+Another interesting point to see is that there're very extreme values as min and max for our z-score variables. Having a HAZ of -5 must
 mean a very extreme case.
 
 Finally, our target variable "decae" has *37031* rows on False. This is almost 80% of the dataset so we have a problem with unbalanced classes and this will affect the performance of our estimators.

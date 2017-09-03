@@ -16,7 +16,7 @@ Hoy en día, esto sigue siendo ciencia ficción, pero no estamos TAN lejos de un
 
 # El problema a resolver
 
-[Kaggle](https://inclass.kaggle.com/c/eci2017-1) lanzó una competencia en el contexto de la semana de la ECI (Escuela de Ciencias Informáticas) referido a temáticas de salud en niños. El problema contenía un dataset de chequeos de rutina para diferentes bebés en diferentes regiones de Argentina, y tuvimos que predecir si los z-values de altura, peso y masa corporal (HAZ, WAZ, BMIZ de ahora en adelante) estarán por debajo de un umbral determinado en el próximo chequeo.
+En el contexto de la semana de la ECI (Escuela de Ciencias Informáticas) se organizó una competencia en [Kaggle](https://inclass.kaggle.com/c/eci2017-1) referida a temáticas de salud en niños. El problema contenía un dataset de chequeos de rutina para diferentes bebés en diferentes regiones de Argentina, y tuvimos que predecir si los z-scores de altura, peso y masa corporal (HAZ, WAZ, BMIZ de ahora en adelante) estarán por debajo de un umbral determinado en el próximo chequeo.
 
 La competencia era abierta a todos los que quisieran participar, es un problema interesante y un buen clasificador tendría un impacto positivo en la medicina nacional.
 
@@ -134,9 +134,9 @@ Toma el valor "true" si se cumple alguna de éstas tres condiciones:
 </table>
 </div>
 
-Esto es, si el valor actual para el z-value es mayor que -1 y en el próximo chequeo es menor que -1 podemos decir
+Esto es, si el valor actual para el z-score es mayor que -1 y en el próximo chequeo es menor que -1 podemos decir
 que el valor bajó por debajo de un rango aceptable, y el bebé está posiblemente en riesgo (y "decae" es true).
-Hay que tener en cuenta que si el z-value del chequeo anterior estaba por debajo de -1, el valor del siguiente chequeo no importa ya que la definición de nuestras condiciones dice que estos casos siempre seran "false".
+Hay que tener en cuenta que si el z-score del chequeo anterior estaba por debajo de -1, el valor del siguiente chequeo no importa ya que la definición de nuestras condiciones dice que estos casos siempre seran "false".
 
 
 <br>
@@ -281,9 +281,9 @@ Antes de seguir con modelos y parámentros y demás, es muy buena idea ver realm
 Si fuéramos médicos, ¿cómo podemos saber intuitivamente si hay algo malo con un bebé? Probablemente midiendo su peso, altura,
 y otras cosas podrían ayudar. Podemos ver su entorno socioeconómico, ¿vive en una zona con mayor probabilidad de conducir a problemas de salud? Idealmente, también podríamos ver la situación de su madre, ¿es sana? ¿Cuida bien de su bebé?
 
-No tenemos esa última información, pero tenemos algo sobre las dos primeras partes. Tenemos los pesos, alturas y z-values y algunos datos geográficos que podemos extrapolar con datos socioeconómicos externos.
+No tenemos esa última información, pero tenemos algo sobre las dos primeras partes. Tenemos los pesos, alturas y z-scores y algunos datos geográficos que podemos extrapolar con datos socioeconómicos externos.
 
-Comencemos con los z-values. Acá podemos ver algunos ejemplos y cómo se relacionan con la variable "decae":
+Comencemos con los z-scores. Acá podemos ver algunos ejemplos y cómo se relacionan con la variable "decae":
 
 <div class="eci-graf">
 
@@ -336,7 +336,7 @@ También en dos minutos se puede generar una exploración descriptiva simple de 
 <br>
 
 Ahora tenemos una idea de los datos. Recordemos que tenemos **43933** filas en el training set. Tenemos **22010** varones, esto es la mitad de los datos y la otra mitad son mujeres, así que está equilibrado por esta variable. También tenemos **17467** casos de Tucumán (es mucho) y esto posiblemente influirá en los resultados que dependan de las ubicaciones. La feature "Zona_rural" tiene **42970** filas en "false", esto es la mayor parte del dataset. Esta feature no tiene casi varianza y es una posible candidata para ser eliminada.
-Una curiosidad para ver es que hay valores muy extremos para el min y max de nuestras features de z-value. Tener un HAZ de -5 debe significar un caso muy complicado de tratar para el médico.
+Una curiosidad para ver es que hay valores muy extremos para el min y max de nuestras features de z-score. Tener un HAZ de -5 debe significar un caso muy complicado de tratar para el médico.
 
 Por último, nuestra variable objetivo "decae" tiene *37031* valores en "false". Esto es casi el 80% del dataset por lo que tenemos un problema con las clases desequilibradas y esto va a afectar el rendimiento de nuestros predictores.
 
