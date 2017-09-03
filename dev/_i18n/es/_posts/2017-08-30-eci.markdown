@@ -257,7 +257,7 @@ true
 La fila resaltada es falsa independientemente de estar por debajo de -1.0 porque HAZ también estaba por debajo de -1.0 en el chequeo anterior. Acá se ve una dependencia, la variable objetivo depende del valor del chequeo visto anteriormente, y éste tiene que ser >= -1 para que "decae" pueda ser verdadero. Este es un umbral/límite fuerte y exploraremos más adelante que sucede en algunos de los modelos que entrenemos si simplemente ignoramos este hecho.
 
 
-Una última cosa a mencionar es que la métrica de scoring que vamos a usar es **ROC AUC** [(interactivo)](http://www.navan.name/roc/) {:target="_blank"}
+Una última cosa a mencionar es que la métrica de scoring que vamos a usar es **ROC AUC** [(interactivo)](http://www.navan.name/roc/){:target="_blank"}
 
 # Primero lo primero
 
