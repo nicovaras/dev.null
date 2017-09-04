@@ -51,6 +51,7 @@ body {
   margin-left: auto;
   padding-right: 110px;
   padding-left: 110px;
+      border-radius: 20px;
 }
 
 table{
@@ -107,18 +108,16 @@ td{
     width: 80%;
 }
 .eci-graf {
-   /* Prevent vertical gaps */
    line-height: 0;
    text-indent:0px;
-
    -webkit-column-count: 5;
    -webkit-column-gap:   0px;
    -moz-column-count:    5;
    -moz-column-gap:      0px;
    column-count:         5;
    column-gap:           0px;
-       display: table;
-    text-align: center;
+   display: table;
+   text-align: center;
 }
 
 .eci-graf img {
@@ -127,6 +126,31 @@ td{
   border:2px solid #000;
 }
 
+.fancy-group{
+   line-height: 0;
+   text-indent:0px;
+   display: flex;
+   text-align: center;
+   justify-content: center;
+
+}
+.fancy-group a{
+  text-decoration: none;
+  }
+.fancy-caption{
+    display: block;
+    margin: 10px;
+    padding: 10px;
+    color: grey;
+    font-style: italic;
+    font-size: small;
+}
+.fancy-group img{
+    width:90%;
+    border-radius: 20px;
+  margin:5px;
+  border:2px solid #000;
+}
 @include media-query($on-laptop) {
   .mapas {
   -moz-column-count:    4;
@@ -282,19 +306,29 @@ td{
 
 .pagination{
   margin: auto;
-    font-size: 10px;
-    text-indent: 0px;
-    margin-bottom: 20px;
-    display: table
+  font-size: 10px;
+  text-indent: 0px;
+  margin-bottom: 20px;
+  display: table
 }
-
 
 .post-header{
   margin-bottom: 50px;
-      border-bottom: thin solid #dcdedf;
-    padding-top: 80px;
+  border-bottom: thin solid #dcdedf;
+  padding-top: 80px;
 }
 
 h1{
   padding-top:30px;
+}
+
+
+.site-footer a{
+    text-decoration:none;
+
+}
+
+
+.highlight{
+      text-indent: 0px;
 }

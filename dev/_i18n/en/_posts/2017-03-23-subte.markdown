@@ -3,6 +3,7 @@ layout: post
 title:  "The Subte web extension"
 categories: firefox chrome javascript
 permalink: subte/
+controller: DefaultController
 ---
 
 The Metro in Buenos Aires is composed of six lines that cover good part of the city. More often than not, one or more of these lines have problems with the service. These problems include technical issues, strikes, repairs or unexpected delays among others.
@@ -14,9 +15,15 @@ To help everyone be a little more happy, I made this extension for Firefox and C
 To get the status of the service, I query the data from Metrovias website, the current owner of the Metro. They currently don't have an API to get the data, so I have to scrap
 the page to get it. I'm using JQuery in my extensions, so it is easy to query the webpage and get the data I need.
 
-<center>
-{% include image.html url="/assets/subte.png" description="It shows the status of each line and possible problems" %}
-</center>
+<div class="fancy-group">
+
+<a class='fancybox-thumb' id="subte" title="It shows the status of each line and possible problems" data-thumb="/assets/subte.png" href="/assets/subte.png" rel="gallery2">
+    <img alt="subte" src="/assets/subte.png">
+    <span class="fancy-caption">It shows the status of each line and possible problems</span>
+</a>
+
+</div>
+
 What I'm looking for is the string that describes the current status for each line. I want to inform three possible states: the line is fully functional, the line has problems but it is usable and if there is a complete shutdown of that line. I look in the string for keywords or phrases that describe each state. For example: if I read "Normal" I assume the line is working properly, if I read something like "service limited" or "delayed" I know that the service is working but it has problems and I take everything else as a failure, the line isn't working at all.
 
 
@@ -94,13 +101,14 @@ The inner function makes another AJAX call but this time to Metrovias.
 <div class="lang-name">Javascript</div>
 {% highlight javascript %}
 
-    function(possible_status) {
-        $.ajax({
-            url: "http://www.metrovias.com.ar",
-            type: 'GET',
-            success: function(data) {
-                ...
-        });}
+function(possible_status) {
+    $.ajax({
+        url: "http://www.metrovias.com.ar",
+        type: 'GET',
+        success: function(data) {
+            ...
+    });
+}
 {% endhighlight %}
 
 
@@ -109,20 +117,20 @@ Finally, after I get that data, this block is run
 <div class="lang-name">Javascript</div>
 {% highlight javascript %}
 
-            var data = $(data);
-            var lines = ["A", "B", "C", "D", "E", "H"];
+var data = $(data);
+var lines = ["A", "B", "C", "D", "E", "H"];
 
-            for (var i = 0; i < lines.length; ++i) {
-                var text = data.find("span#status-line-" + lines[i]).text();
-                if (check_status(text, possible_status['warn'])){
-                    browser.browserAction.setBadgeBackgroundColor({ color: "#FF9933" });
-                    browser.browserAction.setBadgeText({text: '⚠'});
-                } else if (!check_status(text, possible_status['ok'])) {
-                    browser.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 255] });
-                    browser.browserAction.setBadgeText({text: '✗'});
-                    break;
-                }
-            }
+for (var i = 0; i < lines.length; ++i) {
+    var text = data.find("span#status-line-" + lines[i]).text();
+    if (check_status(text, possible_status['warn'])){
+        browser.browserAction.setBadgeBackgroundColor({ color: "#FF9933" });
+        browser.browserAction.setBadgeText({text: '⚠'});
+    } else if (!check_status(text, possible_status['ok'])) {
+        browser.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 255] });
+        browser.browserAction.setBadgeText({text: '✗'});
+        break;
+    }
+}
 {% endhighlight %}
 
 
@@ -133,10 +141,22 @@ The code for the popup version, the one that runs when you click the extension, 
 ## Review Process
 
 Once I finished and tested my extension, is time to ship it! Obviously I'll want it to appear in the Chrome and Firefox official stores. This implies to get through a process of review from each company.
-<div style="width:46%;margin-right:5%;float:left;">
-{% include image.html url="/assets/subte_firefox.png" description="Firefox review screen" %}
+
+
+<div class="fancy-group">
+
+<a class='fancybox-thumb' id="firefox" title="Firefox review screen" data-thumb="/assets/subte_firefox.png" href="/assets/subte_firefox.png" rel="gallery2">
+    <img alt="firefox" src="/assets/subte_firefox.png">
+    <span class="fancy-caption">Firefox review screen</span>
+</a>
+<a class='fancybox-thumb' id="Chrome" title="Chrome review screen" data-thumb="/assets/eci/subte_chrome.png" href="/assets/subte_chrome.png" rel="gallery2">
+    <img alt="Chrome" src="/assets/subte_chrome.png">
+    <span class="fancy-caption">Chrome review screen</span>
+</a>
+
+
 </div>
-{% include image.html url="/assets/subte_chrome.png" description="Chrome review screen" %}
+
 
 In both cases uploading an extension is free. The main difference with the process is the waiting time. Firefox approved my extension almost 20 days after I submitted the first time and two or three days for any update I wanted to do. Instead, Chrome had my extension online after one hour!. This is great for the developer that all he wants is to see his extension on the wild, but it also talks about the scrutinity of each process. The Firefox review process takes more time to really be sure that this extension is safe and sound.
 

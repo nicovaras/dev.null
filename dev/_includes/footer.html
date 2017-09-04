@@ -1,28 +1,32 @@
 <footer class="site-footer">
-        <ul class='footer-list'>
-        <span class='footer-left'>
-          <li >
+    <div class='row '>
+        <div class='col-md-6'>
+        <div >
+            {% include icon-linkedin.html username=site.linkedin_username %}
+        </div>
+        {% if site.github_username %}
+        <div >
+            {% include icon-github.html username=site.github_username %}
+        </div>
+        {% endif %}
+        <div >
+            {% include icon-cv.html username=site.cv %}
+        </div>
+
+
+
+        </div>
+        <div class='col-md-6 footer-right' >
+          <div >
             {% if site.author %}
               {{ site.author | escape }}
             {% else %}
               {{ site.title | escape }}
             {% endif %}
-            </li>
+            </div>
             {% if site.email %}
-            <li ><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
+            <div ><a href="mailto:{{ site.email }}">{{ site.email }}</a></div>
             {% endif %}
-            </span>
-            <li class='footer-right'>
-              {% include icon-linkedin.html username=site.linkedin_username %}
-            </li>
-          {% if site.github_username %}
-            <li class='footer-right'>
-              {% include icon-github.html username=site.github_username %}
-            </li>
-          {% endif %}
-
-            <li class='footer-right'>
-              {% include icon-cv.html username=site.cv %}
-            </li>
-        </ul>
+        </div>
+    </div>
 </footer>

@@ -5,7 +5,27 @@
     angular.module('ngApp', ["ngTable"], function($interpolateProvider) {
         $interpolateProvider.startSymbol('[[{');
         $interpolateProvider.endSymbol('}]]');
-    }).controller('EciController', ["$scope", "$http", "$filter", "NgTableParams",
+    }).controller('DefaultController',["$scope",
+        function DefaultController($scope ) {
+            angular.element(document).ready(function() {
+
+                $(".fancybox-thumb").fancybox({
+                    prevEffect: 'none',
+                    nextEffect: 'none',
+                    helpers: {
+                        title: {
+                            type: 'float'
+                        },
+                        thumbs: {
+                            width: 50,
+                            height: 50
+                        }
+                    }
+                });
+            })
+        }
+    ])
+    .controller('EciController', ["$scope", "$http", "$filter", "NgTableParams",
 
         function EciController($scope, $http, $filter, NgTableParams) {
 

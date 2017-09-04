@@ -3,6 +3,7 @@ layout: post
 title:  "La extensión del Subte"
 categories: firefox chrome javascript
 permalink: subte/
+controller: DefaultController
 ---
 
 El Subte de Buenos Aires se compone de seis líneas que cubren buena parte de la ciudad. Bastante a menudo, una o más de estas líneas tienen problemas con el servicio. Estos problemas incluyen problemas técnicos, huelgas, reparaciones o retrasos inesperados, entre otros.
@@ -14,9 +15,15 @@ Para ayudar a todos a ser un poco más felices, hice esta extensión para Firefo
 Para obtener el estado del servicio, consulto los datos de la web de Metrovias, el actual propietario del Subte. Actualmente no tienen una API para obtener los datos, así que tengo que scrapear la página para obtenerlos. Estoy usando JQuery en mis extensiones, por lo que es fácil consultar la página web y obtener los datos que necesito.
 
 
-<center>
-{% include image.html url="/assets/subte.png" description="Muestra el estado de las lineas y los posibles problemas" %}
-</center>
+<div class="fancy-group">
+
+<a class='fancybox-thumb' id="subte" title="Muestra el estado de las lineas y los posibles problemas" data-thumb="/assets/subte.png" href="/assets/subte.png" rel="gallery2">
+    <img alt="subte" src="/assets/subte.png">
+    <span class="fancy-caption">Muestra el estado de las lineas y los posibles problemas</span>
+</a>
+
+</div>
+
 Lo que estoy buscando es el string que describe el estado actual de cada línea. Quiero poder informar tres posibles estados: la línea es totalmente funcional, la línea tiene problemas pero es utilizable y si hay un cierre completo de esa línea. Busco en el string palabras clave o frases que describen cada estado. Por ejemplo: si leo "Normal" supongo que la línea está funcionando correctamente, si leo algo como "servicio limitado" o "demorado" sé que el servicio está funcionando pero tiene problemas y tomo todo lo demás como un error, la línea no funciona en absoluto.
 
 
@@ -97,13 +104,14 @@ La función interna hace otra llamada AJAX pero esta vez a Metrovias.
 <div class="lang-name">Javascript</div>
 {% highlight javascript %}
 
-    function(possible_status) {
-        $.ajax({
-            url: "http://www.metrovias.com.ar",
-            type: 'GET',
-            success: function(data) {
-                ...
-        });}
+function(possible_status) {
+    $.ajax({
+        url: "http://www.metrovias.com.ar",
+        type: 'GET',
+        success: function(data) {
+            ...
+    });
+}
 {% endhighlight %}
 
 
@@ -112,20 +120,20 @@ Al final, después de obtener esos datos, se ejecuta este bloque
 <div class="lang-name">Javascript</div>
 {% highlight javascript %}
 
-            var data = $(data);
-            var lines = ["A", "B", "C", "D", "E", "H"];
+var data = $(data);
+var lines = ["A", "B", "C", "D", "E", "H"];
 
-            for (var i = 0; i < lines.length; ++i) {
-                var text = data.find("span#status-line-" + lines[i]).text();
-                if (check_status(text, possible_status['warn'])){
-                    browser.browserAction.setBadgeBackgroundColor({ color: "#FF9933" });
-                    browser.browserAction.setBadgeText({text: '⚠'});
-                } else if (!check_status(text, possible_status['ok'])) {
-                    browser.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 255] });
-                    browser.browserAction.setBadgeText({text: '✗'});
-                    break;
-                }
-            }
+for (var i = 0; i < lines.length; ++i) {
+    var text = data.find("span#status-line-" + lines[i]).text();
+    if (check_status(text, possible_status['warn'])){
+        browser.browserAction.setBadgeBackgroundColor({ color: "#FF9933" });
+        browser.browserAction.setBadgeText({text: '⚠'});
+    } else if (!check_status(text, possible_status['ok'])) {
+        browser.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 255] });
+        browser.browserAction.setBadgeText({text: '✗'});
+        break;
+    }
+}
 {% endhighlight %}
 
 
@@ -138,10 +146,20 @@ El código para el popup, el que se ejecuta al hacer click en la extensión, es 
 
 Una vez que terminé y testié mi extensión, ¡es hora de mandarla!. Obviamente, quiero que aparezca en los stores oficiales de Chrome y Firefox. Esto implica pasar por un proceso de revisión propio de cada empresa.
 
-<div style="width:46%;margin-right:5%;float:left;">
-{% include image.html url="/assets/subte_firefox.png" description="Pantalla de review de Firefox" %}
+
+<div class="fancy-group">
+
+<a class='fancybox-thumb' id="firefox" title="Pantalla de review de Firefox" data-thumb="/assets/subte_firefox.png" href="/assets/subte_firefox.png" rel="gallery2">
+    <img alt="firefox" src="/assets/subte_firefox.png">
+    <span class="fancy-caption">Pantalla de review de Firefox</span>
+</a>
+<a class='fancybox-thumb' id="Chrome" title="Pantalla de review de Chrome" data-thumb="/assets/eci/subte_chrome.png" href="/assets/subte_chrome.png" rel="gallery2">
+    <img alt="Chrome" src="/assets/subte_chrome.png">
+    <span class="fancy-caption">Pantalla de review de Chrome</span>
+</a>
+
+
 </div>
-{% include image.html url="/assets/subte_chrome.png" description="Pantalla de review de Chrome" %}
 
 En ambos casos subir una extensión es gratis. La principal diferencia con el proceso es el tiempo de espera. Firefox aprobó mi extensión casi 20 días después de subir la primer version y dos o tres días para cualquier cambio que quería hacer. En cambio, Chrome tenía mi extensión online después de una hora nomas. Esto es genial para el desarrollador que lo único que quiere es ver su extensión subida al público, pero también habla sobre la rigurosidad de cada proceso. El proceso de revisión de Firefox tarda más tiempo para estar realmente seguro de que la extensión es segura y cumple las normas.
 
