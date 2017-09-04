@@ -3,12 +3,13 @@ layout: post
 title:  "Bloom filters en Ruby"
 categories: data-structures ruby
 permalink: bloom/
+controller: DefaultController
 ---
 
 Es sabido que grandes peligros acechan en las profundidades de Internet. Cualquiera podría fácilmente caer víctima de un sitio malicioso con una simple búsqueda o al hacer clic aleatoriamente en cualquier link que encontremos en el camino. Pero en Google Chrome, antes de ingresar a cualquier sitio malicioso, aparece la siguiente advertencia:
 
 
-{% include image.html url="/assets/malware.png" description="Podes probar esto con Chrome yendo a malware.testing.google.test/testing/malware/" %}
+{% include image.html url="/assets/malware.png" description="Podes probar esto con Chrome yendo a malware.testing.google.test/testing/malware/" id="malware" group="malware" %}
 
 
 Esto funciona bastante bien como método de prevención, salvando al usuario de una posible infección. Pero, ¿cómo sabe realmente Chrome que este sitio en particular es malévolo?. Una posible solución es que Chrome tenga almacenado en una base de datos una gran cantidad de URLs correspondientes a los sitios maliciosos. Y esto tiene que hacerse localmente, porque no queremos perder tiempo enviando una solicitud a un servidor de Google cada vez que visitamos una página web. Pero guardar todos estos datos localmente, ¿no tomaría mucho espacio en el disco?. Entonces, ¿cómo hace esto Chrome eficientemente? La respuesta es usando una estructura de datos especial llamada *Bloom Filters*. Chrome utiliza esta estructura de datos para resolver el problema, así como también lo hacen Bitcoin, Cassandra, BigTable y otros para diferentes problemas.

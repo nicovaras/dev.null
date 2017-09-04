@@ -410,15 +410,16 @@ a:visited {
 }
 
 .lang-name {
-    border: 1px solid #e8e8e8;
-    text-align: right;
+    line-height: 20px;
+    text-indent: 0;
     display: inline-block;
-    background-color: #eef;
+    background-color: #23241f;
     padding-left: 4px;
     padding-right: 4px;
     font-size: 12px;
     font-weight: bold;
-    color: #000080;
+    color: #fff;
+    margin-left: 20px;
 }
 
 ul {

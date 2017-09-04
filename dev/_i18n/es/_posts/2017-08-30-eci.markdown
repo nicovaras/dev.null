@@ -285,18 +285,9 @@ No tenemos esa última información, pero tenemos algo sobre las dos primeras pa
 
 Comencemos con los z-scores. Acá podemos ver algunos ejemplos y cómo se relacionan con la variable "decae":
 
-<div class="eci-graf">
 
-<a class='fancybox-thumb' id="haz" title="HAZ" data-thumb="/assets/eci/haz.png" href="/assets/eci/haz.png" rel="gallery2">
-    <img alt="HAZ" src="/assets/eci/haz.png">
-</a>
-<a class='fancybox-thumb' id="waz" title="WAZ" data-thumb="/assets/eci/waz.png" href="/assets/eci/waz.png" rel="gallery2">
-    <img alt="WAZ" src="/assets/eci/waz.png">
-</a>
-<a class='fancybox-thumb' id="bmiz" title="BMIZ" data-thumb="/assets/eci/bmiz.png" href="/assets/eci/bmiz.png" rel="gallery2">
-    <img alt="BMIZ" src="/assets/eci/bmiz.png">
-</a>
-</div>
+{% include image-group.html images=site.data.eci1 lang='es' %}
+
 
 Vemos que, entre ciertos puntos, tenemos más densidad de casos con "decae" en "true". Esto podría ser útil más adelante si podemos meter esta información en nuestro modelo.
 <br>

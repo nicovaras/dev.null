@@ -203,7 +203,9 @@ td{
       padding-right: 10px;
 }
 .tabla > table tbody tr td {
-      padding-right: 10px;
+      text-indent: 0;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 
@@ -330,5 +332,19 @@ h1{
 
 
 .highlight{
+  margin-top: -3px;
       text-indent: 0px;
+      border-radius: 20px;
+}
+
+.highlight pre {
+      border-radius: 20px;
+    }
+
+.highlight code {
+      border-radius: 20px;
+    }
+
+.lang-python {
+  background-color: crimson
 }

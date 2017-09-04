@@ -146,20 +146,8 @@ El código para el popup, el que se ejecuta al hacer click en la extensión, es 
 
 Una vez que terminé y testié mi extensión, ¡es hora de mandarla!. Obviamente, quiero que aparezca en los stores oficiales de Chrome y Firefox. Esto implica pasar por un proceso de revisión propio de cada empresa.
 
+{% include image-group.html images=site.data.subte lang='es' %}
 
-<div class="fancy-group">
-
-<a class='fancybox-thumb' id="firefox" title="Pantalla de review de Firefox" data-thumb="/assets/subte_firefox.png" href="/assets/subte_firefox.png" rel="gallery2">
-    <img alt="firefox" src="/assets/subte_firefox.png">
-    <span class="fancy-caption">Pantalla de review de Firefox</span>
-</a>
-<a class='fancybox-thumb' id="Chrome" title="Pantalla de review de Chrome" data-thumb="/assets/eci/subte_chrome.png" href="/assets/subte_chrome.png" rel="gallery2">
-    <img alt="Chrome" src="/assets/subte_chrome.png">
-    <span class="fancy-caption">Pantalla de review de Chrome</span>
-</a>
-
-
-</div>
 
 En ambos casos subir una extensión es gratis. La principal diferencia con el proceso es el tiempo de espera. Firefox aprobó mi extensión casi 20 días después de subir la primer version y dos o tres días para cualquier cambio que quería hacer. En cambio, Chrome tenía mi extensión online después de una hora nomas. Esto es genial para el desarrollador que lo único que quiere es ver su extensión subida al público, pero también habla sobre la rigurosidad de cada proceso. El proceso de revisión de Firefox tarda más tiempo para estar realmente seguro de que la extensión es segura y cumple las normas.
 

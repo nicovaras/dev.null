@@ -305,19 +305,7 @@ leading to health problems? Ideally, we could also see his mother's situation, i
 We don't have that last bit of information, but we have something about the first two parts. We have the weights, heights and z-scores and some geographic data that we can extrapolate with external socioeconomic data.
 
 Lets start with the z-scores. Here you can see some examples, and how they relate to the target variable:
-
-<div class="eci-graf">
-
-<a class='fancybox-thumb' id="haz" title="HAZ" data-thumb="/assets/eci/haz.png" href="/assets/eci/haz.png" rel="gallery2">
-    <img alt="HAZ" src="/assets/eci/haz.png">
-</a>
-<a class='fancybox-thumb' id="waz" title="WAZ" data-thumb="/assets/eci/waz.png" href="/assets/eci/waz.png" rel="gallery2">
-    <img alt="WAZ" src="/assets/eci/waz.png">
-</a>
-<a class='fancybox-thumb' id="bmiz" title="BMIZ" data-thumb="/assets/eci/bmiz.png" href="/assets/eci/bmiz.png" rel="gallery2">
-    <img alt="BMIZ" src="/assets/eci/bmiz.png">
-</a>
-</div>
+{% include image-group.html images=site.data.eci1 lang='en' %}
 
 We see that, between certain points, we have more density of cases with the target variable on true. This could be useful later if we can encode this information into our model.
 <br>
