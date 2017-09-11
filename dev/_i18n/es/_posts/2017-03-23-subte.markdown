@@ -32,6 +32,7 @@ Lo que realmente estoy haciendo es conseguir los strings desde mi propio server.
 
 
 
+<hr>
 
 ## Implementación
 
@@ -141,6 +142,7 @@ for (var i = 0; i < lines.length; ++i) {
 Esto solo parsea el html recibido, busca algún string que indique si la línea está mal y asigna un color y un símbolo al icono.
 El código para el popup, el que se ejecuta al hacer click en la extensión, es similar pero la diferencia es que tiene código específico para procesar el html.
 
+<hr>
 
 ## Proceso de review
 

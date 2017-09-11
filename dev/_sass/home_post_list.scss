@@ -49,19 +49,3 @@
     }
 }
 
-.div-post-cat {
-    display: table-cell;
-    width:22%;
-    text-align: left;
-    vertical-align: middle;
-    @include media-query($on-palm) {
-        display:none;
-    }
-}
-
-.post-cat {
-    border: 1px solid #ccc;
-    padding: 1px 5px;
-    font-size: 0.7em;
-    background: #ddf;
-}

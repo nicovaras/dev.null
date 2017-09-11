@@ -15,6 +15,7 @@ It is known that multiple dangers lurk in depths of the Internet. Anyone could e
 
 This works pretty well as a prevention method, saving the user from a possible infection. But, how does Chrome really know that this particular site is evil? One possible answer is that the browser is keeping stored in some database a lot of URLs corresponding to the malicious sites. Furthermore this has to be done locally, because we do not want to waste time sending a request to a Google server every time we visit a webpage. But saving all this data locally wouldn't take lots of space in disk? Then, how do they do this efficiently? The answer is using a special data structure called *Bloom Filters*. Chrome uses this data structure to solve this problem, as well as Bitcoin, Cassandra, BigTable and others do.
 
+<hr>
 
 ## So we need Bloom Filters...
 
@@ -27,6 +28,7 @@ At first glance, it seems to be a hard structure to implement but in fact it's r
 This implies several things. We are not actually saving the element with all its information (an URL in our example), but only its hash. So, we can only ask if an element is included or not within the set, but we cannot retrieve information about those elements. This also means that we can't ask the structure to give us a list of the elements already included in the set. If we examine the Bloom Filter that Chrome uses, we couldn't know which malicious URLs are included. We also don't have a delete method, this is another disadvantage of the structure. It is up to the programmer and the nature of the problem he has to solve if these disadvantages are acceptable or not.
 
 
+<hr>
 
 ## Coding time!
 

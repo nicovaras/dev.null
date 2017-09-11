@@ -14,6 +14,8 @@ riesgo de salud... dentro de cuatro meses.
 
 Hoy en día, esto sigue siendo ciencia ficción, pero no estamos TAN lejos de una situación así. Hoy voy a escribir sobre una competencia de la que participé, que proponía un problema similar: dadas algunas medidas como el peso o la talla de un bebé, ¿serán esos valores peligrosamente bajos en el futuro?
 
+<hr>
+
 # El problema a resolver
 
 En el contexto de la semana de la ECI (Escuela de Ciencias Informáticas) se organizó una competencia en [Kaggle](https://inclass.kaggle.com/c/eci2017-1) referida a temáticas de salud en niños. El problema contenía un dataset de chequeos de rutina para diferentes bebés en diferentes regiones de Argentina, y tuvimos que predecir si los z-scores de altura, peso y masa corporal (HAZ, WAZ, BMIZ de ahora en adelante) estarán por debajo de un umbral determinado en el próximo chequeo.
@@ -21,6 +23,8 @@ En el contexto de la semana de la ECI (Escuela de Ciencias Informáticas) se org
 La competencia era abierta a todos los que quisieran participar, es un problema interesante y un buen clasificador tendría un impacto positivo en la medicina nacional.
 
 Además, pasó mucho tiempo desde que no competía, por lo que me vino al pelo. <i class="material-icons">sentiment_very_satisfied</i>
+
+<hr>
 
 # Veamos los datos
 
@@ -109,7 +113,7 @@ Ahora veamos lo que tenemos que predecir. Nuestra variable objetivo "decae" se c
 
 <div class="tabla" >
 <table >
-<tr style="background-color:rgba(217, 238, 249, 0.75) !important">
+<tr style="background-color:#C5CAE9 !important">
 <td>Decae </td>
 <td>
 Toma el valor "true" si se cumple alguna de éstas tres condiciones:
@@ -259,6 +263,8 @@ La fila resaltada es falsa independientemente de estar por debajo de -1.0 porque
 
 Una última cosa a mencionar es que la métrica de scoring que vamos a usar es **ROC AUC** [(interactivo)](http://www.navan.name/roc/){:target="_blank"}
 
+<hr>
+
 # Primero lo primero
 
 Digamos que Alice y Bob descargan el training set y empiezan a trabajar. La idea de Alice es tener un buen modelo, limpio, con buenas features
@@ -275,6 +281,8 @@ No digo que alguien que hace lo que Alice hizo va a cometer un error antes de te
 una solución que funcione, por más mala que sea, y luego mejorarla. Esto es cierto en las competencias y también en la industria.
 
 Así que hice exactamente eso, limpié un poco el dataset (imputación básica y labelling), corrí un modelo de Gradient Boosting con valores por default y subí una solución el mismo día que empecé a competir. El puntaje inicial fue de *0.77043* y fue suficiente para estar entre los diez primeros en ese momento!
+
+<hr>
 
 # Explorando los datos
 Antes de seguir con modelos y parámentros y demás, es muy buena idea ver realmente los datos y pensar cómo pueden ayudarnos a resolver el problema.

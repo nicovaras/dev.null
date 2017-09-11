@@ -19,6 +19,8 @@ Si, ya sé, es un poco difícil de entender lo que está pasando acá pero aguá
 
 El único momento en el que muevo yo el mouse a mano es cuando cambio el tamaño del juego de 5 x 5 a 6 x 6. El programa podría quedarse jugando por sí sólo infinitamente si lo dejo.
 
+<hr>
+
 ## Reglas del juego
 
 Citando más o menos la ayuda oficial del juego:
@@ -50,6 +52,8 @@ Si no tienen el juego y quieren probarlo:
 
 ```$ sudo apt install hitori ```
 
+<hr>
+
 ## Detección con OpenCV y OCR
 
 Para poder resolver este juego programáticamente tenemos que lograr leer los números del tablero de alguna manera. Decidí sacar un screenshot del tablero y procesarlo con OpenCV. Para los screenshots usé una librería que se llama [Python MSS](https://github.com/BoboTiG/python-mss). Esta librería parece ser bastante rápida, pude medir unos 25 frames por segundo en promedio. Sólo necesito un screenshot esta vez, pero seguro podría ser útil para los próximos proyectos.
@@ -66,6 +70,8 @@ Ahora debería ser fácil para el OCR procesar esto. La librería usada para el 
 
 Esto lee la imagen tmp_img.jpg y guarda el resultado en tmp_result.txt. El parámetro psm se refiere a un "modo de segmentación de página" que indica a tesseract cómo tratar la imagen. De la documentación, psm = 11 corresponde a _"Texto esparzo. Buscar tanto texto como sea posible en ningún orden particular"_.
 También le paso una whitelist con los posibles caracteres del texto (la imagen contiene sólo dígitos en nuestro caso).
+
+<hr>
 
 ## Resolviendo el juego
 
@@ -109,6 +115,7 @@ Acá, con `still_connected(...)` estoy revisando también la **REGLA \#3** (¿el
 
 Si todavía no lo resolví, intento todo el proceso de vuelta partiendo desde otra celda de forma recursiva o hago backtracking si es necesario. Eventualmente voy a llegar a una solución y saber exactamente a qué celdas hacerles click.
 
+<hr>
 
 ## Clickeando
 

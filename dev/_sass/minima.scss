@@ -289,7 +289,7 @@ body {
 
 hr {
     border: 0;
-    border-top: 1px solid #eee;
+    border-top: 1px solid #C5CAE9;
     width: 40%;
     margin: 30px auto;
 }
@@ -368,46 +368,12 @@ pre, code {
     float: right;
 }
 
-.lang-link {
-    font-size:14px;
-    text-decoration:none;
-    @include media-query($on-palm) {
-        display: block;
-        line-height:20px;
-        padding: 5px 5px;
-        &:not(:last-child) {
-            margin-right: 0;
-        }
-        margin-left: 10px;
-    }
-}
-
-
-/* unvisited link */
-
-.lang-link:link {
-    color: #000000;
-}
-
-
-/* visited link */
-
-.lang-link:visited {
-    color: #000000;
-}
-
 .rss-subscribe {
     font-size: 15px;
     float: right;
 }
 
-a:link {
-    color: #2a3aa2;
-}
 
-a:visited {
-    color: #2a3aa2;
-}
 
 .lang-name {
     line-height: 20px;

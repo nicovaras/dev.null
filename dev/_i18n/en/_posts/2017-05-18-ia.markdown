@@ -19,6 +19,8 @@ I know, it is kind of hard to understand what is happening, but bear with me. Th
 
 The only moment that I'm controlling the mouse is when I change the board size from 5 x 5 to 6 x 6. I could leave the program playing by itself indefinitely if I let it.
 
+<hr>
+
 ## Game Rules
 
 Quoting the game help screen:
@@ -50,6 +52,8 @@ If you don't have the game and want to try it
 
 ```$ sudo apt install hitori ```
 
+<hr>
+
 ## OpenCV Detection and OCR
 
 To be able to solve this game programatically I must read the numbers in the screen somehow. I've decided to start by taking a screenshot of the board and process it using OpenCV. For the screenshots I used a library called [Python MSS](https://github.com/BoboTiG/python-mss). This library seems to be pretty fast, I've measured a steady 25 frames per second. I only need one screenshot this time but it could became handy for next projects.
@@ -67,6 +71,8 @@ Now it should be easy for the OCR to process this. The library used for OCR is G
 This reads the image tmp_img.jpg and stores the result in tmp_result.txt. The parameter psm refers to a "page segmentation mode" that tells tesseract how to treat the image. From the documentation psm=11 corresponds to "_Sparse text. Find as much text as possible in no particular order"_.
 I also set a whitelist of possible characters to be found in the input text (in our case, the image contains only digits).
 
+
+<hr>
 
 ## Solving the game
 
@@ -110,6 +116,8 @@ First, if the cell is already painted, I skip it. Then, I check for **RULE \#1**
 Here with `still_connected(...)` I'm checking for **RULE \#3** (is the board still connected in only one group?). In that method I run a DFS from any cell to know if I can get from there to all other cells. After that method, I check if every other cell is valid. This is, every cell is either a "*" or a number that doesn't break **RULE \#1**.
 
 If I still haven't solve the game, I try all the process again starting from another cell recursibly or backtracking if necessary. Eventually I'll reach a solution and know exactly which cells I have to click.
+
+<hr>
 
 ## Clicking
 

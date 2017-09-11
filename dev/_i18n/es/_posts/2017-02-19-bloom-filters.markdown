@@ -14,6 +14,7 @@ Es sabido que grandes peligros acechan en las profundidades de Internet. Cualqui
 
 Esto funciona bastante bien como método de prevención, salvando al usuario de una posible infección. Pero, ¿cómo sabe realmente Chrome que este sitio en particular es malévolo?. Una posible solución es que Chrome tenga almacenado en una base de datos una gran cantidad de URLs correspondientes a los sitios maliciosos. Y esto tiene que hacerse localmente, porque no queremos perder tiempo enviando una solicitud a un servidor de Google cada vez que visitamos una página web. Pero guardar todos estos datos localmente, ¿no tomaría mucho espacio en el disco?. Entonces, ¿cómo hace esto Chrome eficientemente? La respuesta es usando una estructura de datos especial llamada *Bloom Filters*. Chrome utiliza esta estructura de datos para resolver el problema, así como también lo hacen Bitcoin, Cassandra, BigTable y otros para diferentes problemas.
 
+<hr>
 
 ## Así que necesitamos Bloom Filters...
 
@@ -27,6 +28,7 @@ A simple vista, parece ser una estructura difícil de implementar, pero de hecho
 Esto implica varias cosas. En realidad, no estamos guardando el elemento con toda su información (una URL entera en nuestro ejemplo), sino sólo su hash. Por lo tanto, sólo podemos preguntar si un elemento está incluido o no dentro del conjunto, pero no podemos recuperar información acerca de esos elementos. Esto también significa que no podemos pedir a la estructura que nos proporcione una lista de los elementos que ya fueron incluidos en el conjunto. Si pudieramos examinar el Bloom Filter que utiliza Chrome, no podríamos saber qué URLs maliciosas están incluidas en él. Tampoco no tenemos un método de eliminación de elementos, esta es otra desventaja de la estructura. Depende del programador y de la naturaleza del problema si estas desventajas son aceptables o no.
 
 
+<hr>
 
 ## ¡Vamos a implementarlo!
 

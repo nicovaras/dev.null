@@ -91,7 +91,7 @@ I've described three datasets until now: 4-dataset, 3-dataset and the original o
 
 <div class="tabla" >
 <table >
-<tr style="background-color:rgba(217, 238, 249, 0.75) !important">
+<tr style="background-color:#C5CAE9 !important">
 <td>Decae (Target variable) </td>
 <td>
 It takes the value "True" if at least one of the following conditions occurs:
@@ -131,8 +131,6 @@ This was my final model.
 # Adjusting knobs
 
 coso de busqueda hyper
-
-
 
 
 <!-- - cosas que mejorar y cosas que quedaron -->

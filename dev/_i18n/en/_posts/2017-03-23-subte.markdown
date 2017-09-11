@@ -24,6 +24,7 @@ What I'm looking for is the string that describes the current status for each li
 The possible strings are not standarized and a new string may appear anytime, one that I didn't considered before. I can't hardcode them or save them to a file and ship it with the extension because every new string would mean to re deploy the extension and this isn't cheap: there is a review process involved that can take days as I'll show later.
 What I'm really doing is getting the strings from my own server. The extension queries my server on demand, and I can change everything I want on the fly.
 
+<hr>
 
 ## Implementation
 
@@ -131,6 +132,8 @@ for (var i = 0; i < lines.length; ++i) {
 
 This just parses the html received, searches for a key string that indicates if the line is not ok and assigns a color and an symbol to the icon.
 The code for the popup version, the one that runs when you click the extension, is similar but it has specific code to render the html.
+
+<hr>
 
 ## Review Process
 

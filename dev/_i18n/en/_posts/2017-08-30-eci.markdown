@@ -20,9 +20,12 @@ Today, this is still science fiction, but we are not THAT far from it. Today I'l
 similar problem: given some measurements like the weight or height of a baby, will those values be dangerously low in the future?
 
 <!-- - contexto/problema de la competencia -->
+
+<hr>
+
 # The problem to solve
 
-in the context of the ECI week (School of Informatics Sciences for its initials in Spanish), a competition was launched in [Kaggle](https://inclass.kaggle.com/c/eci2017-1) which theme was children health analysis.
+In the context of the ECI week (School of Informatics Sciences for its initials in Spanish), a competition was launched in [Kaggle](https://inclass.kaggle.com/c/eci2017-1) which theme was children health analysis.
 The problem consisted in a dataset of routine check-ups for different babies in different regions of Argentina, and we had
 to predict if the z-scores for height, weight and body mass (HAZ, WAZ, BMIZ from now on) will be below a given threshold in the
 next check-up.
@@ -32,6 +35,9 @@ The competition was open to everyone, it is an interesting problem and a good cl
 Also, it has been a long time since I didn't compete, so it was the perfect excuse. <i class="material-icons">sentiment_very_satisfied</i>
 
 <!-- - datos que proveen, ejemplitos, graficos -->
+
+<hr>
+
 # Let's look at the data
 
 The dataset for this competition is pretty straightforward and small enough for running nice experiments.
@@ -119,7 +125,7 @@ Now lets see what we have to predict. Our target variable is made of three condi
 
 <div class="tabla" >
 <table >
-<tr style="background-color:rgba(217, 238, 249, 0.75) !important">
+<tr style="background-color:#C5CAE9 !important">
 <td>Decae (Target variable) </td>
 <td>
 It takes the value "True" if at least one of the following conditions occurs:
@@ -274,6 +280,8 @@ on some of the models we train if we just ignore it.
 One last thing to mention is that the scoring metric that we will use is **ROC AUC** [(interactive)](http://www.navan.name/roc/){:target="_blank"}
 
 <!-- - end to end, ventajas y desventajas -->
+<hr>
+
 # First things first
 
 Let's say Alice and Bob download the train set and start working. Alice idea is to have a good model, clean, with nice features
@@ -294,6 +302,8 @@ a working solution and then improve on it. This is true in competitions and also
 <!-- - puntaje del primer submit, posicion en medio de la tabla -->
 So I did exactly that, I cleaned up the dataset (basic imputation and labeling), ran a Gradient Boosting model with default
 parameters and submitted. My baseline score was *0.77043* and it was enough to be on the top ten at that time!
+
+<hr>
 
 # Exploring the data
 <!-- - exploracion, regiones y mapitas -->
