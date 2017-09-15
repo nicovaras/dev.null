@@ -7,7 +7,7 @@ permalink: eci2/
 
 <!-- /_sass/minima/_layout -->
 
-In the [previous post](http://dev.null.com.ar/eci) I talked about a Kaggle competition that proposed building a model that predicts factors that affect children's health in Argentina. I wrote about some exploratory analysis on the problem and today I continue with those ideas applied to a model.
+In the [previous post](http://dev.null.com.ar/eci){:target="_blank"} I talked about a Kaggle competition that proposed building a model that predicts factors that affect children's health in Argentina. I wrote about some exploratory analysis on the problem and today I continue with those ideas applied to a model.
 
 <!-- - cada uno de los diferentes datasets -->
 # Datasets
@@ -34,7 +34,7 @@ Another basic thing is to have a cross validation method (also coming almost for
 
 From now on I'll name these datasets: 4-dataset, 3-dataset and original dataset respectibily.
 
-Running the 4-dataset on our basic pipeline and submitting the solution resulted in a score of *0.785*. The last score was  *0.77043* so this is a nice improvement!
+Running the 4-dataset on our basic pipeline and submitting the solution resulted in a score of **0.785**. The last score was  **0.77043** so this is a nice improvement!
 
 <!-- - feaures engs que se hicieron -->
 
@@ -43,13 +43,13 @@ Running the 4-dataset on our basic pipeline and submitting the solution resulted
 Ok, we have our pipeline working, explored our data, made maps and created new datasets. Now what?
 We can start looking into making new features and transforming the existing ones into a better representation for the classifier.
 
-The features I'll end up adding are based on the map data we talked about in the [last post](http://dev.null.com.ar), combinations of the original features and insights from other studies on the same subject. Some of these worked flawlessly and others were terrible.
+The features I'll end up adding are based on the map data we talked about in the [last post](http://dev.null.com.ar){:target="_blank"}, combinations of the original features and insights from other studies on the same subject. Some of these worked flawlessly and others were terrible.
 
 Let's start with the map data we talk about earlier. I used what I saw in the map to clusterize "by hand" the hospitals and made 14 different regions.
 
 //mapa regiones
 
-It was a promising idea but sadly it didn't work at all. The gradient boosting method I'm using as model, lets you look at which features were more important at the moment of taking a decision. This new clusterization ended up not being important at all.
+It was a promising idea but sadly it didn't work at all. The gradient boosting method I'm using as model, let's you look at which features were more important at the moment of taking a decision. This new clusterization ended up not being important at all.
 
 On the other hand, the other approach of having the proportion of true/false for each hospital was surprisingly good. This feature improved the overall score.
 
@@ -65,7 +65,7 @@ $HAZ_1 * HAZ_1$, $HAZ_1 * HAZ_2$, $HAZ_1 * HAZ_3$, $HAZ_1 * HAZ_4$, $HAZ_2 * HAZ
 The same process was applied to WAZ_1...WAZ_4 and BMIZ_4...BMIZ_4. This added 30 new features in total.
 
 The problem we're studing, the one of children growth, must be a common one and other articles and papers *must* exist on the subject.
-In fact there're a lot. [This one](https://www.omicsonline.org/open-access/predicting-under-nutrition-status-of-under-five-children-using-data-mining-techniques-2157-7420.1000152.pdf) in particular caught my attention because it tries to solve a very very similar problem on children in Ethiopia. I took a result from that paper: a rule that stated that an individual is malnourished if $HAZ <= 2SD && -2SD <= WAZ <= 2SD$
+In fact there're a lot. [This one](https://www.omicsonline.org/open-access/predicting-under-nutrition-status-of-under-five-children-using-data-mining-techniques-2157-7420.1000152.pdf){:target="_blank"} in particular caught my attention because it tries to solve a very very similar problem on children in Ethiopia. I took a result from that paper: a rule that stated that an individual is malnourished if $HAZ <= 2SD && -2SD <= WAZ <= 2SD$
 
 They claim this rule alone classified correctly 99.7% of their instances (!). This seems like magic, so why not? Let's try it.
 I adjusted a bit those values and created a feature based on the rule which, out of lack of a better name, I called it "Magic".
@@ -86,7 +86,7 @@ For my models I used stacking. This means making a new dataset from the solution
 <!-- - modelo y puntaje final -->
 So what I'm combining here? I've been running each of the datasets described with a simple gradient boosting algorithm. What I'll do is to get all those predictions and make a new dataset with each prediction as a feature column and I'll run a prediction algorithm on that to get the final result.
 
-I've described three datasets until now: 4-dataset, 3-dataset and the original one. But I can play a little more with this, lets remember our target variable definition:
+I've described three datasets until now: 4-dataset, 3-dataset and the original one. But I can play a little more with this, let's remember our target variable definition:
 
 
 <div class="tabla" >
@@ -124,14 +124,34 @@ Going further, I made other datasets but instead of removing the restriction for
 
 One last idea, I can try to predict our target variable using only one column of the original dataset at a time. For example, trying to predict "decae" only by looking at the date of birth. Each of these predictions by themselves are very bad, but I combined the results into a new dataset, having each prediction as a feature column (yes, it is stacking again, I made a lesser stacked model to use on our final stacking model).
 
-This brings the total to sixteen different models. Like I said before, I put each of the individual predictions of each of the sixteen datasets as columns and predicted that final set with another model (that ended up being gradient boosting again, but with other parameters).
+This brings the total to sixteen different models. Like I said before, I put each of the individual predictions of each of the sixteen datasets as columns and predicted that final set with yet another model (that ended up being gradient boosting again, but with other parameters).
 
-This was my final model.
+This seventeenth model was my final one.
 
 # Adjusting knobs
 
-coso de busqueda hyper
+Finally, let's improve and optimize everything. I have seventeen models made of Gradient Boosting with default parameters.
+This algorithm has several hyperparameters to play with and I think this is the right time to start with this task. I think is common (and I did it myself in the past) to start adjusting the parameters very early when working on a project, even after having an end-to-end pipeline working (I talked a bit about this [earlier](http://dev.null.com.ar/eci){:target="_blank"}). The problem with this is that you can lose a lot of time trying to improve something that will change
+pretty soon. So, I like to have a solid and well thought solution before starting optimizing.
+
+Finding hyperparameters is basically an automated process. Scikit has methods like GridSearchCV or RandomizedSearchCV. The former searches all the combinations of the parameters that you want, performing a Cross Validation using your model and reports the best set of parameters that it found. It is slooooow. The latter doesn't try everything, you have to specify how many times you want the algorithm to run and it chooses a random subset of your parameters each round. It is way faster but I don't find it good enough.
+
+I came up with a custom method that worked for me. I don't know if it is something that already exists and I just reinvented the wheel or something. Or maybe is just a bad idea overall and I just got lucky this time. My method is a greedy search over the space of hyperparameters:
+
+1. I take one parameter randomly
+2. I try all values assigned to that parameter and keep the one that got the best score
+3. I fix that parameter and repeat from (1)
+
+I run this $n$ times and I keep the best model generated. Yes, I know, it is shady at least but in practice it did work for me and was very very fast (if I'm not mistaken, $O(n)$ for n being the total number of values I can try for the hyperparameters).
+
+
+
+
+
 
 
 <!-- - cosas que mejorar y cosas que quedaron -->
 <!-- - conclusion de la historia -->
+
+
+LLENAR TODO DE LINKS

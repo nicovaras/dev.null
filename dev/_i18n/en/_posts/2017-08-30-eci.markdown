@@ -121,7 +121,7 @@ Here we have the description of each feature:
 
 <!-- - ver lo que hay que predecir, decae -->
 <br>
-Now lets see what we have to predict. Our target variable is made of three conditions:
+Now let's see what we have to predict. Our target variable is made of three conditions:
 
 <div class="tabla" >
 <table >
@@ -314,7 +314,7 @@ leading to health problems? Ideally, we could also see his mother's situation, i
 
 We don't have that last bit of information, but we have something about the first two parts. We have the weights, heights and z-scores and some geographic data that we can extrapolate with external socioeconomic data.
 
-Lets start with the z-scores. Here you can see some examples, and how they relate to the target variable:
+Let's start with the z-scores. Here you can see some examples, and how they relate to the target variable:
 {% include image-group.html images=site.data.eci1 lang='en' %}
 
 We see that, between certain points, we have more density of cases with the target variable on true. This could be useful later if we can encode this information into our model.
