@@ -58,14 +58,33 @@ In the 4-dataset, I had four instances of HAZ, WAZ and BMIZ over time. I wanted 
 // dibujito de LR
 
 I also added second grade polynomic features based on HAZ, WAZ and BMIZ. This means to take each of the features and multiply them by all others (including itself).
-In my particular case, in the 4-dataset for example, I took HAZ_1, ..., HAZ_4 and combined them into:
+In my particular case, in the 4-dataset for example, I took HAZ_1, ..., HAZ_4 and combined them into the following features:
 
-$HAZ_1 * HAZ_1$, $HAZ_1 * HAZ_2$, $HAZ_1 * HAZ_3$, $HAZ_1 * HAZ_4$, $HAZ_2 * HAZ_2$, $HAZ_2 * HAZ_3$, $HAZ_2 * HAZ_4$, $HAZ_3 * HAZ_3$, $HAZ_3 * HAZ_4$, $HAZ_4 * HAZ_4$
+{::options parse_block_html="true" /}
+<div style="display: block; text-align: center">
+
+
+$${haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{1}}$$ $$\qquad{haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{2}}$$ $$\qquad{haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{3}}$$ $$\qquad{haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{4}}$$
+
+$${haz}\color{red}{\mathbf{2}} * {haz}\color{red}{\mathbf{2}}$$ $$\qquad{haz}\color{red}{\mathbf{2}} * {haz}\color{red}{\mathbf{3}}$$ $$\qquad{haz}\color{red}{\mathbf{2}} * {haz}\color{red}{\mathbf{4}}$$
+
+$${haz}\color{red}{\mathbf{3}} * {haz}\color{red}{\mathbf{3}}$$ $$\qquad{haz}\color{red}{\mathbf{3}} * {haz}\color{red}{\mathbf{4}}$$
+
+$$$$$${haz}\color{red}{\mathbf{4}} * {haz}\color{red}{\mathbf{4}}$$
+
+
+</div>
 
 The same process was applied to WAZ_1...WAZ_4 and BMIZ_4...BMIZ_4. This added 30 new features in total.
 
 The problem we're studing, the one of children growth, must be a common one and other articles and papers *must* exist on the subject.
-In fact there're a lot. [This one](https://www.omicsonline.org/open-access/predicting-under-nutrition-status-of-under-five-children-using-data-mining-techniques-2157-7420.1000152.pdf){:target="_blank"} in particular caught my attention because it tries to solve a very very similar problem on children in Ethiopia. I took a result from that paper: a rule that stated that an individual is malnourished if $HAZ <= 2SD && -2SD <= WAZ <= 2SD$
+In fact there're a lot. [This one](https://www.omicsonline.org/open-access/predicting-under-nutrition-status-of-under-five-children-using-data-mining-techniques-2157-7420.1000152.pdf){:target="_blank"} in particular caught my attention because it tries to solve a very very similar problem on children in Ethiopia. I took a result from that paper: a rule that stated that an individual is malnourished if
+
+<p style="text-align:center">
+$$haz <= 2\sigma$$ and $$-2\sigma <= waz <= 2\sigma$$
+</p>
+
+with $$\sigma$$ the standard deviation.
 
 They claim this rule alone classified correctly 99.7% of their instances (!). This seems like magic, so why not? Let's try it.
 I adjusted a bit those values and created a feature based on the rule which, out of lack of a better name, I called it "Magic".
@@ -118,9 +137,9 @@ It takes the value "True" if at least one of the following conditions occurs:
 
 Ok, we can see that everything depends on the value of the previous checkup: if HAZ/WAZ/BMIZ was below -1, my condition will always be false regardeless of the value of the new checkup.
 
-What happens if I remove this restriction? For each of my datasets I made another one where the target variable doesn't have this condition. This means that "decae" will be independent of previous values, it will only depend on the new checkup. Now I have $3 * 2 = 6$ datasets.
+What happens if I remove this restriction? For each of my datasets I made another one where the target variable doesn't have this condition. This means that "decae" will be independent of previous values, it will only depend on the new checkup. Now I have $$3 * 2 = 6$$ datasets.
 
-Going further, I made other datasets but instead of removing the restriction for all variables, I removed it for one variable at a time. For example, a made a new data set removing the condition on HAZ but keeping WAZ and BMIZ untouched. That's three more datasets for each one of the originals: $3 * 2 + 3 * 3 = 15$.
+Going further, I made other datasets but instead of removing the restriction for all variables, I removed it for one variable at a time. For example, a made a new data set removing the condition on HAZ but keeping WAZ and BMIZ untouched. That's three more datasets for each one of the originals: $$3 * 2 + 3 * 3 = 15$$.
 
 One last idea, I can try to predict our target variable using only one column of the original dataset at a time. For example, trying to predict "decae" only by looking at the date of birth. Each of these predictions by themselves are very bad, but I combined the results into a new dataset, having each prediction as a feature column (yes, it is stacking again, I made a lesser stacked model to use on our final stacking model).
 
@@ -142,16 +161,31 @@ I came up with a custom method that worked for me. I don't know if it is somethi
 2. I try all values assigned to that parameter and keep the one that got the best score
 3. I fix that parameter and repeat from (1)
 
-I run this $n$ times and I keep the best model generated. Yes, I know, it is shady at least but in practice it did work for me and was very very fast (if I'm not mistaken, $O(n)$ for n being the total number of values I can try for the hyperparameters).
+I run this $$n$$ times and I keep the best model generated. Yes, I know, it is shady at least but in practice it did work for me and was very very fast (if I'm not mistaken, $$O(n)$$ for n being the total number of values I can try for the hyperparameters).
 
+I ran this until I felt the results were good enough and then submitted.
 
+My previous score was **0.785** and my final score...* *drumroll* *.... **0.78998**.
 
+# Conclusion
 
+I ended up 18th of 40 participants. It's not the position I'd wanted, but it's ok and I learned a lot along the way:
 
+* Having a pipeline end to end as a first priority is good. But after that, I would have wanted to give a better look at the data. For example, next time I'll try to classify by hand some examples to see if I can discover a pattern or take a look to the more extreme cases of each class.
 
+* I can reuse my code for another competition, I think at least the structure is usable and I'll save a lot of time.
 
-<!-- - cosas que mejorar y cosas que quedaron -->
+* The stacking of models works well, but I had a hard time coding it. Next time I'll think my code better knowing that I'll have to use my results for a stacked model.
+
+* Finally, I have my not-so-scientifically-probed-but-good-in-practice greedy cross validation method that helped me this time. It may not be the best alternative, but I kinda grew fond of it.
+
 <!-- - conclusion de la historia -->
 
+The interesting thing about this problem is that these results (and others by other participants) can be really useful in public health.
+With more information, like for example data about the mothers, we'll surely can a better score and better predictions.
+It would be awesome if something like this ends up being used by doctors and help children before they even start having some kind of problem.
 
-LLENAR TODO DE LINKS
+{::options parse_block_html="true" /}
+<div style="float:right;padding: 50px; padding-bottom: 70px;">
+*That's all, thanks for reading!*
+</div>
