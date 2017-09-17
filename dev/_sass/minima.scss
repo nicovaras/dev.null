@@ -72,7 +72,9 @@ a {
     border-bottom: 1px solid $grey-color-light;
     min-height: 56px;
     // Positioning context for the mobile navigation icon
-    position: relative;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
 }
 
 .site-title {

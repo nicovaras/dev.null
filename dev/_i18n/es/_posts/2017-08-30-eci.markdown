@@ -16,7 +16,7 @@ Hoy en día, esto sigue siendo ciencia ficción, pero no estamos TAN lejos de un
 
 <hr>
 
-# El problema a resolver
+## El problema a resolver
 
 En el contexto de la semana de la ECI (Escuela de Ciencias Informáticas) se organizó una competencia en [Kaggle](https://inclass.kaggle.com/c/eci2017-1) referida a temáticas de salud en niños. El problema contenía un dataset de chequeos de rutina para diferentes bebés en diferentes regiones de Argentina, y tuvimos que predecir si los z-scores de altura, peso y masa corporal (HAZ, WAZ, BMIZ de ahora en adelante) estarán por debajo de un umbral determinado en el próximo chequeo.
 
@@ -26,7 +26,7 @@ Además, pasó mucho tiempo desde que no competía, por lo que me vino al pelo. 
 
 <hr>
 
-# Veamos los datos
+## Veamos los datos
 
 El dataset para esta competencia es bastante sencillo y lo suficientemente pequeño para correr varios experimentos interesantes.
 El conjunto de training tiene **43933** filas y el conjunto de test **6275** filas. Ambos conjuntos tienen 23 columnas (features).
@@ -265,7 +265,7 @@ Una última cosa a mencionar es que la métrica de scoring que vamos a usar es *
 
 <hr>
 
-# Primero lo primero
+## Primero lo primero
 
 Digamos que Alice y Bob descargan el training set y empiezan a trabajar. La idea de Alice es tener un buen modelo, limpio, con buenas features
 y buenos hiperparámetros antes de mandar una solución. Bob por otro lado piensa que es mejor ser capaz de enviar una solución rápido
@@ -284,7 +284,7 @@ Así que hice exactamente eso, limpié un poco el dataset (imputación básica y
 
 <hr>
 
-# Explorando los datos
+## Explorando los datos
 Antes de seguir con modelos y parámentros y demás, es muy buena idea ver realmente los datos y pensar cómo pueden ayudarnos a resolver el problema.
 Si fuéramos médicos, ¿cómo podemos saber intuitivamente si hay algo malo con un bebé? Probablemente midiendo su peso, altura,
 y otras cosas podrían ayudar. Podemos ver su entorno socioeconómico, ¿vive en una zona con mayor probabilidad de conducir a problemas de salud? Idealmente, también podríamos ver la situación de su madre, ¿es sana? ¿Cuida bien de su bebé?

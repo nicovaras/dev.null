@@ -3,6 +3,8 @@ layout: post
 title:  "Predicting growth in children - part 2/2"
 categories: kaggle scikit
 permalink: eci2/
+controller: EciController
+
 ---
 
 <!-- /_sass/minima/_layout -->
@@ -10,35 +12,35 @@ permalink: eci2/
 In the [previous post](http://dev.null.com.ar/eci){:target="_blank"} I talked about a Kaggle competition that proposed building a model that predicts factors that affect children's health in Argentina. I wrote about some exploratory analysis on the problem and today I continue with those ideas applied to a model.
 
 <!-- - cada uno de los diferentes datasets -->
-# Datasets
+## Datasets
 
 We saw we have some kind of "history" on each patient. We have four measurements corresponding to four different checkups. Now we can try to build another dataset that takes advantage of that history of the patient.
-On the training set we have some patients with four measurements and the rest have only three. The fourth one is in the test set.
-What I did was to concatenate together all the three or four measurement rows for each patient into only one row. For the patients with three rows in the training set, I concatenated them with the corresponding row of the test set and made my new test set from that. Now we have a dataset made of a history of four checkups per row.
-The clear advantage is that I have way more information on the patient on each row but on the other hand now I have a much smaller train set, 6200~ versus the original 42000~.
 
-// dibujito de concatenar 4
+On the training set we have some patients with four measurements and the rest have only three. For those with only three measurements, the fourth one is included in the test set. What I did was to concatenate together all the checkups for the same patients into one row.
+Now we have a dataset made of a history of four checkups per row.
 
-Another thing I did was to make a dataset of three checkups per row instead of all four.
-This implies that I can now use the first three rows of the test subjects and use them in my training set. With this approach I have twice as much training rows, 12000~.
+{% include image.html id='concat' url='/assets/eci/concat3.png' description='Concatenating rows' %}
 
-// dibujito de concatenar 3
+I can concatenate for example all four check-ups into one row. The clear advantage is that I have way more information on the patient on each row but on the other hand now I have a much smaller train set, **6200**~ versus the original **42000**~.
+
+Another thing I can do is to concatenate three checkups per row instead of all four.
+This implies that I can now use the first and last three rows of the patients and make two different rows. With this approach I have twice as much training rows, **12000**~.
 
 I also kept the original dataset to use for training. I think it can't hurt to train a separate model with it.
 
-Those are the main three datasets I used in my final solution, but on the journey I made a lot more of (failed) experiments.
+Those are the main three datasets I used in my final solution, but on the journey I made a lot more of <span style="font-size: xx-small;">(failed)</span> experiments.
 
 Now is also time to add some more work to the pipeline. With scikit-learn we can automatically divide the train datasets into three parts: train/test/validation. This will became super handy because we leave the original test set untouched, meaning that we won't overfit to the test data.
 
 Another basic thing is to have a cross validation method (also coming almost for free in scikit) to check for an estimation of our score locally.
 
-From now on I'll name these datasets: 4-dataset, 3-dataset and original dataset respectibily.
+From now on I'll name these datasets: <u>4-dataset</u>, <u>3-dataset</u> and <u>original dataset</u> respectibily.
 
 Running the 4-dataset on our basic pipeline and submitting the solution resulted in a score of **0.785**. The last score was  **0.77043** so this is a nice improvement!
 
 <!-- - feaures engs que se hicieron -->
 
-# Pulling features out of my hat
+## Pulling features out of my hat
 
 Ok, we have our pipeline working, explored our data, made maps and created new datasets. Now what?
 We can start looking into making new features and transforming the existing ones into a better representation for the classifier.
@@ -81,7 +83,7 @@ The problem we're studing, the one of children growth, must be a common one and 
 In fact there're a lot. [This one](https://www.omicsonline.org/open-access/predicting-under-nutrition-status-of-under-five-children-using-data-mining-techniques-2157-7420.1000152.pdf){:target="_blank"} in particular caught my attention because it tries to solve a very very similar problem on children in Ethiopia. I took a result from that paper: a rule that stated that an individual is malnourished if
 
 <p style="text-align:center">
-$$haz <= 2\sigma$$ and $$-2\sigma <= waz <= 2\sigma$$
+$$haz \leq 2\sigma \quad$$  and  $$\quad -2\sigma \leq waz \leq 2\sigma$$
 </p>
 
 with $$\sigma$$ the standard deviation.
@@ -93,7 +95,7 @@ It ended up as one of the most important features in my model.
 // filas con todas las nuevas features
 
 
-# Combining everything
+## Combining everything
 <!-- - stacking -->
 Until now I've been running each dataset an change separately and submitting those solutions. One idea in machine learning that works very well is to "combine" several models into a better model. There are different approaches to do this like boosting, bagging and stacking.
 Our base model, Gradint Boosting, already uses this idea by having an ensamble of trees internally.
@@ -147,7 +149,7 @@ This brings the total to sixteen different models. Like I said before, I put eac
 
 This seventeenth model was my final one.
 
-# Adjusting knobs
+## Adjusting knobs
 
 Finally, let's improve and optimize everything. I have seventeen models made of Gradient Boosting with default parameters.
 This algorithm has several hyperparameters to play with and I think this is the right time to start with this task. I think is common (and I did it myself in the past) to start adjusting the parameters very early when working on a project, even after having an end-to-end pipeline working (I talked a bit about this [earlier](http://dev.null.com.ar/eci){:target="_blank"}). The problem with this is that you can lose a lot of time trying to improve something that will change
@@ -167,7 +169,7 @@ I ran this until I felt the results were good enough and then submitted.
 
 My previous score was **0.785** and my final score...* *drumroll* *.... **0.78998**.
 
-# Conclusion
+## Conclusion
 
 I ended up 18th of 40 participants. It's not the position I'd wanted, but it's ok and I learned a lot along the way:
 

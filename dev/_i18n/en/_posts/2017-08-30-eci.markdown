@@ -23,7 +23,7 @@ similar problem: given some measurements like the weight or height of a baby, wi
 
 <hr>
 
-# The problem to solve
+## The problem to solve
 
 In the context of the ECI week (School of Informatics Sciences for its initials in Spanish), a competition was launched in [Kaggle](https://inclass.kaggle.com/c/eci2017-1) which theme was children health analysis.
 The problem consisted in a dataset of routine check-ups for different babies in different regions of Argentina, and we had
@@ -38,7 +38,7 @@ Also, it has been a long time since I didn't compete, so it was the perfect excu
 
 <hr>
 
-# Let's look at the data
+## Let's look at the data
 
 The dataset for this competition is pretty straightforward and small enough for running nice experiments.
 The train set has **43933** rows and the test set **6275** rows. Both sets have 23 columns (features).
@@ -282,7 +282,7 @@ One last thing to mention is that the scoring metric that we will use is **ROC A
 <!-- - end to end, ventajas y desventajas -->
 <hr>
 
-# First things first
+## First things first
 
 Let's say Alice and Bob download the train set and start working. Alice idea is to have a good model, clean, with nice features
 and good hyperparameters before submitting a solution. Bob on the other hand thinks it's better to be able to submit quickly
@@ -305,7 +305,7 @@ parameters and submitted. My baseline score was *0.77043* and it was enough to b
 
 <hr>
 
-# Exploring the data
+## Exploring the data
 <!-- - exploracion, regiones y mapitas -->
 Before going any further it's a good idea to actually see the data and think how it can help us solve the problem.
 If we were a doctor, how can we intuitively know if there's something wrong with a baby? Probably measuring his weight, height,
