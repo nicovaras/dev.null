@@ -49,15 +49,23 @@ The features I'll end up adding are based on the map data we talked about in the
 
 Let's start with the map data we talk about earlier. I used what I saw in the map to clusterize "by hand" the hospitals and made 14 different regions.
 
-//mapa regiones
+{% include image.html id='regiones' url='/assets/eci/regiones.png' description='Regions selected by hand' %}
 
 It was a promising idea but sadly it didn't work at all. The gradient boosting method I'm using as model, let's you look at which features were more important at the moment of taking a decision. This new clusterization ended up not being important at all.
 
-On the other hand, the other approach of having the proportion of true/false for each hospital was surprisingly good. This feature improved the overall score.
+On the other hand, an approach of having the proportion of "decae" = true/false for each hospital was surprisingly good. This feature improved the overall score.
 
 In the 4-dataset, I had four instances of HAZ, WAZ and BMIZ over time. I wanted to use this information, and to let know the classifier that they are related somehow. I came up with a function that, for each row, adjusts a linear regression over these four values and adds the slope and intercept of the fitted line as new features.
 
-// dibujito de LR
+$$ y_i = \alpha_1 HAZ_1 + \alpha_2 HAZ_2 +\alpha_3 HAZ_3 +\alpha_4 HAZ_4 + \beta $$
+
+<div style="text-align:center">
+<span>
+$$ \rightarrow \text{new features for this row:  }\; \alpha, \; \beta $$
+</span>
+</div>
+
+////GRAFICO INTERACTIVO lr
 
 I also added second grade polynomic features based on HAZ, WAZ and BMIZ. This means to take each of the features and multiply them by all others (including itself).
 In my particular case, in the 4-dataset for example, I took HAZ_1, ..., HAZ_4 and combined them into the following features:
@@ -92,8 +100,20 @@ They claim this rule alone classified correctly 99.7% of their instances (!). Th
 I adjusted a bit those values and created a feature based on the rule which, out of lack of a better name, I called it "Magic".
 It ended up as one of the most important features in my model.
 
-// filas con todas las nuevas features
+<div class="waka tabla" style="font-size: 14px">
 
+|Name| Description |
+|-------|--------|
+| region_n | 1 if the hospital belongs to region $$n$$, 0 if not. |
+| p | proportion of decae=true for the hospital  |
+| HAZ_x * HAZ_y | Polynomical features for HAZ|
+| WAZ_x * WAZ_y |  Polynomical features for WAZ |
+| BMIZ_x * BMIZ_y |  Polynomical features for BMIZ |
+|HAZ/WAZ/BMIZ_x_linear_reg_slope| Slope of the regression line for HAZ/WAZ/BMIZ|
+|HAZ/WAZ/BMIZ_x_linear_reg_intercept|Intercept of the regression line for HAZ/WAZ/BMIZ|
+| magic | $$haz \leq 2\sigma \quad$$  and  $$\quad -2\sigma \leq waz \leq 2\sigma$$ |
+
+</div>
 
 ## Combining everything
 <!-- - stacking -->
@@ -102,7 +122,7 @@ Our base model, Gradint Boosting, already uses this idea by having an ensamble o
 
 For my models I used stacking. This means making a new dataset from the solutions of other models, and running another classifier on top of that.
 
-// grafiquito con varios models->un model de stack -> solucion
+{% include image-group.html images=site.data.eci2 lang='en' %}
 
 <!-- - modelo y puntaje final -->
 So what I'm combining here? I've been running each of the datasets described with a simple gradient boosting algorithm. What I'll do is to get all those predictions and make a new dataset with each prediction as a feature column and I'll run a prediction algorithm on that to get the final result.
