@@ -3,11 +3,15 @@ layout: post
 title:  "Predicting growth in children - part 2/2"
 categories: kaggle scikit
 permalink: eci2/
-controller: EciController
+controller: Eci2Controller
 
 ---
 
 <!-- /_sass/minima/_layout -->
+
+<div id="container2">
+</div>
+
 
 In the [previous post](http://dev.null.com.ar/eci){:target="_blank"} I talked about a Kaggle competition that proposed building a model that predicts factors that affect children's health in Argentina. I wrote about some exploratory analysis on the problem and today I continue with those ideas applied to a model.
 

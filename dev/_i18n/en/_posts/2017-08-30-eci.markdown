@@ -12,9 +12,9 @@ controller: EciController
 
 What would happen if a doctor could know beforehand if a child is going to have health issues?
 
-Let's say a mother with her baby arrives at the doctor's office to have a routine check-up. The doctor does his job and everything
-seems fine. He enters all the new info of the baby on the computer but the computer says that the baby is probably going to be at
-risk... in four months.
+Let's say a mother arrives with her baby at the doctor's office to have a routine check-up. The doctor does his job and everything
+seems fine. He enters all the baby's new info on the computer but it informs that the baby is probably going to be at
+risk... in about four months from now.
 
 Today, this is still science fiction, but we are not THAT far from it. Today I'll write about a competition I took part of, which addressed a
 similar problem: given some measurements like the weight or height of a baby, will those values be dangerously low in the future?
@@ -26,13 +26,12 @@ similar problem: given some measurements like the weight or height of a baby, wi
 ## The problem to solve
 
 In the context of the ECI week (School of Informatics Sciences for its initials in Spanish), a competition was launched in [Kaggle](https://inclass.kaggle.com/c/eci2017-1) which theme was children health analysis.
-The problem consisted in a dataset of routine check-ups for different babies in different regions of Argentina, and we had
-to predict if the z-scores for height, weight and body mass (HAZ, WAZ, BMIZ from now on) will be below a given threshold in the
+The problem consisted of a dataset contaning routine check-ups for different babies in different regions of Argentina. Our job was to predict if the z-scores for height, weight and body mass (HAZ, WAZ, BMIZ from now on) will be below a given threshold in the
 next check-up.
 
-The competition was open to everyone, it is an interesting problem and a good classifier will have a positive impact in national medicine.
+The competition was open to everyone, it was an interesting problem and a good classifier will have a positive impact in national medicine.
 
-Also, it has been a long time since I didn't compete, so it was the perfect excuse. <i class="material-icons">sentiment_very_satisfied</i>
+Also, it has been a long time since I didn't compete, so it was the perfect excuse for me to do so. <i class="material-icons">sentiment_very_satisfied</i>
 
 <!-- - datos que proveen, ejemplitos, graficos -->
 
@@ -72,7 +71,7 @@ Here are the first rows of the original train data:
 </table>
 </div>
 
-Here we have the description of each feature:
+Here we have the description for each feature:
 
 {::options parse_block_html="true" /}
 <div ng-show="!vm.showFeatures" class="tabla">
@@ -273,8 +272,8 @@ true
 
 
 The row highlighted is false regardless of being below -1.0 because HAZ also was below -1.0 on the previous check-up . Here we have a dependency, the target variable depends
-on the value of the previous seen check-up , and it has to be >= -1 for the target to be true. This is a hard threshold/limit and we will explore later what happens
-on some of the models we train if we just ignore it.
+on the value of the previous seen check-up , and it has to be >= -1 for the target to be true. This is a hard threshold/limit and we will explore what happens
+on some of the models we train with if we just ignore it, later in this post.
 
 
 One last thing to mention is that the scoring metric that we will use is **ROC AUC** [(interactive)](http://www.navan.name/roc/){:target="_blank"}
@@ -284,32 +283,32 @@ One last thing to mention is that the scoring metric that we will use is **ROC A
 
 ## First things first
 
-Let's say Alice and Bob download the train set and start working. Alice idea is to have a good model, clean, with nice features
-and good hyperparameters before submitting a solution. Bob on the other hand thinks it's better to be able to submit quickly
+Let's say Alice and Bob download the train set and start working. Bob's idea is to have a good model, clean, with nice features
+and good hyperparameters before submitting a solution. Alice on the other hand thinks it's better to be able to submit quickly
 and then improve the solution.
 
-Alice works for a week before submitting, guiding her work on the results of her own validation set. But the day she submits
-her solution, something went wrong and the score is lower than she expected. It could be a bug on her code, or she overfitted at
-some point and now she has to go back to a possibly complex program to debug.
+Bob works for a week before submitting, guiding his work on the results of his own validation set. However, the day he submits
+his solution, something went wrong and the score is lower than he expected. It could be a bug on his code, or maybe he overfitted at
+some point and now possibly has to go back to a complex to debug program.
 
-Bob does just the minimal work to have a solution as fast as possible. He did a basic clean up of the dataset, ran any model with
-default parameters and generated the solution. He submitted and got a not-so-good score, but now he has a baseline on which
-to improve. He knows his pipeline works from end to end, he just has to improve the solution.
+Alice does just the minimal work to have a solution ready as fast as possible. She did a basic clean up of the dataset, ran any model with
+default parameters and generated the solution. She submitted and got a not-so-good score, but now she has a baseline on which
+to improve. She knows her pipeline works from end to end, she just has to improve the solution.
 
-I'm not saying that anyone that does what Alice did will make a mistake before having a solution, but I think it's better to have
-a working solution and then improve on it. This is true in competitions and also in the industry.
+I'm not saying that anyone that does what Bob did will make a mistake before having a solution, but I think it's better to have
+a working solution and then improve it. This is true for both competitions and the industry.
 
 <!-- - puntaje del primer submit, posicion en medio de la tabla -->
 So I did exactly that, I cleaned up the dataset (basic imputation and labeling), ran a Gradient Boosting model with default
-parameters and submitted. My baseline score was *0.77043* and it was enough to be on the top ten at that time!
+parameters and submitted my solution. My baseline score was *0.77043* and it was enough to be on the top ten at that specific time!
 
 <hr>
 
 ## Exploring the data
 <!-- - exploracion, regiones y mapitas -->
-Before going any further it's a good idea to actually see the data and think how it can help us solve the problem.
+Before going any further a good idea is to actually see the data and think how it can help us solve the problem.
 If we were a doctor, how can we intuitively know if there's something wrong with a baby? Probably measuring his weight, height,
-and other things could help. We can see his socioeconomic environment, does he live in a zone with higher probability of
+and other things could help. We can also see his socioeconomic environment, does he live in a zone with higher probability of
 leading to health problems? Ideally, we could also see his mother's situation, is she healthy? Does she take good care of her baby?
 
 We don't have that last bit of information, but we have something about the first two parts. We have the weights, heights and z-scores and some geographic data that we can extrapolate with external socioeconomic data.
@@ -354,7 +353,7 @@ Here is a simple exploration of the features:
 <br>
 
 We have an insight on the data now. Remember that we have **43933** rows in the training set. We have **22010** males, this is half of the data and the other half are females, so it's
-balanced. We also have **17467** cases from Tucumán (a lot) and this will possibly influence the results that depend on locations. The feature "Zona_rural"
+balanced. We also have **17467** cases from Tucumán (which is a lot) and this will possibly influence the results that depend on locations. The feature "Zona_rural"
 has **42970** rows on False, this is most of the dataset. This feature has almost no variance and is a possible candidate to be removed.
 Another interesting point to see is that there're very extreme values as min and max for our z-score variables. Having a HAZ of -5 must
 mean a very extreme case.
