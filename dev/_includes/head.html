@@ -19,13 +19,14 @@
 <script src="/bower_components/angular/angular.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
-    <script data-require="ng-table@*" data-semver="0.5.4" src="https://cdnjs.cloudflare.com/ajax/libs/ng-table/0.8.3/ng-table.js"></script>
-    <link data-require="ng-table@*" data-semver="0.5.4" rel="stylesheet" href="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.css" />
+<script data-require="ng-table@*" data-semver="0.5.4" src="https://cdnjs.cloudflare.com/ajax/libs/ng-table/0.8.3/ng-table.js"></script>
+<link data-require="ng-table@*" data-semver="0.5.4" rel="stylesheet" href="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.css" />
 <script type="text/javascript" src="/js/raphael.min.js"></script>
 
 <!-- Add jQuery library -->
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
+<script type="text/javascript" src="/js/highcharts-regression/highcharts-regression.js"></script>
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -47,8 +48,11 @@
 <script type="text/javascript" src="/js/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
 
 
+<link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
 
-  <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
+<!-- Scripts mios -->
+
+<script src="/app/eci_lr_chart.js"></script>
 <script src="/app/app.js"></script>
 
   {% if jekyll.environment == 'production' %}

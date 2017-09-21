@@ -433,7 +433,8 @@ a:visited {
 
 .chart {
     min-width: 320px;
-    max-width: 800px;
+    max-width: 600px;
     height: 220px;
-    margin: 0 auto;
 }
+
+.highcharts-container { overflow: visible !important; }

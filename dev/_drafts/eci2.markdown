@@ -9,9 +9,22 @@ controller: Eci2Controller
 
 <!-- /_sass/minima/_layout -->
 
-<div id="container2">
+<div class="row">
+<div class="col-md-9">
+
+<div id="lr_chart">
+</div>
 </div>
 
+<div class="col-md-3">
+
+<button ng-click="prev()" ng-disabled="curr==0">a</button>
+<button ng-click="next()" ng-disabled="curr==datasets.length-1">b</button>
+<button ng-click="zoom()" >b</button>
+<div class="bold">Patient ID: [[{curr+1}]]</div>
+<div class="bold">Decae: [[{datasets[curr][12]}]]</div>
+</div>
+</div>
 
 In the [previous post](http://dev.null.com.ar/eci){:target="_blank"} I talked about a Kaggle competition that proposed building a model that predicts factors that affect children's health in Argentina. I wrote about some exploratory analysis on the problem and today I continue with those ideas applied to a model.
 
