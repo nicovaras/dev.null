@@ -18,11 +18,15 @@ controller: Eci2Controller
 
 <div class="col-md-3">
 
-<button ng-click="prev()" ng-disabled="curr==0">a</button>
-<button ng-click="next()" ng-disabled="curr==datasets.length-1">b</button>
-<button ng-click="zoom()" >b</button>
-<div class="bold">Patient ID: [[{curr+1}]]</div>
-<div class="bold">Decae: [[{datasets[curr][12]}]]</div>
+<h4 class="bold">Patient ID: [[{curr+1}]]</h4>
+<h4 class="bold">Decae:
+<span ng-if="datasets[curr][12] == 'True'" style="color: red;">[[{datasets[curr][12]}]]</span>
+<span ng-if="datasets[curr][12] != 'True'" style="color: blue;">[[{datasets[curr][12]}]]</span>
+</h4>
+
+<button class="btn btn-default glyphicon glyphicon-chevron-left" ng-click="prev()" ng-disabled="curr==0"></button>
+<button class="btn btn-default glyphicon glyphicon-chevron-right" ng-click="next()" ng-disabled="curr==datasets.length-1"></button>
+<button class="btn btn-default glyphicon glyphicon-zoom-in" ng-click="zoom()" ></button>
 </div>
 </div>
 
