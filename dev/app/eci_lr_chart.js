@@ -72,7 +72,7 @@ function eciLrChartConfig(dataset, name, color, zoom) {
                 format: 'checkup #{value}'
             }
         },
-                title: {
+        title: {
             text: name,
             align: 'left',
             margin: 0,
@@ -86,23 +86,7 @@ function eciLrChartConfig(dataset, name, color, zoom) {
                 text: "Z-value"
             }
         },
-        tooltip: {
-            positioner: function() {
-                return {
-                    x: 100,
-                    y: 9 // align to title
-                };
-            },
-            borderWidth: 0,
-            backgroundColor: 'none',
-            pointFormat: 'Z-value: {point.y}',
-            headerFormat: '',
-            shadow: false,
-            style: {
-                fontSize: '18px'
-            },
-            valueDecimals: 3
-        },
+
         legend: {
             layout: 'vertical',
             align: 'right',
