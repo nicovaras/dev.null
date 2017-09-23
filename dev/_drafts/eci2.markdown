@@ -31,15 +31,18 @@ This implies that I can now use the first and last three rows of the patients an
 
 I also kept the original dataset to use for training. I think it can't hurt to train a separate model with it.
 
+From now on I'll name these datasets: <u>4-dataset</u>, <u>3-dataset</u> and <u>original dataset</u> respectively.
+
+{% include image-group.html images=site.data.eci2_datasets lang='en' %}
+
+
 Those are the main three datasets I used in my final solution, but on the journey I made a lot more of <span style="font-size: xx-small;">(failed)</span> experiments.
 
-Now is also time to add some more work to our pipeline (remember we had a end to end pipeline from the last post). With scikit-learn we can automatically divide the train datasets into three parts: train/test/validation. This will became super handy because we leave the original test set untouched, meaning that we won't overfit to the test data.
+Now is also time to add some more work to our pipeline (remember we had a end to end pipeline from the last post). With scikit-learn we can automatically divide the train datasets into three parts: train/test/validation. This will become super handy because we leave the original test set untouched, meaning that we won't overfit to the test data.
 
 Another basic thing is to have a cross validation method (also coming almost for free in scikit) to check for an estimation of our score locally.
 
-From now on I'll name these datasets: <u>4-dataset</u>, <u>3-dataset</u> and <u>original dataset</u> respectively.
-
-Running the 4-dataset on our basic pipeline and submitting the solution resulted in a score of **0.785**. The last score was  **0.77043** so this is a nice improvement!
+I ran each dataset on our basic pipeline one at a time, and submitting the solution for the 4-dataset resulted in a score of **0.785**. The last score was  **0.77043** so this is a nice improvement!
 
 <!-- - feaures engs que se hicieron -->
 
