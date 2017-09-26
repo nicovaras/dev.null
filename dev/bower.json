@@ -20,5 +20,8 @@
   },
   "devDependencies": {
     "angular-fancybox-plus": "^1.0.3"
+  },
+  "resolutions": {
+    "angular": "1.6.5"
   }
 }
