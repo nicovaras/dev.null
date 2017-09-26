@@ -28,7 +28,7 @@ Now we have a dataset made of a history of four check-ups per row.
 For example, given one patient, I can concatenate all four check-ups into only one row. The clear advantage of this is that I have way more information on the patient on each row: all the HAZs. WAZs, BMIZs, etc into one row. I'm leaving out the patients with only three check-ups because I don't have information on the "decae" variable for the fourth check-up (because it's in the test set). So, this means that now I have a much smaller train set, **6200**~ versus the original **42000**~.
 
 Another thing I can do is, instead of concatenating all four check-ups, I concatenate only three per row as in the image.
-This implies that I can now use the check-ups 1, 2, 3 and 2, 3, 4  of each patient and make two different rows. I can now also use the patients I couldn't use before. With this approach I have twice as much training rows, **12000**~.
+This way I can now use the check-ups 1, 2, 3  of each patient and I can also use the patients I couldn't use before because I don't need that fourth check-up . With this approach I have twice as much training rows, **12000**~.
 
 I also kept the original dataset to use for training. I think it can't hurt to train a separate model with it.
 
@@ -149,7 +149,7 @@ It ended up as one of the most important features in my model.
 ## Combining everything
 <!-- - stacking -->
 Until now, I've been running each of these datasets separately and submitting those solutions. One idea in machine learning that works very well is to "combine" several models into a better model. There are different approaches to do this like boosting, bagging and stacking.
-Our base model, Gradint Boosting, already uses this idea by having an ensamble of trees internally.
+Our base model, Gradient Boosting, already uses this idea by having an ensamble of trees internally.
 
 To combine my models I used stacking. This means making a new dataset from the solutions of other models, and running another classifier on top of that.
 
