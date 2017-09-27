@@ -500,6 +500,12 @@ a:visited {
     height: 200px;
 }
 
+.post-link{
+    @include media-query($on-palm) {
+      font-size:14px !important;
+    }
+}
+
 .highcharts-container { overflow: visible !important; }
 
 .highcharts-root {overflow: visible !important;}
