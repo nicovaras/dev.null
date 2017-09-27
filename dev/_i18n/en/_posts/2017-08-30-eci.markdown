@@ -410,8 +410,7 @@ Not only that, those patients who have three rows correspond to the same patient
 
 
 In the [next post](http://dev.null.com.ar/eci2), I'll continue with these ideas and explain the new features I generated and the predictive models I used to play in the competition.
-
-<div style="float:right;padding: 50px; padding-bottom: 70px;">
+<div class="firma">
 *Thanks for reading!*
 </div>
 

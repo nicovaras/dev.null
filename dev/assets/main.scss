@@ -506,6 +506,12 @@ a:visited {
     }
 }
 
+.tabla{
+    @include media-query($on-palm) {
+    font-size:75%;
+  }
+}
+
 .highcharts-container { overflow: visible !important; }
 
 .highcharts-root {overflow: visible !important;}

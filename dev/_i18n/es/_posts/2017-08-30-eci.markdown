@@ -387,7 +387,7 @@ No sólo eso, los pacientes que tienen tres filas corresponden a los mismos paci
 
 En el [próximo post](http://dev.null.com.ar/es/eci2), sigo un poco con estas ideas y voy a contar las nuevas features que generé y los modelos predictivos que terminé usando en la competencia.
 
-<div style="float:right;padding: 50px; padding-bottom: 70px;">
+<div class="firma">
 *¡Gracias por leer!*
 </div>
 
