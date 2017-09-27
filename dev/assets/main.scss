@@ -63,6 +63,11 @@ strong {
   margin-left: auto;
   padding-right: 110px;
   padding-left: 110px;
+@include media-query($on-palm) {
+  padding-right: 10px;
+  padding-left: 10px;
+
+     }
       border-radius: 20px;
 }
 
@@ -137,13 +142,24 @@ td{
   margin:5px;
   border:2px solid #000;
 }
-
+.MathJax_Display{
+@include media-query($on-palm) {
+  font-size:80%;
+  text-align:left !important;
+  margin-left:20px !important;
+}
+}
 .fancy-group{
    line-height: 0;
    text-indent:0px;
    display: flex;
    text-align: center;
    justify-content: center;
+@include media-query($on-palm) {
+   line-height: 1;
+  display:block;
+
+}
 
 }
 .fancy-group a{
@@ -160,11 +176,44 @@ td{
     font-size: small;
 }
 .fancy-group img{
+
     width:90%;
     border-radius: 20px;
   margin:5px;
   border:2px solid #000;
+
 }
+
+.firma {
+  float:right;padding: 50px; padding-bottom: 70px;
+}
+
+@include media-query($on-palm) {
+  .firma {
+    float:right;padding: 20px; padding-bottom: 20px;
+  }
+.piramide{
+  font-size:75% !important;
+}
+.waka{
+  font-size:75% !important;
+}
+  .lr_chart_row{
+    width: 100% !important;
+    margin-left:0 !important;
+  }
+  .chart{
+    width:250px !important;
+    height:250px !important;
+
+  }
+  .highcharts-legend{
+    display:none;
+  }
+
+}
+
+
 @include media-query($on-laptop) {
   .mapas {
   -moz-column-count:    4;
@@ -347,6 +396,19 @@ h1{
 
 }
 
+.site-footer{
+@include media-query($on-palm) {
+  padding:20px;
+}
+}
+
+
+.site-footer .col-md-6{
+@include media-query($on-palm) {
+  width:50% ;
+  float:left;
+}
+}
 
 .highlight{
   margin-top: -3px;

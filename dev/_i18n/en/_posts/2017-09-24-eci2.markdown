@@ -76,7 +76,7 @@ $$ \rightarrow \text{new features for this row:  }\; \alpha, \; \beta $$
 Here you can play a bit with some of the results:
 
 
-<div class="row" style=" margin-bottom:20px;   border: 2px solid; border-radius: 20px; justify-content: center; display: flex; padding: 10px;">
+<div class="row lr_chart_row" style=" margin-bottom:20px;   border: 2px solid; border-radius: 20px; justify-content: center; display: flex; padding: 10px;">
 <div class="col-md-8">
 
 <div id="lr_chart">
@@ -102,7 +102,7 @@ I also added second grade polynomic features based on HAZ, WAZ and BMIZ. This me
 In my particular case, in the 4-dataset for example, I took HAZ_1, ..., HAZ_4 and combined them into the following features:
 
 {::options parse_block_html="true" /}
-<div style="display: block; text-align: center">
+<div class="piramide" style="display: block; text-align: center">
 
 
 $${haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{1}}$$ $$\qquad{haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{2}}$$ $$\qquad{haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{3}}$$ $$\qquad{haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{4}}$$
@@ -244,6 +244,6 @@ With more information, like for example data about the mothers, we'll surely can
 It would be awesome if something like this ends up being used by doctors and help children before they even start having some kind of problem.
 
 {::options parse_block_html="true" /}
-<div style="float:right;padding: 50px; padding-bottom: 70px;">
+<div class="firma">
 *That's all, thanks for reading!*
 </div>

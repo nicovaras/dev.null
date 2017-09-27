@@ -73,7 +73,7 @@ $$ \rightarrow \text{nuevas features:  }\; \alpha, \; \beta $$
 Acá pueden jugar un poco con algunos de los resultados:
 
 
-<div class="row" style=" margin-bottom:20px;   border: 2px solid; border-radius: 20px; justify-content: center; display: flex; padding: 10px;">
+<div class="row lr_chart_row" style=" margin-bottom:20px;   border: 2px solid; border-radius: 20px; justify-content: center; display: flex; padding: 10px;">
 <div class="col-md-8">
 
 <div id="lr_chart">
@@ -99,7 +99,7 @@ También agregué features polinómicas de segundo grado basadas en HAZ, WAZ y B
 En mi caso particular, en el 4-dataset por ejemplo, combiné HAZ_1, ..., HAZ_4 en las siguientes features:
 
 {::options parse_block_html="true" /}
-<div style="display: block; text-align: center">
+<div class="piramide" style="display: block; text-align: center">
 
 
 $${haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{1}}$$ $$\qquad{haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{2}}$$ $$\qquad{haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{3}}$$ $$\qquad{haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{4}}$$
@@ -239,6 +239,6 @@ Con más información, como por ejemplo datos sobre las madres, seguramente se p
 Sería buenísimo si algo como esto termina siendo usado por los médicos y se pueda ayudar a los chicos antes de que incluso empiecen a tener algún tipo de problema.
 
 {::options parse_block_html="true" /}
-<div style="float:right;padding: 50px; padding-bottom: 70px;">
+<div class="firma">
 *Eso es todo, gracias por leer!*
 </div>
