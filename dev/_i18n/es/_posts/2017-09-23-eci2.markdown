@@ -1,0 +1,248 @@
+---
+diseño: publicar
+title: "Predicción del crecimiento de los niños - parte 2/2"
+categorías: kaggle scikit
+permalink: eci2 /
+controlador: Eci2Controller
+
+---
+
+<! - / _sass / minima / _layout ->
+
+
+
+En el [post anterior] (http://dev.null.com.ar/eci) {: target = "_blank"} Hablé de una competencia Kaggle en la que tuvimos que construir un modelo para predecir ciertos factores que afectan a los niños salud en Argentina. Escribí sobre algún análisis exploratorio sobre el problema y hoy continúo con esas ideas, ahora aplicadas a un modelo.
+
+<! - - cada uno de los conjuntos de datos diferentes ->
+## Conjuntos de datos
+
+En el último episodio (?), Vimos que tenemos algún tipo de "historia" en cada paciente: tenemos algunas filas que corresponden a chequeos diferentes para el mismo paciente. Ahora podemos intentar construir otro conjunto de datos que aproveche esta "historia del paciente".
+
+En el conjunto de entrenamiento, tenemos algunos pacientes con cuatro chequeos y el resto sólo tiene tres chequeos. Para aquellos con sólo tres mediciones, el cuarto se incluye en el conjunto de prueba. Por lo tanto, al final, podemos tener cuatro filas para cada paciente. Lo que hice fue concatenar todos los chequeos para los mismos pacientes en una fila cada uno.
+
+Ahora tenemos un conjunto de datos hecho de una historia de cuatro chequeos por fila.
+
+{% include image.html id = 'concat' url = '/ assets / eci / concat3.png' description = 'Concatenando filas'%}
+
+Por ejemplo, dado un paciente, puedo concatenar los cuatro chequeos en una sola fila. La clara ventaja de esto es que tengo mucho más información sobre el paciente en cada fila: todas las HAZ. WAZs, BMIZs, etc en una fila. Por otro lado, esto significa que ahora tengo un tren mucho más pequeño, ** 6200 ** ~ frente al original ** 42000 ** ~.
+
+Otra cosa que puedo hacer es concatenar tres chequeos por fila en lugar de los cuatro como en la imagen.
+Esto implica que ahora puedo usar las primeras y últimas tres filas de los pacientes y hacer dos filas diferentes. Con este enfoque tengo el doble de filas de entrenamiento, ** 12000 ** ~.
+
+También mantuve el conjunto de datos original para su uso en el entrenamiento. Creo que no puede dañar entrenar un modelo separado con él.
+
+A partir de ahora nombraré estos conjuntos de datos: <u> 4-dataset </ u>, <u> 3-dataset </ u> y <u> dataset original </ u>, respectivamente.
+
+{% include image-group.html images = sitio.data.eci2_datasets lang = 'en'%}
+
+
+Estos son los tres conjuntos de datos principales que usé en mi solución final, pero en el viaje hice mucho más de <span style = "font-size: xx-small;"> (falló) </ span> experimentos.
+
+Ahora también es el momento de agregar un poco más de trabajo a nuestro oleoducto (recuerde que teníamos un final a fin de tuberías desde el último post). Con scikit-learn podemos dividir automáticamente los datasets del tren en tres partes: train / test / validation. Esto se convertirá en muy práctico porque dejamos el conjunto de pruebas original intacto, lo que significa que no vamos a superponer a los datos de prueba.
+
+Otra cosa básica es tener un método de validación cruzada (también viene casi gratis en scikit) para comprobar una estimación de nuestra puntuación a nivel local.
+
+Corrí cada conjunto de datos en nuestro pipeline básico uno a la vez, y presentar la solución para el conjunto de datos 4 resultó en una puntuación de ** 0,785 **. La última puntuación fue ** 0,77043 ** por lo que esta es una mejora agradable!
+
+<! - - feaures engs que se hicieron ->
+
+## Tirando de las características de mi sombrero
+
+Ok, tenemos nuestro trabajo en tuberías, exploramos nuestros datos, hicimos mapas y creamos nuevos conjuntos de datos. ¿Ahora que?
+Podemos empezar a buscar nuevas características y transformar las existentes en una mejor representación para el clasificador.
+
+Las características que acabaré añadiendo se basan en los datos del mapa de los que hablamos en el [último post] (http://dev.null.com.ar) {: target = "_blank"}, combinaciones de las características originales y las ideas de otros estudios sobre el mismo tema. Algunos de estos funcionaban sin problemas y otros eran terribles.
+
+Comencemos con los datos del mapa de los que hablamos anteriormente. Utilicé lo que vi ese tiempo en el mapa para agrupar "a mano" los hospitales y terminé haciendo catorce regiones diferentes.
+
+{% include image.html id = 'regiones' url = '/ assets / eci / regiones.png' description = 'Regiones seleccionadas manualmente'%}
+
+Fue una idea prometedora, pero lamentablemente no funcionó en absoluto. El método de aumento de gradiente que estoy usando como modelo, vamos a ver qué características eran más importantes en el momento de tomar una decisión. Esta nueva agrupación terminó por no ser importante en absoluto.
+
+Por otro lado, otro enfoque consistente en tener la proporción de "decae" = verdadero / falso para cada hospital fue sorprendentemente bueno. Esta característica mejoró la puntuación general.
+
+En el 4-dataset, tuve cuatro casos de HAZ, WAZ y BMIZ con el tiempo. Quise usar esta información, y dejar saber al clasificador que están relacionados de alguna manera. Empecé con una función que, para cada fila, ajusta una regresión lineal sobre estos cuatro valores y agrega la pendiente y la intersección de la línea ajustada como nuevas características.
+
+$$ y_i = \ alpha_1 HAZ_1 + \ alpha_2 HAZ_2 + \ alpha_3 HAZ_3 + \ alpha_4 HAZ_4 + \ beta $$
+
+
+<div style = "text-align: center">
+<span>
+$$ \ rightarrow \ text {nuevas funciones para esta fila:} \; \ alpha, \; beta
+</ span>
+</ div>
+
+Aquí puede jugar un poco con algunos de los resultados:
+
+
+<div class = "row" style = "margin-bottom: 20px; border: 2px sólido; border-radius: 20px; justificar-content: center; display: flex; padding: 10px;">
+<div class = "col-md-8">
+
+<div id = "lr_chart">
+</ div>
+</ div>
+
+<div class = "col-md-3" style = "display: grid; height: 200px; align-items: center; margin-top: 100px; text-indent: 0; text-align: center;">
+
+<h4 class = "bold"> Identificación del paciente: [[curr + 1}]] </ h4>
+<h4 class = "bold"> Decae:
+<span ng-if = "datasets [curr] [12] == 'True'" </ span>
+<span ng-if = "conjuntos de datos [curr] [12]! =" True "=" color: blue; "> [[{datasets [curr]
+</ h4>
+
+<button class = "btn btn-primario glyphicon glyphicon-chevron-left" ng-click = "prev ()" ng-disabled = "curr == 0"> </ button>
+<button class = "btn glyphicon glyphicon-zoom-in" ng-click = "zoom ()"> </ button>
+<button class = "btn btn-primario glyphicon glyphicon-chevron-right" ng-click = "next ()" ng-disabled = "curr == datasets.length-1"> </ button>
+</ div>
+</ div>
+
+
+También añadí características polinómicas de segundo grado basadas en HAZ, WAZ y BMIZ. Esto significa tomar cada una de las características y multiplicarlas por todas las demás (incluyendo a sí misma).
+En mi caso particular, en el 4-dataset por ejemplo, tomé HAZ_1, ..., HAZ_4 y los combiné en las siguientes características:
+
+{opciones :: parse_block_html = "true" /}
+<div style = "display: block; text-align: center">
+
+
+$$ {haz} \ color {red} {\ mathbf {1}} * {haz} Color {red} {\ mathbf {1}} {haz} \ color {red} {\ mathbf {2}} $ $$ \ qquad {haz} {\ mathbf {3}} $$ $$ \ qquad {haz} \ color {rojo} {\ mathbf {1}} * {haz} \ color {red} {\ mathbf {4}}
+
+$$ {haz} \ color {rojo} {\ mathbf {2}} * {haz} \ color {rojo} {\ mathbf {2}} $$ $$ \ qquad {haz} \ color {rojo} {\ mathbf Color {red} {\ mathbf {2}} {haz} \ color {red} {\ mathbf {3}} $ $$ \ qquad {haz} {\ mathbf {4}} $$
+
+$$ {haz} \ color {red} {\ mathbf {3}} * {haz} \ color {rojo} {\ mathbf {3}} $$ $$ \ qquad {haz} \ color {rojo} {\ mathbf {3}} * {haz} \ color {red} {\ mathbf {4}} $$
+
+{}} color {rojo} {\ mathbf {4}} {haz}
+
+
+</ div>
+
+El mismo proceso se aplicó a WAZ_1 ... WAZ_4 y BMIZ_4 ... BMIZ_4. Esto agregó 30 nuevas características en total.
+
+El problema que estamos estudiando, el de crecimiento de los niños, debe ser uno común y otros artículos y documentos * deben * existir sobre el tema.
+De hecho, hay mucho. [Éste] (https://www.omicsonline.org/open-access/predicting-under-nutrition-status-of-under-five-children-using-data-mining-techniques-2157-7420.1000152.pdf) { : target = "_ blank"} en particular llamó mi atención porque trata de resolver un problema muy similar en los niños de Etiopía. Tomé un resultado de ese documento: una regla que declaraba que un individuo está desnutrido si
+
+<p style = "text-align: center">
+$$ haz \ leq 2 \ sigma \ cuádruple $$ y $$ \ quad -2 \ sigma \ leq waz \ leq 2 \ sigma $$
+</ p>
+
+con $$ \ sigma $$ la desviación estándar.
+
+Afirman que esta regla clasificó correctamente el 99,7% de sus instancias (!). Esto parece mágico, ¿por qué no? Vamos a intentarlo.
+Ajusté un poco esos valores y creé una característica basada en la regla que, por falta de un mejor nombre, lo llamé "Magic".
+Terminó siendo una de las características más importantes de mi modelo.
+
+<div class = "waka tabla"> <font size = "font-size: 14px">
+
+Nombre | Descripción |
+Unesdoc.unesco.org unesdoc.unesco.org
+| region_n | 1 si el hospital pertenece a la región $$ n $$, 0 si no. |
+| p | proporción de decae = verdadero para el hospital |
+| HAZ_x * HAZ_y | Funciones polinómicas para HAZ |
+| WAZ_x * WAZ_y | Funciones polinómicas para WAZ |
+| BMIZ_x * BMIZ_y | Características polinómicas para BMIZ |
+| HAZ / WAZ / BMIZ_x_linear_reg_slope | Pendiente de la línea de regresión para HAZ / WAZ / BMIZ |
+| HAZ / WAZ / BMIZ_x_linear_reg_intercept | Intercepción de la línea de regresión para HAZ / WAZ / BMIZ |
+| magia $$ haz \ leq 2 \ sigma \ quad $$ y $$ \ quad -2 \ sigma \ leq waz \ leq 2 \ sigma $$ |
+
+</ div>
+
+## Combinando todo
+<! - - apilado ->
+Hasta ahora, he estado ejecutando cada uno de estos conjuntos de datos por separado y presentar esas soluciones. Una idea en el aprendizaje automático que funciona muy bien es "combinar" varios modelos en un modelo mejor. Hay diferentes enfoques para hacer esto como impulsar, embolsar y apilar.
+Nuestro modelo base, Gradint Boosting, ya usa esta idea al tener un ensamble de árboles internamente.
+
+Para combinar mis modelos he utilizado el apilamiento. Esto significa hacer un nuevo conjunto de datos a partir de las soluciones de otros modelos y ejecutar otro clasificador encima de eso.
+
+{% include image-group.html images = sitio.data.eci2 lang = 'en'%}
+
+<! - - modelo y puntaje final ->
+Entonces, ¿qué estoy combinando aquí? Como he dicho, he estado ejecutando cada uno de los conjuntos de datos descritos con un simple algoritmo de aumento de gradiente. Lo que voy a hacer es obtener todas esas predicciones y hacer un nuevo conjunto de datos con cada predicción como una columna de características y voy a ejecutar un algoritmo de predicción en que para obtener el resultado final.
+
+Por lo tanto, he descrito tres conjuntos de datos hasta ahora: 4-dataset, 3-dataset y el original. Pero puedo jugar un poco más con esto. Recordemos la definición de la variable objetivo:
+
+
+<div class = "tabla" style = "margin-bottom: 20px">
+<table>
+<tr style = "color de fondo: # C5CAE9! important">
+<td> Decae (variable de destino) </ td>
+<td>
+Se toma el valor "Verdadero" si se produce al menos una de las siguientes condiciones:
+<div style = "margin: auto; display: table;">
+<div style = "vertical-align: middle; font-size: 70px; margin-top: 22px;">
+{
+</ div>
+<div class = "" style = "font-family: monospace; display: table-cell; vertical-align: middle;">
+<div class = "">
+<span> HAZ & gt; = -1 y next_HAZ & lt; -1 </ span>
+</ div>
+<div class = "">
+WAZ & gt; = -1 y next_WAZ & lt; -1 </ span>
+</ div>
+<div class = "">
+<span> BMIZ & gt; = -1 y next_BMIZ & lt; -1 </ span>
+</ div>
+</ div>
+</ div>
+</ td>
+</ tr>
+</ table>
+</ div>
+
+Ok, podemos ver que todo depende del valor del chequeo anterior: si HAZ / WAZ / BMIZ estaba por debajo de -1 (la primera parte de la condición), "decae:" siempre será falso sin tener en cuenta el valor de el próximo chequeo. Esto es muy restrictivo y probablemente confunde nuestro algoritmo.
+
+¿Qué sucede si elimino esta restricción? Para cada uno de mis datasets hice * otro * donde la variable objetivo no tiene esta condición. Esto significa que "decae" será independiente de los valores anteriores, sólo dependerá de la nueva revisión. Tenía tres conjuntos de datos y los duplicaba así que ahora tengo $ 3 * 2 = 6 $$ conjuntos de datos.
+
+Más allá, hice otros conjuntos de datos, pero en lugar de eliminar la restricción para todas las variables, la quité para una variable a la vez. Por ejemplo, a hizo un nuevo conjunto de datos eliminando la restricción en HAZ pero manteniendo WAZ y BMIZ sin tocar. Eso es tres conjuntos de datos más para cada uno de los originales: $$ 3 * 2 + 3 * 3 = 15 $$.
+
+Una última idea, puedo tratar de predecir nuestra variable de destino utilizando sólo una columna del conjunto de datos original a la vez. Por ejemplo, tratando de predecir "decae" sólo mirando la fecha de nacimiento, luego mirando sólo a la región, etc Cada una de estas predicciones por sí mismos es muy malo, pero combiné los resultados en un nuevo conjunto de datos, teniendo * cada predicción como una columna de características *. Sí, es la idea de apilamiento otra vez, hice un modelo apilado más pequeño para usar en nuestro último modelo de apilamiento más grande.
+
+Esto lleva el total a dieciséis modelos diferentes. Como he dicho antes, puse cada una de las predicciones individuales de cada uno de los dieciséis conjuntos de datos como columnas de un nuevo conjunto de datos final y predijo que el conjunto con otro modelo (que terminó siendo gradiente de impulsión de nuevo, pero con otros hiperparámetros).
+
+Este decimoséptimo modelo fue mi último.
+
+## Botones de ajuste
+
+Finalmente, vamos a mejorar y optimizar todo. Tengo diecisiete modelos hechos de impulsión del gradiente con parámetros del defecto.
+Este algoritmo tiene varios hiperparámetros para jugar y creo que este es el momento adecuado para comenzar con esta tarea. Tengo la impresión de que es común (y lo hice yo mismo en el pasado) empezar a ajustar los parámetros muy temprano cuando se trabaja en un proyecto, incluso después de haber trabajado un pipeline de extremo a extremo (hablé un poco acerca de esto [anterior ] (http://dev.null.com.ar/eci) {: target = "_blank"}). El problema con esto es que se puede perder mucho tiempo tratando de mejorar algo que va a cambiar
+muy pronto. Por lo tanto, me gusta tener una solución sólida y bien pensado antes de empezar a optimizar.
+
+Encontrar hiperparámetros es básicamente un proceso automatizado. Scikit tiene métodos como GridSearchCV o RandomizedSearchCV. El primero busca todas las combinaciones de los parámetros que desea, realizando una validación cruzada usando su modelo y reportando el mejor conjunto de parámetros que encontró. Es slooooow.
+
+El último no intenta todo, usted tiene que especificar cuántas veces usted desea que el algoritmo corra y elige un subconjunto al azar de sus parámetros cada ronda. Es mucho más rápido pero no lo encuentro lo suficientemente bueno.
+
+Me ocurrió un método personalizado que funcionó para mí. No sé si es algo que ya existe y acabo de reinventar la rueda o algo así. O tal vez es sólo una mala idea en general y he tenido suerte esta vez. Mi método es una búsqueda codiciosa sobre el espacio de hyperparameters:
+
+1. Para cada parámetro, asigno un conjunto de valores posibles
+2. Tomo un parámetro aleatoriamente
+3. Intento todos los valores asignados a ese parámetro y mantengo el que obtuvo la mejor puntuación
+4. Continúo de (2) tener ese parámetro fijo
+
+Ejecutar este $$ n $$ veces y mantener el mejor modelo generado. Sí, lo sé, es sombrío al menos pero en la práctica funcionó para mí y fue muy rápido (si no me equivoco, $$ O (n) $$ para n es el número total de valores que puedo probar para los hiperparámetros).
+
+Corrí esto hasta que sentí que los resultados eran lo suficientemente buenos y luego presentados.
+
+Mi puntuación anterior fue ** 0.785 ** y mi puntuación final ... * * drumroll * * .... ** 0.78998 **.
+
+## Conclusión
+
+Terminé la competición 18º de los 40 participantes. No es la posición que me gustó, pero está bien y he aprendido mucho en el camino:
+
+* Tener una tubería de extremo a extremo como una prioridad es bueno. Pero después de eso, habría querido dar una mejor mirada a los datos. Por ejemplo, la próxima vez voy a tratar de clasificar a mano algunos ejemplos para ver si puedo descubrir un patrón o echar un vistazo a los casos más extremos de cada clase. El cerebro es más poderoso que cualquier predictor algorítmico.
+
+* Puedo reutilizar mi código para otra competencia, creo que al menos la estructura es utilizable y voy a ahorrar mucho tiempo.
+
+* Modelo de apilado funciona bien, pero me costó mucho codificarlo. La próxima vez voy a pensar mi código mejor sabiendo que voy a tener que utilizar mis resultados para un modelo apilado.
+
+* Finalmente, tengo mi método de validación cruzada no tan científicamente probado, pero bueno en la práctica, codicioso que me ayudó esta vez. Puede que no sea la mejor alternativa, pero me gustaba mucho.
+
+<! - - conclusión de la historia ->
+
+Lo interesante de este problema es que estos resultados (y otros de otros participantes) pueden ser realmente útiles en salud pública.
+Con más información, como por ejemplo datos sobre las madres, seguramente podremos obtener una mejor puntuación y mejores predicciones.
+
+
+Sería impresionante si algo como esto termina siendo utilizado por los médicos y ayudar a los niños antes de que incluso empezar a tener algún tipo de problema.
+
+{opciones :: parse_block_html = "true" /}
+<div style = "float: derecho; relleno: 50px; padding-bottom: 70px;">
+* Eso es todo, gracias por leer! *
+</ div>
