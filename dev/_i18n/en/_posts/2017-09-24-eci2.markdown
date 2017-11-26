@@ -18,16 +18,17 @@ In the [previous post](http://dev.null.com.ar/eci){:target="_blank"} I talked ab
 
 In the last episode (?), we saw we have some kind of "history" on each patient: we have some rows corresponding to different checkups for the same patient. Now we can try to build another dataset that takes advantage of this "patient history".
 
-On the training set, we have some patients with four check-ups and the rest have only three check-ups. For those with only three measurements, the fourth one can be found in the test set. So, in the end, we can have four rows for every patient. What I did was to concatenate together all the check-ups for the same patients into one row each.
+On the training set, we have some patients with four check-ups and the rest have only three check-ups. For those with only three measurements, the fourth one can be found in the test set.
+If I grab all the patients with four check-ups on the *train set*, I can concatenate the check-ups for the same patient together into only one row.
 
 Now we have a dataset made of a history of four check-ups per row.
 
 {% include image.html id='concat' url='/assets/eci/concat3.png' description='Concatenating rows' %}
 
-For example, given one patient, I can concatenate all four check-ups into only one row. The clear advantage of this is that I have way more information on the patient on each row: all the HAZs. WAZs, BMIZs, etc into one row. On the other hand, this means that now I have a much smaller train set, **6200**~ versus the original **42000**~.
+For example, given one patient, I can concatenate all four check-ups into only one row. The clear advantage of this is that I have way more information on the patient on each row: all the HAZs. WAZs, BMIZs, etc into one row. I'm leaving out the patients with only three check-ups because I don't have information on the "decae" variable for the fourth check-up (because it's in the test set). So, this means that now I have a much smaller train set, **6200**~ versus the original **42000**~.
 
 Another thing I can do is, instead of concatenating all four check-ups, I concatenate only three per row as in the image.
-This implies that I can now use the check-ups 1, 2, 3 and 2, 3, 4  of each patient and make two different rows. With this approach I have twice as much training rows, **12000**~.
+This way I can now use the check-ups 1, 2, 3  of each patient and I can also use the patients I couldn't use before because I don't need that fourth check-up . With this approach I have twice as much training rows, **12000**~.
 
 I also kept the original dataset to use for training. I think it can't hurt to train a separate model with it.
 
@@ -57,7 +58,7 @@ Let's start with the map data we talk about earlier. I used what I saw that time
 
 {% include image.html id='regiones' url='/assets/eci/regiones.png' description='Regions selected by hand' %}
 
-It was a promising idea but sadly it didn't work at all. The gradient boosting method I'm using as model, let's you look at which features were more important at the moment of taking a decision. This new clusterization ended up not being important at all.
+It was a promising idea but sadly it didn't work at all. The gradient boosting method I'm using as model, lets you look at which features were more important at the moment of taking a decision. This new clusterization ended up not being important at all.
 
 On the other hand, another approach consisting on having the proportion of "decae" = true/false for each hospital was surprisingly good. This feature improved the overall score.
 
@@ -75,7 +76,7 @@ $$ \rightarrow \text{new features for this row:  }\; \alpha, \; \beta $$
 Here you can play a bit with some of the results:
 
 
-<div class="row" style=" margin-bottom:20px;   border: 2px solid; border-radius: 20px; justify-content: center; display: flex; padding: 10px;">
+<div class="row lr_chart_row" style=" margin-bottom:20px;   border: 2px solid; border-radius: 20px; justify-content: center; display: flex; padding: 10px;">
 <div class="col-md-8">
 
 <div id="lr_chart">
@@ -101,7 +102,7 @@ I also added second grade polynomic features based on HAZ, WAZ and BMIZ. This me
 In my particular case, in the 4-dataset for example, I took HAZ_1, ..., HAZ_4 and combined them into the following features:
 
 {::options parse_block_html="true" /}
-<div style="display: block; text-align: center">
+<div class="piramide" style="display: block; text-align: center">
 
 
 $${haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{1}}$$ $$\qquad{haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{2}}$$ $$\qquad{haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{3}}$$ $$\qquad{haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{4}}$$
@@ -148,7 +149,7 @@ It ended up as one of the most important features in my model.
 ## Combining everything
 <!-- - stacking -->
 Until now, I've been running each of these datasets separately and submitting those solutions. One idea in machine learning that works very well is to "combine" several models into a better model. There are different approaches to do this like boosting, bagging and stacking.
-Our base model, Gradint Boosting, already uses this idea by having an ensamble of trees internally.
+Our base model, Gradient Boosting, already uses this idea by having an ensamble of trees internally.
 
 To combine my models I used stacking. This means making a new dataset from the solutions of other models, and running another classifier on top of that.
 
@@ -205,7 +206,7 @@ Finally, let's improve and optimize everything. I have seventeen models made of 
 This algorithm has several hyperparameters to play with and I think this is the right time to start with this task. I have the impression that it's common (and I did it myself in the past) to start adjusting the parameters very early when working on a project, even before having an end-to-end pipeline working (I talked a bit about this [earlier](http://dev.null.com.ar/eci){:target="_blank"}). The problem with this is that you can waste a lot of time trying to improve something that will change
 pretty soon. So, I like to have a solid and well thought solution before start optimizing.
 
-Finding hyperparameters is basically an automated process. Scikit has methods like GridSearchCV or RandomizedSearchCV. The former searches all the combinations of the parameters that you want, performing a Cross Validation using your model and reports the best set of parameters that it found. It is slooooow.
+Finding hyperparameters is basically an automated process. These hyperparameters take different range of values, for example number of trees on an ensamble (integer) or learning rates (float from 0 to 1). Scikit has methods to automate the process, like GridSearchCV or RandomizedSearchCV. If you specify a set of possible values for each parameter, the first method searches all the combinations of the parameters that you want, performing a Cross Validation using your model and reports the best set of parameters that it found. It is slooooow.
 
 The latter doesn't try everything, you have to specify how many times you want the algorithm to run and it chooses a random subset of your parameters each round. It is way faster but I don't find it good enough.
 
@@ -243,6 +244,6 @@ With more information, like for example data about the mothers, we'll surely can
 It would be awesome if something like this ends up being used by doctors and help children before they even start having some kind of problem.
 
 {::options parse_block_html="true" /}
-<div style="float:right;padding: 50px; padding-bottom: 70px;">
+<div class="firma">
 *That's all, thanks for reading!*
 </div>

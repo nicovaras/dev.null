@@ -385,9 +385,9 @@ Una última cosa (y muy importante), podemos ver que los datos del training se c
 No sólo eso, los pacientes que tienen tres filas corresponden a los mismos pacientes que están en el test set. Entonces tenemos la historia de los pacientes en el test set!
 
 
-En el próximo post, sigo un poco con estas ideas y voy a contar las nuevas features que generé y los modelos predictivos que terminé usando en la competencia.
+En el [próximo post](http://dev.null.com.ar/es/eci2), sigo un poco con estas ideas y voy a contar las nuevas features que generé y los modelos predictivos que terminé usando en la competencia.
 
-<div style="float:right;padding: 50px; padding-bottom: 70px;">
+<div class="firma">
 *¡Gracias por leer!*
 </div>
 
