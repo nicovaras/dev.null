@@ -1,8 +1,19 @@
+<div style="display: flex;width: 70%;margin: auto;">
+
+<p style="margin: auto; flex-grow: 1; order:{{ include.order }}">
+{{ include.text }}
+</p>
+
 <div class="fancy-group">
 
 <a class='fancybox-thumb {{ include.class }}' id="{{ include.id }}" title="{{ include.description }}" data-thumb="{{ include.url }}" href="{{ include.url }}" rel="{{ include.group }}">
-    <img alt="subte" src="{{ include.url }}">
+    <img src="{{ include.url }}">
     <span class="fancy-caption">{{ include.description }}</span>
 </a>
 
 </div>
+</div>
+
+
+
+

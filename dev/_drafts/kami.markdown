@@ -23,15 +23,15 @@ First of all, a [video](https://www.youtube.com/watch?v=yiK8EqCvtkI){:target="_b
 
 I present you the particular level I'll be using throughout the post.
 
-{% include image.html url="/assets/kami/test.jpg" description="" %}
+{% include image.html class="kami-small" url="/assets/kami/test.jpg" description="Our test case" %}
 
 The objective of the game is to paint each cell to end up with only one color at the end
 
-FOTO --> FOTO FIN
+{% include image-group.html images=site.data.kami_fin lang='en' %}
 
 To do this we tap a color from the bottom and then a cell. That cell and every other adjacent cell with the same color will be painted with the new color
 
-FOTO --> FOTO pintado
+{% include image-group.html images=site.data.kami_color lang='en' %}
 
 You have to do this in less than X movements and that's it, those are the rules.
 
@@ -46,7 +46,7 @@ It would be very slow if I make a program that really taps on the screen and rea
 
 Having group of cells adjacent to each other seems like a graph, in particular we can abstract our level to:
 
-{% include image.html url="/assets/kami/graphviz.png" description="" %}
+{% include image.html url="/assets/kami/graphviz.png" description="Simplified graph representation" %}
 
 If the python script can have this representation, it can solve it trying every possibility like we said before.
 
@@ -59,40 +59,40 @@ To reach that point we need to:
 
 ## The Solution
 <!-- paso a paso con dibujitos y codigo -->
-To start I just took a screenshot of the level with my phone. I could automate this first step, but I'll leave it for the future.
 
-{% include image.html url="/assets/kami/test.jpg" description="" %}
+For this script and all image processing I'm using the image library [pillow].
 
-Now I import it in python and I have to identify each cell color. I'm using the image library [pillow] for this.
 
-To be able to recognize each cell's color, first I have to know where each cell is. This can be done easily with a couple of for loops and calculating correctly the separation between each cell.
+{% include image_inline.html  url="/assets/kami/test.jpg" description="Our test case again, the screeshot I took"
+text="To start I just took a screenshot of the level with my phone. I could automate this first step, but I'll leave it for the future." %}
 
-{% include image.html url="/assets/kami/cross.jpg" description="" %}
 
-In this step I can also start making the graph, it is straightforward to do this.
+{% include image_inline.html url="/assets/kami/cross.jpg" description="Every cell recognized" order=1
+text="To be able to recognize each cell's color, first I have to know where each cell is. This can be done easily with a couple of for loops and calculating correctly the separation between each cell." %}
 
-{% include image.html url="/assets/kami/graph.jpg" description="" %}
+{% include image_inline.html url="/assets/kami/graph.jpg" description="Every cell connected in a graph"
+text="In this step I can also start making the graph, it is straightforward to do this." %}
 
-Then I read each color from the bottom of the screen and the color of each cell. I can compare them directly because the colors aren't uniform, so I took an average from the surrouding pixels and took the closest matching color. This worked flawlessly.
-
-{% include image.html url="/assets/kami/colors.jpg" description="" %}
+{% include image_inline.html url="/assets/kami/colors.jpg" description="The colors recognized" order=1
+text="
+Then I read each color from the bottom of the screen and the color of each cell. I can compare them directly because the colors aren't uniform, so I took an average from the surrouding pixels and took the closest matching color. This worked flawlessly." %}
 
 Ok, from this representation we can already solve it. Only theoretically. The problem is that we have way too many nodes and we're using backtracking, this will not finish in a reasonable time (it doesn't, I tried).
 
-We can give it another go. It's really the same if I tap a cell from a sector or other cell from the same sector, so we can group or "clusterize" our graph. Having a clusterized version of the graph means that now we have only one node per cluster instead that one node per cell. We've reduced the number of nodes drastically.
+We can give it another go. It's really the same if I tap a cell from a sector or other cell from the same sector, so we can group or 'clusterize' our graph.
 
-{% include image.html url="/assets/kami/clusters.jpg" description="" %}
+{% include image_inline.html url="/assets/kami/clusters.jpg" description="Each cluster recognized separately"
+text=" Having a clusterized version of the graph means that now we have only one node per cluster instead that one node per cell. We've reduced the number of nodes drastically." %}
 
-Now our backtracking algorithm can finish in our lifespan and it gives us the solution for the puzzle! (magic!).
+{% include image_inline.html url="/assets/kami/sol1.jpg" description="The solution to this puzzle" order=1
+text="Now our backtracking algorithm can finish in our lifespan and it gives us the solution for the puzzle! (magic!)." %}
 
-{% include image.html url="/assets/kami/sol1.jpg" description="" %}
 
 ## The Next Steps
 
 Ok, so we have a working script that solves this puzzle. The manual labor consists in taking a screenshot of the level and running the script. Here are a couple more of solutions:
 
-{% include image.html url="/assets/kami/sol2.png" description="" %}
-{% include image.html url="/assets/kami/sol3.png" description="" %}
+{% include image-group.html images=site.data.kami_sols lang='en' %}
 
 So it is solved. Only theoretically... again. I had to keep the script running all night for that last gray and yellow puzzle. Backtracking isn't the real anwser here. In the future it could be cool if I change the solver from backtracking to something a bit more smart like A* and integrate everything to android.
 
