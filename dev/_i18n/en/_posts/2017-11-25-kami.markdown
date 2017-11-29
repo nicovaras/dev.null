@@ -16,7 +16,7 @@ class: kami
 The other day I was bored so I did what everyone do when they're bored: I went for my phone and searched for a new game.
 I found this game, [Kami 2](https://play.google.com/store/apps/details?id=com.stateofplaygames.kami2){:target="_blank"}. It's a very relaxing and pleasant puzzle game and I finished quite a few levels. But, like every game of this style, the levels were getting harder and it can give you clues but for a price. So I thought what everyone think at this time but nobody say: how can I cheat?
 
-Today I show you a way to have a little "extra help" with this game, it's something similar to what a did in a [previous post](http://127.0.0.1:4000/ai/){:target="_blank"} with a game called Hitori and can be still extended to other games.
+Today I show you a way to have a little "extra help" with this game, it's something similar to what a did in a [previous post](http://dev.null.com.ar/ai/){:target="_blank"} with a game called Hitori and the idea can be still extended to other games.
 
 ## The Game
 <!-- explicacion del juego -->
@@ -31,7 +31,7 @@ The objective of the game is to paint each cell to end up with only one color at
 
 {% include image-group.html arrow='true' class="kami-small" images=site.data.kami_fin lang='en' %}
 
-To do this we tap a color from the bottom and then a cell. That cell and every other adjacent cell with the same color will be painted with the new color
+To do this we tap a color from the bottom of the screen and then any cell. That cell and every other adjacent cell with the same color will be painted with the new color we chose
 
 {% include image-group.html arrow='true' class="kami-small" images=site.data.kami_color lang='en' %}
 
@@ -50,7 +50,7 @@ Having group of cells adjacent to each other seems like a graph, in particular w
 
 {% include image.html url="/assets/kami/graphviz.png" description="Simplified graph representation" %}
 
-If the python script can have this representation, it can solve it trying every possibility like we said before.
+If we can give to the python script this representation, it can solve it trying every possibility like we said before.
 
 To reach that point we need to:
 
@@ -65,7 +65,7 @@ To reach that point we need to:
 For this script and all image processing I'm using the image library [pillow](https://python-pillow.org/){:target="_blank"}.
 
 {% include image_inline.html  url="/assets/kami/test.jpg" description="Our test case again, the screeshot I took"
-text="To start I just took a screenshot of the level with my phone. I could automate this first step, but I'll leave it for the future." %}
+text="To start I just took a screenshot of the level with my phone. I could have automated this first step, but I'll leave it for the future." %}
 
 
 {% include image_inline.html url="/assets/kami/cross.jpg" description="Every cell recognized" order=1
@@ -76,7 +76,7 @@ text="In this step I can also start making the graph, it is straightforward to d
 
 {% include image_inline.html url="/assets/kami/colors.jpg" description="The colors recognized" order=1
 text="
-Then I read each color from the bottom of the screen and the color of each cell. I can compare them directly because the colors aren't uniform, so I took an average from the surrouding pixels and took the closest matching color. This worked flawlessly." %}
+Then I read each color from the bottom of the screen and the color of each cell. I can't compare them directly because the colors aren't uniform, so I took an average from the surrouding pixels and took the closest matching color. This worked flawlessly." %}
 
 Ok, from this representation we can already solve it. Only theoretically. The problem is that we have way too many nodes and we're using backtracking, this will not finish in a reasonable time (it doesn't, I tried).
 
@@ -87,7 +87,7 @@ text=" Having a clusterized version of the graph means that now we have only one
 
 {% include image_inline.html url="/assets/kami/sol1.jpg" description="The solution to this puzzle" order=1
 text="Now our backtracking algorithm can finish in our lifespan and it gives us the solution for the puzzle! (magic!). You can click the image
-to see the solution better. Each number represents the order in which to click (strating from zero) and which color to choose" %}
+to see better the solution. Each number represents the order in which to click (strating from zero) and which color to choose" %}
 
 
 ## The Next Steps

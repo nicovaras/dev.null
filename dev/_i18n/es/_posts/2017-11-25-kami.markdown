@@ -1,0 +1,103 @@
+---
+layout: post
+title:  "Resolviendo el juego de Android Kami"
+categories: python ai
+permalink: kami/
+controller: Eci2Controller
+reading: 5
+class: kami
+
+---
+
+El otro día andaba aburrido, así que hice lo que todos hacen cuando están aburridos: agarré el celular y busqué un nuevo juego.
+Encontré este juego, [Kami 2](https://play.google.com/store/apps/details?id=com.stateofplaygames.kami2){:target="_blank"}. Es un juego de puzzles muy tranquilo  y pude terminar bastantes niveles de una pasada. Pero, como en todos los juegos de este estilo, los niveles eran cada vez más difíciles y te ofrecen pistas, pero por un precio. Entonces pensé en lo que todos piensan en este momento, pero nadie dice: ¿cómo puedo hacer trampa?
+
+Hoy muestro una forma de tener un poco de "ayuda extra" con este juego, es algo similar a lo que hice en una [publicación anterior](http://dev.null.com.ar/es/ai/){:target=" _blank "} con el juego Hitori de Linux y la idea puede extenderse a otros juegos.
+
+## El juego
+
+Antes que nada, un [videito](https://www.youtube.com/watch?v=yiK8EqCvtkI){:target="_blank"} puede ser mejor que cualquier explicación que pueda dar yo.
+
+Les presento el nivel particular que voy a usar a lo largo de del post:
+
+{% include image.html class="kami-small" url="/assets/kami/test.jpg" description="Nuestro caso de prueba" %}
+
+El objetivo del juego es pintar cada celda para terminar con un solo color al final de todo
+
+{% include image-group.html arrow='true' class="kami-small" images=site.data.kami_fin lang='es' %}
+
+Para hacer esto, clickeamos un color de los que aparecen abajo y después una celda cualquiera. Esa celda y todas las demás celdas adyacentes con el mismo color se van a pintar con el nuevo color que elegimos
+
+{% include image-group.html arrow='true' class="kami-small" images=site.data.kami_color lang='es' %}
+
+Hay que hacer esto en menos de X movimientos y eso es todo, esas son las reglas.
+
+## La idea
+
+Quiero resolver esto automáticamente, entonces, ¿qué puedo hacer?
+
+Una solución naive sería un programa que prueba cada color en cada celda hasta que llega a una solución. Bueno... si funciona, funciona, vamos con eso.
+
+Sería muy lento si hago un programa que realmente toque la pantalla y realmente juegue el juego, así que voy a crear una representación en memoria del juego y un script de Python para resolverlo.
+
+Tener un grupo de celdas adyacentes se parece a un grafo, en particular, podemos abstraer nuestro nivel a:
+
+{% include image.html url="/assets/kami/graphviz.png" description="Representación simplificada del juego" %}
+
+Si podemos darle al script de python esta representación, puede resolverlo probando todas las posibilidades como dijimos antes.
+
+Para llegar a ese punto, necesitamos:
+
+* Hacer un screenshot del nivel
+* Identificar cada celda y qué vecinos tiene (haciendo un grafo)
+* Identificar el color de cada celda
+* Usar backtracking para resolver ese grafo y llegar a una solución
+
+## La solución
+
+Para este script y todo el procesamiento de imágenes, estoy usando la librería de imágenes [pillow](https://python-pillow.org/){:target="_blank"}.
+
+
+{% include image_inline.html  url="/assets/kami/test.jpg" description="Otra vez, nuestro caso de prueba"
+text="Para empezar, tomé un screenshot del nivel con mi teléfono. Podría haber automatizado este primer paso, pero lo dejo para el futuro" %}
+
+{% include image_inline.html url="/assets/kami/cross.jpg" description="Cada celda reconocida" order=1
+text="Para poder reconocer el color de cada celda, primero tengo que saber dónde están . Esto se puede hacer fácilmente con un par de loops y calculando correctamente la separación entre cada celda." %}
+
+{% include image_inline.html url="/assets/kami/graph.jpg" description="Cada celda conectada en un grafo"
+text="En este paso también puedo empezar a hacer el grafo, total es fácil hacerlo." %}
+
+{% include image_inline.html url="/assets/kami/colors.jpg" description="Los colores reconocidos" order=1
+text="Luego leo cada color de la parte de abajo de la pantalla y el color de cada celda. No puedo compararlos directamente porque los colores no son uniformes, así que tomé un promedio de los píxeles de la zona y tomé el color coincidente más cercano. Esto funcionó bastante bien." %}
+
+Ok, a partir de esta representación ya podemos resolverlo. Solo teóricamente... El problema es que tenemos demasiados nodos y estamos usando backtracking, esto no va a terminar en un tiempo razonable (no termina, ya lo intenté).
+
+Podemos darle otra vuelta más al problema. La verdad es que es lo mismo si toco una celda de un sector u otra celda del mismo sector, por lo que podemos agrupar o 'clusterizar' nuestro grafo.
+
+
+{% include image_inline.html url="/assets/kami/clusters.jpg" description="Cada grupo se reconoce por separado"
+text="Tener una versión clusterizada del grafo significa que ahora solo tenemos un nodo por clúster en lugar de un nodo por celda. Con esto reducimos drásticamente el número de nodos." %}
+
+{% include image_inline.html url="/assets/kami/sol1.jpg" description="La solución a este nivel" order=1
+text="Ahora nuestro algoritmo de backtracking puede terminar en nuestro mismo milenio y nos da la solución para el nivel (¡magia!). Pueden hacer clic en la imagen para ver mejor la solución.  Cada número representa el orden en el que se debe hacer clic (empezando desde cero) y qué color elegir " %}
+
+
+
+## Los siguientes pasos
+
+Ok, entonces tenemos un script que resuelve este juego. El trabajo manual consiste sólo en tomar una captura de pantalla del nivel y correr el script. Acá hay un par más de soluciones:
+
+{% include image-group.html  class="kami-small" images=site.data.kami_sols lang='es' %}
+
+Entonces, ya está resuelto. Solo teóricamente... otra vez. Tuve que mantener el script corriendo toda la noche para ese último nivel gris y amarillo. Backtracking no el mejor método para este problema. En el futuro, podría ser genial si cambio el solucionador desde backtracking a algo un poco más inteligente como A* e integre todo en Android.
+
+Pueden ver el código [acá](https://github.com/nicovaras/ia_experiments/tree/master/kami){:target="_blank"}
+
+
+Bueno, mientras tanto, voy a tratar de no hacer más trampa y disfrutar un poco del juego (y se los recomiendo, es bastante bueno).
+
+
+{::options parse_block_html="true" /}
+<div class="firma">
+*Eso es todo, gracias por leer!*
+</div>
