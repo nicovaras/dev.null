@@ -4,6 +4,8 @@ title:  "Solving the Android game Kami"
 categories: python ai
 permalink: kami/
 controller: Eci2Controller
+reading: 5
+class: kami
 
 ---
 

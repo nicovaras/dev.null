@@ -1,17 +1,17 @@
-<div style="display: flex;width: 70%;margin: auto;">
+<div class="fancy-inline" >
 
-<p style="margin: auto; flex-grow: 1; width:50%; order:{{ include.order }}">
-{{ include.text }}
-</p>
+    <p style="margin: auto; flex-grow: 1; width:50%; order:{{ include.order }}">
+    {{ include.text }}
+    </p>
 
-<div class="fancy-group" style="width:40%">
+    <div class="fancy-group" style="width:40%">
 
-<a class='fancybox-thumb {{ include.class }}' id="{{ include.id }}" title="{{ include.description }}" data-thumb="{{ include.url }}" href="{{ include.url }}" rel="{{ include.group }}">
-    <img src="{{ include.url }}">
-    <span class="fancy-caption">{{ include.description }}</span>
-</a>
+    <a class='fancybox-thumb {{ include.class }}' id="{{ include.id }}" title="{{ include.description }}" data-thumb="{{ include.url }}" href="{{ include.url }}" rel="{{ include.group }}">
+        <img src="{{ include.url }}">
+        <span class="fancy-caption">{{ include.description }}</span>
+    </a>
 
-</div>
+    </div>
 </div>
 
 

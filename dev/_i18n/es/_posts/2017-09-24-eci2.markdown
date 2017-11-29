@@ -4,6 +4,7 @@ title:  "Predicción de salud infantil en Argentina - parte 2/2"
 categories: kaggle scikit
 permalink: eci2/
 controller: Eci2Controller
+reading: 12
 
 ---
 
