@@ -17,12 +17,12 @@ title: $/dev/null
 email: dev@null.com.ar
 author: Nico Varaschin
 description: > # this means to ignore newlines until "baseurl:"
-  Hi! I'm a <span class="tooltipo">Zombie <span class="tooltipotext">I actually died on the operating table and was revived by the doctors. Literally a Zombie ¯\_(ツ)_/¯ </span></span> Computer Scientist and this is my blog. I'll post my projects and things I find interesting.
-  I'm a mix of a Python / Java / Android dev and a Machine Learning and Data Science enthusiast.
+  Hi! I'm a Computer Scientist and this is my blog. Here I'll post my projects and other things that got my attention from time to time.
+  From my experience and interests I'm a mix of a Software Engineering and Data Scientist. I love making machines learn.
 
 description_es: > # this means to ignore newlines until "baseurl:"
-  Hola! Soy un Computador Científico <span class="tooltipo">Zombie <span class="tooltipotext">Me morí en una operación y los doctores me revivieron. Literalmente un Zombie ¯\_(ツ)_/¯ </span></span> y este es mi blog. Voy a postear mis proyectos y cosas que me parecen interesantes.
-  Soy una mezcla de desarrollador Python / Java / Android y un fan de Machine Learning y Data Science.
+  Hola! Soy un Computador Científico y este es mi blog. Aquí voy a postear mis proyectos y cosas que me llamaron la atención.
+  Desde mi experiencia e intereses soy una mezcla de Ingeniero de Software y Científico de Datos. Me encanta hacer que las maquinas aprendan.
 
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "dev.null.com.ar" # the base hostname & protocol for your site, e.g. http://example.com

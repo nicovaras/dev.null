@@ -1,0 +1,22 @@
+---
+layout: post
+title:  "The best movies on Netflix"
+categories: python
+permalink: netflix/
+---
+
+<!-- /_sass/minima/_layout -->
+
+My mother likes Netflix. In fact it's her only source for movies and shows. But she has a problem I bet most of us had: we don't know what to watch next. Ok, Netflix has its recommendation system, but (at least for me) is not the best thing in the world. Besides, it mostly recommends Netflix own productions.
+So my mother just searches aimlessly and picks a movie, but it's possible that's a bad movie (and it's not that there's something bad with my mother tastes in movies or something). In fact, Netflix also recommends movies that are not that good, or not at all. So, we also more or less have gone through the same. I came with a simple solution that I want to share, a list of the best rated movies in Netflix Argentina (link at the bottom).
+
+Lets assess the situation. Netflix has different movies for each region. In Argentina, there are fewer movies that we'd like. Sometimes we search on the internet for new movies or for recommended movies, but is probable that they aren't in our region. Nevertheless, Netflix has good movies that are there to find and of course a lot of original productions. At the time of writing, there isn't a proper score for the movies. All I see is a 'match' percentage, that I assume is how much would I like the movie based on what I watched earlier. But I don't see any information about how much the movie is liked by others. I know that webs like IMDB (Internet Movie Database) or Rotten Tomatoes have all this movies scored by critics and the public, and they're more or less accurate. If a movie is well rated there, I tend to like it. So it's a good place to start, we can build something that relates movies to scores and keep only the 'good' ones.
+
+We got some problems to solve first. We need to get all the movies from Netflix, but it doesn't have an API. It had it before but now it's deprecated. On the other hand, we have the movie scores. I've chosen to use only IMDB. It has an API so we should be good. The last thing to do is to merge all that information.
+
+For the IMDB part, I used an open service: OMDb (LINK!!). It lets me query a thousand movies per day. I need to query for the movies in english so I changed my Netflix account to english. To get the movies for Netflix I did something I'm not so proud about. When you enter the movies tab, you see some movies, and it has an infinite scroll to show the others. So... I scrolled all the way down to load all the movies' names. Then I just copied and parsed the resulting HTML.
+With this I got more or less 1700 movies.
+OMDb lets you query the API a thousand times a day but I didn't want to get info for 1000 movies and wait another day for the rest. So, yes, I created two accounts and used them at the same time. Using this I got a list of movies with ratings and genres. I filtered all movies with score lower than 6.
+The list is sorted alphabetically but this order isn't the best. We have to sort this list differently somehow. If I sort only by score, I get movies that we all saw like The Godfather II or Schindler's List. So I sorted it by year and score, newer movies first. In fact, I made groups of 3 or 4 consecutive years each and sorted by that.
+
+In the end, I got a list of 654 movies from Netflix Argentina rated 6.0 or more by IMDb. The final file is here: (ASDASDASD)

@@ -63,7 +63,14 @@ DEPENDENCIES
   tzinfo-data
 
 RUBY VERSION
+<<<<<<< HEAD
    ruby 2.1.5p273
 
 BUNDLED WITH
    1.16.1
+=======
+   ruby 2.5.0p0
+
+BUNDLED WITH
+   1.16.2
+>>>>>>> 678ac76e3b110e83e428b87d18c918dd6cbc7681
