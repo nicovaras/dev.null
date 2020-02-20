@@ -22,7 +22,7 @@ gem "minima","2.1.0"
 group :jekyll_plugins do
    gem "jekyll-feed"
    gem 'octopress-video-tag', :git => "https://github.com/anarchivist/octopress-video-tag.git", :branch => "loosen-gemspec"
-   gem 'jekyll-multiple-languages-plugin'
+   gem 'jekyll-multiple-languages-plugin',"1.5.1"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
