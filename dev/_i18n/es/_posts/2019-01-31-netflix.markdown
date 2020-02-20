@@ -1,0 +1,28 @@
+---
+layout: post
+title:  "Las mejores películas en Netflix"
+categories: python
+permalink: netflix/
+---
+
+<!-- /_sass/minima/_layout -->
+
+A mi mamá le encanta Netflix. De hecho, es su fuente favorita de películas y series. Pero tiene un problema que apuesto que la mayoría de nosotros tenemos: no sabemos qué ver. Ok, Netflix tiene su sistema de recomendación, pero (al menos para mí) no está funcionando como me gustaría.
+
+Así que busca sin rumbo nomás y elige una película, pero a veces es una película mala (y no es que haya algo malo con las preferencias de mi mamá con las películas o algo así). Además, Netflix también recomienda películas que no son tan buenas o para nada buenas. Entonces, todos pasamos más o menos por lo mismo. Implementé una solución fácil que quiero compartir, es una lista de las películas mejor calificadas en Netflix Argentina (link abajo de todo).
+
+
+Vamos a evaluar la situación. Netflix tiene diferentes películas para cada región. En Argentina, hay menos películas de las que nos gustaría. A veces buscamos en internet películas de estreno o películas recomendadas, pero es bastante posible que no estén en nuestra región. Sin embargo, Netflix tiene buenas películas para ver y, por supuesto, muchas producciones originales. Al momento que estoy escribiendo esto, no hay un rating adecuado para las películas, todo lo que veo es un porcentaje de "coincidencia", que asumo que significa cuánto me gustaría la película en base a lo que vi anteriormente. Pero no veo ninguna información sobre cuánto le gusta a la película a otras personas. Sé que sitios como IMDB (Internet Movie Database) o Rotten Tomatoes tienen todas estas películas calificadas por críticos y por el público, y éstas calificaciones son más o menos precisas. Si una película está bien calificada ahí, tiende a gustarme. Así que ese es un buen lugar para empezar, podemos implementar algo que relacione las películas con las calificaciones y quedarnos solo con las "buenas".
+
+
+Tenemos algunos problemas que resolver primero. Necesitamos obtener todas las películas de Netflix, pero Netflix no tiene una API. La tenía antes pero ahora está deprecada.
+
+Por otro lado, necesitamos los ratings de cada película. Para tener estos puntajes, elegí usar solo IMDB. Tiene una API concisa por lo que deberíamos estar bien con esto. Lo último que hay que hacer es fusionar toda esta información.
+
+
+Para la parte IMDB, usé un servicio open source: [OMDb](http://www.omdbapi.com){:target="_blank"}. Me permite hacer mil querys de películas por día. Necesito hacer querys de las películas en inglés, así que cambié mi cuenta de Netflix a inglés. Para tener los nombres de las películas desde Netflix hice algo de lo que no estoy tan orgulloso. Cuando entras a la sección de películas en Netflix, ves algunas películas y tiene un infinite scroll para mostrar las demás. Así que... hice scroll hasta abajo de todo para cargar todos los nombres de las películas. Luego nomás copié y analicé el HTML que quedó. Con esto, tengo más o menos 1700 películas.
+
+OMDb te permite consultar la API mil veces por día, pero no quería tener información para mil películas y después tener que esperar otro día para el resto. Entonces, sí, me hice dos cuentas y las usé al mismo tiempo. Haciendo esto obtuve una lista de películas con ratings y géneros. Filtré todas las películas con una puntuación inferior a 6.
+La lista está ordenada lexicográficamente, pero este orden no es el mejor porque tenemos las buenas películas mezcladas con las demás. Tenemos que ordenar esta lista de forma diferente de alguna manera. Si ordeno solo por la puntuación, voy a tener películas que todos vimos como El Padrino II o La Lista de Schindler. Así que lo ordené por año y rating, primero las películas más nuevas. De hecho, hice grupos de tres o cuatro años consecutivos para cada uno y ordené por eso. Al final tenemos las mejores películas recientes, seguidas de las mejores de 2015-16 y así sucesivamente.
+
+Al final, conseguí una lista de 654 películas de Netflix Argentina calificadas con 6.0 o más por IMDb. El resultado final está acá: [Lista de Netflix](http://dev.null.com.ar/netflix.csv)

@@ -278,7 +278,10 @@ body {
     margin: 0 0 35px;
     text-align: center;
 }
+.home{
+    margin-top:50px;
 
+}
 .post-header {
     margin-bottom: $spacing-unit;
 }
@@ -462,4 +465,30 @@ video {
     padding:1em;
     width:90%;
     height:90%;
+}
+
+.kami-small{
+    width:35%;
+}
+
+.kami .fancy-group img{
+    @include media-query($on-palm) {
+        width:60%;
+    }
+    /*height: 500px;*/
+}
+
+.fancy-inline{
+    display: flex;
+    width: 70%;
+    margin: auto;
+    @include media-query($on-palm) {
+        width:initial;
+    }
+}
+
+.fancy-inline img{
+    @include media-query($on-palm) {
+        width:70%;
+    }
 }

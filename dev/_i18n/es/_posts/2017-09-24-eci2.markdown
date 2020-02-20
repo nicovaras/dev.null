@@ -4,6 +4,7 @@ title:  "Predicción de salud infantil en Argentina - parte 2/2"
 categories: kaggle scikit
 permalink: eci2/
 controller: Eci2Controller
+reading: 12
 
 ---
 
@@ -16,17 +17,17 @@ En el [post anterior](http://dev.null.com.ar/es/eci){:target="_blank"} hablaba d
 
 En el episodio anterior(?), vimos que tenemos algún tipo de "historia" de cada paciente: tenemos algunas filas que corresponden al mismo paciente y a chequeos diferentes. Ahora podemos intentar construir otro conjunto de datos que aproveche esta "historia del paciente".
 
-En el training set, tenemos algunos pacientes con cuatro chequeos y el resto solamente tiene tres chequeos. Para esos con sólo tres mediciones, la cuarta medición la podemos encontrar en el test set. Entonces, al final, podemos tener cuatro filas por cada paciente. Lo que hice fue concatenar todos estos chequeos para los mismos pacientes en una sola fila.
+En el training set, tenemos algunos pacientes con cuatro chequeos y el resto solamente tiene tres chequeos. Para esos con sólo tres mediciones, la cuarta medición la podemos encontrar en el test set. Si agarro todos los pacientes con cuatro checkeos *en el train set*, puedo concatenarlos en una sola fila.
 
 Ahora tenemos un dataset hecho de la historia de cada paciente, usando los cuatro chequeos por cada fila.
 
 {% include image.html id='concat' url='/assets/eci/concat3.png' description='Concatenando filas' %}
 
 
-Por ejemplo, dado un paciente, puedo concatenar los cuatro chequeos en una sola fila. La clara ventaja de esto es que, en cada fila, tengo mucha más información sobre el paciente: todas las HAZ. WAZs, BMIZs, etc en una sola fila. Por otro lado, esto significa que ahora tengo un train set mucho más chico, **6200**~ contra el original de **42000**~.
+Por ejemplo, dado un paciente, puedo buscar sus cuatros checkeos y concatenarlos en una sola fila. La clara ventaja de esto es que, en cada fila, tengo mucha más información sobre el paciente: todas las HAZ. WAZs, BMIZs, etc en una sola fila. Estoy dejando afuera a aquellos pacientes que solo tienen tres checkeos porque no tengo informacion de la variable "decae" para ese cuarto checkeo (porque vive en el test set). A su vez, esto significa que ahora tengo un train set mucho más chico, **6200**~ contra el original de **42000**~.
 
 Otra cosa que puedo hacer es, en lugar de concatenar los cuatro chequeos, concateno solo tres por fila como en la imagen.
-Esto implica que ahora puedo usar los checkeos 1, 2, 3  y los 2, 3, 4 de cada paciente y hacer dos filas diferentes. Con este enfoque tengo el doble de filas de entrenamiento, **12000**~.
+Esto implica que ahora puedo usar los checkeos 1, 2, 3  de cada paciente y usar esos pacientes que antes no pude porque no necesito ese cuarto checkeo. Con este enfoque tengo el doble de filas de entrenamiento, **12000**~.
 
 También mantuve el conjunto de datos original para usar en el entrenamiento. Supongo que no puede ser malo entrenar un modelito separado con ese.
 
@@ -73,7 +74,7 @@ $$ \rightarrow \text{nuevas features:  }\; \alpha, \; \beta $$
 Acá pueden jugar un poco con algunos de los resultados:
 
 
-<div class="row" style=" margin-bottom:20px;   border: 2px solid; border-radius: 20px; justify-content: center; display: flex; padding: 10px;">
+<div class="row lr_chart_row" style=" margin-bottom:20px;   border: 2px solid; border-radius: 20px; justify-content: center; display: flex; padding: 10px;">
 <div class="col-md-8">
 
 <div id="lr_chart">
@@ -99,7 +100,7 @@ También agregué features polinómicas de segundo grado basadas en HAZ, WAZ y B
 En mi caso particular, en el 4-dataset por ejemplo, combiné HAZ_1, ..., HAZ_4 en las siguientes features:
 
 {::options parse_block_html="true" /}
-<div style="display: block; text-align: center">
+<div class="piramide" style="display: block; text-align: center">
 
 
 $${haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{1}}$$ $$\qquad{haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{2}}$$ $$\qquad{haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{3}}$$ $$\qquad{haz}\color{red}{\mathbf{1}} * {haz}\color{red}{\mathbf{4}}$$
@@ -187,7 +188,7 @@ Es "True" si por lo menos una de las siguientes condiciones se cumple:
 
 Ok, algo que podemos ver es que todo depende del valor del chequeo anterior: si HAZ/WAZ/BMIZ estaba por debajo de -1 (la primera parte de la condición), "decae" siempre será falso sin tener en cuenta el valor de el próximo chequeo. Esto parece muy restrictivo y probablemente confunda un poco al algoritmo.
 
-¿Qué pasa si saco esta restricción? Para cada uno de mis datasets hice *otro* donde "decae" no tiene la restricción. Esto significa que "decae" será independiente de los valores anteriores y sólo dependerá del nuevo checkeo. Tenía tres datasets y los dupliqué así que ahora tengo $3 * 2 = 6$$ conjuntos de datos.
+¿Qué pasa si saco esta restricción? Para cada uno de mis datasets hice *otro* donde "decae" no tiene la restricción. Esto significa que "decae" será independiente de los valores anteriores y sólo dependerá del nuevo checkeo. Tenía tres datasets y los dupliqué así que ahora tengo $$3 * 2 = 6$$ conjuntos de datos.
 
 Después, hice armé otros datasets, pero en vez de sacar la restricción para todas las variables, la quité para *una variable a la vez*. Por ejemplo, hice un nuevo dataset sacando la restricción sobre HAZ pero sin tocar WAZ y BMIZ. Eso son tres conjuntos de datos más por cada uno de los originales: $$3 * 2 + 3 * 3 = 15$$.
 
@@ -239,6 +240,6 @@ Con más información, como por ejemplo datos sobre las madres, seguramente se p
 Sería buenísimo si algo como esto termina siendo usado por los médicos y se pueda ayudar a los chicos antes de que incluso empiecen a tener algún tipo de problema.
 
 {::options parse_block_html="true" /}
-<div style="float:right;padding: 50px; padding-bottom: 70px;">
+<div class="firma">
 *Eso es todo, gracias por leer!*
 </div>

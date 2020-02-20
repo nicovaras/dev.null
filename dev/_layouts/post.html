@@ -8,8 +8,12 @@ layout: default
     <p class="post-meta">
 
     <span class="reading">
-      {% assign words = content | number_of_words %}
-      Estimated reading time: {{words | divided_by: 160 | round}} mins
+      {% if page.reading %}
+        Estimated reading time: {{page.reading}} mins
+      {% else %}
+        {% assign words = content | number_of_words %}
+        Estimated reading time: {{words | divided_by: 190 | round}} mins
+      {% endif %}
     </span>
 
     <time class="post_date" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %Y" }}</time>
@@ -17,7 +21,7 @@ layout: default
     </p>
   </header>
 
-  <div class="post-content" itemprop="articleBody" ng-controller="{{page.controller}}">
+  <div class="post-content {{page.class}}" itemprop="articleBody" ng-controller="{{page.controller}}">
     {{ content }}
   </div>
 

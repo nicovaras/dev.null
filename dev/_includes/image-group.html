@@ -1,19 +1,27 @@
 <div class="fancy-group">
 
 {% for x in include.images %}
-{% if include.lang == 'es' %}
-<a class='fancybox-thumb' id="{{ x.id }}" title="{{ x.description_es }}"   data-thumb="{{ x.url }}" href="{{ x.url }}" rel="{{ x.group }}">
-<img alt="{{ x.id }}" src="{{ x.url }}">
-<span class="fancy-caption">{{ x.description_es }}</span>
-</a>
-{% else %}
-<a class='fancybox-thumb' id="{{ x.id }}" title="{{ x.description_en }}"   data-thumb="{{ x.url }}" href="{{ x.url }}" rel="{{ x.group }}">
-<img alt="{{ x.id }}" src="{{ x.url }}">
-<span class="fancy-caption">{{ x.description_en }}</span>
-</a>
-{% endif %}
+    {% if include.lang == 'es' %}
+        <a class='fancybox-thumb {{ include.class }}' id="{{ x.id }}" title="{{ x.description_es }}"
+           data-thumb="{{ x.url }}" href="{{ x.url }}" rel="{{ x.group }}">
+            <img alt="{{ x.id }}" src="{{ x.url }}">
+            <span class="fancy-caption">{{ x.description_es }}</span>
+        </a>
+        {% if include.arrow == 'true' and forloop.last == false %}
+            <span class="glyphicon glyphicon-arrow-right" style="margin-top: auto; margin-bottom: auto; margin-left: 20px; margin-right: 20px; font-size: 50px;"></span>
+        {% endif %}
 
+    {% else %}
+        <a class='fancybox-thumb {{ include.class }}' id="{{ x.id }}" title="{{ x.description_en }}"
+           data-thumb="{{ x.url }}" href="{{ x.url }}" rel="{{ x.group }}">
+            <img alt="{{ x.id }}" src="{{ x.url }}">
+            <span class="fancy-caption">{{ x.description_en }}</span>
+        </a>
+        {% if include.arrow == 'true' and forloop.last == false %}
+            <span class="glyphicon glyphicon-arrow-right" style="margin-top: auto; margin-bottom: auto; margin-left: 20px; margin-right: 20px; font-size: 50px;"></span>
+        {% endif %}
 
+    {% endif %}
 {% endfor %}
 
 </div>
